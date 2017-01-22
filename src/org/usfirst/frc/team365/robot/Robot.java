@@ -3,7 +3,7 @@ package org.usfirst.frc.team365.robot;
 
 import java.util.List;
 
-import org.usfirst.frc.team365.util.interf.RobotModule;
+import org.usfirst.frc.team365.util.RobotModule;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 
