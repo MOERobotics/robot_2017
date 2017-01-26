@@ -1,26 +1,17 @@
 package org.usfirst.frc.team365.modules;
 import org.usfirst.frc.team365.robot.SharedVariables;
+import org.usfirst.frc.team365.util.RobotModule;
 
 import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
-
-
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
- */
-public class Drivetrain extends IterativeRobot  implements PIDOutput {
+public class Drivetrain extends RobotModule  implements PIDOutput {
 	AHRS navX;
 	
 	CANTalon driveLA = new CANTalon(12);
@@ -170,4 +161,11 @@ public class Drivetrain extends IterativeRobot  implements PIDOutput {
     	else if (motorLimit < -1) return -1;
     	else return motorLimit;
     }
+
+	@Override
+	public void robotPeriodic()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }
