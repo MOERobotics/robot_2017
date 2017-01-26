@@ -1,11 +1,14 @@
 package org.usfirst.frc.team365.modules;
-import com.kauailabs.navx.frc.AHRS;
-
+import org.usfirst.frc.team365.robot.SharedVariables;
 
 import com.ctre.CANTalon;
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 
@@ -17,7 +20,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Drivetrain extends IterativeRobot{// implements PIDOutput {
+public class Drivetrain extends IterativeRobot  implements PIDOutput {
 	AHRS navX;
 	
 	CANTalon driveLA = new CANTalon(12);
@@ -29,12 +32,16 @@ public class Drivetrain extends IterativeRobot{// implements PIDOutput {
 	CANTalon driveRC = new CANTalon(3); 
 	//CANTalon driveRD = new CANTalon(4);
 	
+	
 	Joystick driveStick;
 	Joystick funStick;
 	Encoder leftEncoder;
 	int autoLoopCounter;
 	int autoStep;
 	int teleopLoopCounter;
+	double direction;
+	
+	PIDController driveStraight;
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -54,18 +61,32 @@ public class Drivetrain extends IterativeRobot{// implements PIDOutput {
     	driveRC.enableBrakeMode(true);
     	driveStick = new Joystick(0);
     	funStick = new Joystick(1);
+    	
+    	SharedVariables.registerKeyspace("DriveTrain");
+    	SharedVariables.registerKey("DriveTrain","Turn");
+    	
+    	driveStraight = new PIDController(0.04, 0.00005, 0.03, navX, this);
+    	driveStraight.setContinuous();
+    	driveStraight.setInputRange(-180.0, 180.0);
+    	driveStraight.setOutputRange(-1.0, 1.0);
     }
     
     /**
      * This function is run once each time the robot enters autonomous mode
      */
     public void disabledInit () {
+    	if (driveStraight.isEnabled()) {
+    		driveStraight.disable();
+    	}
+    	}
+    
     	
-    }
+    	
+    
     
     public void disabledPeriodic () {
     	if(driveStick.getTrigger()) {
-    		leftEncoder.reset();
+    		//leftEncoder.reset();
     	}
     }
     public void autonomousInit() {
@@ -99,23 +120,20 @@ public class Drivetrain extends IterativeRobot{// implements PIDOutput {
       
         double leftMotor = limitMotor(yJoy + xJoy);
         double rightMotor;
-        if (funStick.getRawButton(2)) {
-        	rightMotor = limitMotor(yJoy);
+        if (driveStick.getTrigger()) {
+        	rightMotor = yJoy;
+        	leftMotor = yJoy;
         }
         else {
         	rightMotor = limitMotor(yJoy - xJoy);
+        	leftMotor = limitMotor(yJoy + xJoy);
+        	
         }
         
+        driveRobot(leftMotor, rightMotor);
+        
        
-        driveLA.set(leftMotor);
-        driveLB.set(leftMotor);
-        driveLC.set(leftMotor);
-       // driveLD.set(leftMotor);
-        driveRA.set(rightMotor);
-        driveRB.set(rightMotor);
-        driveRC.set(rightMotor);
-        //driveRD.set(rightMotor); 
-    	}
+    }
     
     /**
      * This function is called periodically during test mode
@@ -129,6 +147,23 @@ public class Drivetrain extends IterativeRobot{// implements PIDOutput {
     public void testPeriodic() {
     	LiveWindow.run();
     }
+    
+    public void pidWrite(double output) {
+    	double right = direction - output;
+    	double left = direction + output;
+    	driveRobot(left, right);
+    }
+    
+    public void driveRobot(double leftMotor, double rightMotor){
+        driveLA.set(leftMotor);
+        driveLB.set(leftMotor);
+        driveLC.set(leftMotor);
+       // driveLD.set(leftMotor);
+        driveRA.set(rightMotor);
+        driveRB.set(rightMotor);
+        driveRC.set(rightMotor);
+        //driveRD.set(rightMotor); 
+    	}
    
     double limitMotor(double motorLimit) {
     	if (motorLimit > 1) return 1;
