@@ -2,9 +2,9 @@ package org.usfirst.frc.team365.modules;
 
 import org.usfirst.frc.team365.util.RobotModule;
 
-public class Gear extends RobotModule
+public class GearMechanism extends RobotModule
 {
-	public Gear(){
+	public GearMechanism(){
 		super();
 	}
 	@Override
