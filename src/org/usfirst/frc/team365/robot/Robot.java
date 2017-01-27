@@ -1,8 +1,13 @@
 
 package org.usfirst.frc.team365.robot;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.usfirst.frc.team365.modules.Climber;
+import org.usfirst.frc.team365.modules.Drivetrain;
+import org.usfirst.frc.team365.modules.GearMechanism;
+import org.usfirst.frc.team365.modules.Shooter;
 import org.usfirst.frc.team365.util.RobotModule;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -13,7 +18,11 @@ public class Robot extends IterativeRobot {
 	
 	
 	public Robot(){
-		
+		modules=new ArrayList<>();
+		modules.add(new Climber());
+		modules.add(new Drivetrain());
+		modules.add(new GearMechanism());
+		modules.add(new Shooter());
 	}
 	@Override
 	public void robotInit() {
