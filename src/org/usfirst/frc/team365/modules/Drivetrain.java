@@ -142,6 +142,7 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
         {
         	gearShift.set(Value.kForward);
         }
+        
         if (driveStick.getTrigger()) {
         	rightMotor = yJoy;
         	leftMotor = yJoy;
@@ -151,8 +152,14 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
         	leftMotor = limitMotor(yJoy + xJoy);
         	
         }
-        
+        if (driveStick.getRawButton(8))
+        {
+        	driveRobot(leftMotor * 0.5, rightMotor * 0.5);
+        }
+        else 
+        {
         driveRobot(leftMotor, rightMotor);
+        }
         
        
     }
