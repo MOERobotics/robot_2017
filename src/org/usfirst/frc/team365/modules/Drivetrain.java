@@ -91,30 +91,35 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
     	if (driveStraight.isEnabled()) {
     		driveStraight.disable();
     	}
-    	}
-    
-    	
-    	
-    
+    }
     
     public void disabledPeriodic () {
     	if(driveStick.getTrigger()) {
-    		//leftEncoder.reset();
+    		leftEncoder.reset();
     	}
     }
+    
+    
+    
+    
+    
+    
+    
     public void autonomousInit() {
     	autoLoopCounter = 0;
     	autoStep = 1;
     }
 
-    /**
-     * This function is called periodically during autonomous
-     */
-    
     public void autonomousPeriodic() {
     	
     }
    
+    
+    
+    
+    
+    
+    
     /**
      * This function is called once each time the robot enters tele-operated mode
      */
@@ -154,13 +159,18 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
         }
         if (driveStick.getRawButton(8))
         {
-        	driveRobot(leftMotor * 0.5, rightMotor * 0.5);
+        	leftMotor = 0.5 * leftMotor; 
+            rightMotor = 0.5 * rightMotor;
         }
-        else 
-        {
         driveRobot(leftMotor, rightMotor);
+        //recommeded
+        /* 
+        if (driveStick.getRawButton(8))
+        {
+        	leftMotor *= .5;
+        	rightMotor *= .5
         }
-        
+         */
        
     }
     
