@@ -18,12 +18,14 @@ public class Robot extends IterativeRobot {
 	
 	
 	public Robot(){
-		modules=new ArrayList<>();
+		GlobalShared.init();
+		modules = new ArrayList<RobotModule>();
 		modules.add(new Climber());
 		modules.add(new Drivetrain());
 		modules.add(new GearMechanism());
 		modules.add(new Shooter());
 	}
+
 	@Override
 	public void robotInit() {
 		modules.forEach((x)->x.robotInit());
