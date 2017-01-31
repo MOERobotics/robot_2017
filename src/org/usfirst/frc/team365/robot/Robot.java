@@ -15,8 +15,6 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 public class Robot extends IterativeRobot {
 	List<RobotModule>modules;
 	
-	
-	
 	public Robot(){
 		modules=new ArrayList<>();
 		modules.add(new Climber());
