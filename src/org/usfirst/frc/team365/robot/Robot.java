@@ -7,6 +7,8 @@ import java.util.List;
 import org.usfirst.frc.team365.modules.Climber;
 import org.usfirst.frc.team365.modules.Drivetrain;
 import org.usfirst.frc.team365.modules.GearMechanism;
+import org.usfirst.frc.team365.modules.RobotInputs;
+import org.usfirst.frc.team365.modules.RobotOutputs;
 import org.usfirst.frc.team365.modules.Shooter;
 import org.usfirst.frc.team365.util.RobotModule;
 
@@ -16,11 +18,14 @@ public class Robot extends IterativeRobot {
 	List<RobotModule>modules;
 	
 	public Robot(){
+		RobotInputs inputs = new RobotInputs();
+		RobotOutputs outputs = new RobotOutputs();
+		
 		modules=new ArrayList<>();
-		modules.add(new Climber());
-		modules.add(new Drivetrain());
-		modules.add(new GearMechanism());
-		modules.add(new Shooter());
+		modules.add(new Climber(inputs, outputs));
+		modules.add(new Drivetrain(inputs, outputs));
+		modules.add(new GearMechanism(inputs, outputs));
+		modules.add(new Shooter(inputs, outputs));
 	}
 	@Override
 	public void robotInit() {

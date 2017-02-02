@@ -13,8 +13,8 @@ public class Shooter extends RobotModule
 	double shootSpeed;
 	double collectSpeed;
 	
-	public Shooter(){
-		super();
+	public Shooter(RobotInputs inputs, RobotOutputs outputs){
+		super(inputs, outputs);
 	}
 	
 	void turnChuteToAngle(double theta){
