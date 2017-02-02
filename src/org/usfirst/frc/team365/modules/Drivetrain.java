@@ -28,9 +28,6 @@ public class Drivetrain extends RobotModule{
     	driveStraight.setOutputRange(-1.0, 1.0);
     }
     
-    /**
-     * This function is run once each time the robot enters autonomous mode
-     */
     public void disabledInit () {
     	if (driveStraight.isEnabled()) {
     		driveStraight.disable();
@@ -41,31 +38,23 @@ public class Drivetrain extends RobotModule{
     		//leftEncoder.reset();
     	}
     }
+    
+    
     public void autonomousInit() {
     	autoLoopCounter = 0;
     	autoStep = 1;
     }
-
-    /**
-     * This function is called periodically during autonomous
-     */
     
     public void autonomousPeriodic() {
     	
     }
-   
-    /**
-     * This function is called once each time the robot enters tele-operated mode
-     */
+
+    
     public void teleopInit(){
     	teleopLoopCounter = 0;
     	outputs.gearShift.set(Value.kForward);
     	
     }
-
-    /**
-     * This function is called periodically during operator control
-     */
     public void teleopPeriodic() {
     	teleopLoopCounter ++;
         double xJoy = inputs.driveStick.getX();
@@ -96,19 +85,17 @@ public class Drivetrain extends RobotModule{
         {
         driveRobot(leftMotor, rightMotor);
         }
-        
-       
     }
-    
     
     
     public void testInit() {
     	
     }
-    
     public void testPeriodic() {
     	LiveWindow.run();
     }
+    
+    
     
     public void pidDrive() {
     	double output = driveCorrection.getOutput();
