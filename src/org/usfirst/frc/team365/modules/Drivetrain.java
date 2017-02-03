@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
-public class Drivetrain extends RobotModule{	
+public class Drivetrain extends RobotModule{
 	int autoLoopCounter;
 	int autoStep;
 	int teleopLoopCounter;
@@ -27,7 +27,6 @@ public class Drivetrain extends RobotModule{
     	driveStraight.setInputRange(-180.0, 180.0);
     	driveStraight.setOutputRange(-1.0, 1.0);
     }
-    
     public void disabledInit () {
     	if (driveStraight.isEnabled()) {
     		driveStraight.disable();
@@ -38,13 +37,10 @@ public class Drivetrain extends RobotModule{
     		//leftEncoder.reset();
     	}
     }
-    
-    
     public void autonomousInit() {
     	autoLoopCounter = 0;
     	autoStep = 1;
     }
-    
     public void autonomousPeriodic() {
     	
     }
@@ -53,7 +49,6 @@ public class Drivetrain extends RobotModule{
     public void teleopInit(){
     	teleopLoopCounter = 0;
     	outputs.gearShift.set(Value.kForward);
-    	
     }
     public void teleopPeriodic() {
     	teleopLoopCounter ++;
@@ -71,32 +66,22 @@ public class Drivetrain extends RobotModule{
         if (inputs.driveStick.getTrigger()) {
         	rightMotor = yJoy;
         	leftMotor = yJoy;
-        }
-        else {
+        } else {
         	rightMotor = limitMotor(yJoy - xJoy);
         	leftMotor = limitMotor(yJoy + xJoy);
-        	
         }
-        if (inputs.driveStick.getRawButton(8))
-        {
-        	driveRobot(leftMotor * 0.5, rightMotor * 0.5);
+        if (inputs.driveStick.getRawButton(8)){
+        	leftMotor = 0.5 * leftMotor;
+            rightMotor = 0.5 * rightMotor;
         }
-        else 
-        {
         driveRobot(leftMotor, rightMotor);
-        }
     }
-    
-    
     public void testInit() {
     	
     }
     public void testPeriodic() {
     	LiveWindow.run();
     }
-    
-    
-    
     public void pidDrive() {
     	double output = driveCorrection.getOutput();
     	double right = direction - output;
@@ -113,11 +98,11 @@ public class Drivetrain extends RobotModule{
         outputs.driveRR.set(rightMotor);
     }
    
-    double limitMotor(double motorLimit) {
-    	if (motorLimit > 1) return 1;
-    	else if (motorLimit < -1) return -1;
-    	else return motorLimit;
-    }
+    double limitMotor(double motorLimit) { // 
+    	if (motorLimit > 1) return 1; // 
+    	else if (motorLimit < -1) return -1; // 
+    	else return motorLimit; // 
+    } // 
 
 	@Override
 	public void robotPeriodic()

@@ -52,7 +52,11 @@ public class SharedVariables {
 		
 		keyspace.put(key, null);
 	}
-	
+	public static void registerKey (String keyspace_name, String key, Object object) throws NoSuchElementException,KeyAlreadyExistsException {
+		registerKey(keyspace_name,key);
+		set(keyspace_name,key,object);
+	}
+
 	public static void registerKeyspace (String keyspace_name) throws KeyAlreadyExistsException {
 		if (sharedVariables.containsKey(keyspace_name))
 			throw new KeyAlreadyExistsException(String.format(

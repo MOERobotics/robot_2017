@@ -27,6 +27,7 @@ public class Robot extends IterativeRobot {
 		modules.add(new GearMechanism(inputs, outputs));
 		modules.add(new Shooter(inputs, outputs));
 	}
+
 	@Override
 	public void robotInit() {
 		modules.forEach((x)->x.robotInit());
