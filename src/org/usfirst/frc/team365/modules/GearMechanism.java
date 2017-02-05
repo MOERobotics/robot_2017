@@ -5,7 +5,6 @@ import org.usfirst.frc.team365.util.RobotModule;
 import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
@@ -35,8 +34,8 @@ public class GearMechanism extends RobotModule {
 	int teleopStep;
 	int teleopLoopCounter;
 	
-	public GearMechanism(){
-		super();
+	public GearMechanism(RobotInputs inputs, RobotOutputs outputs){
+		super(inputs, outputs);
 	}
 	@Override
 	public void robotInit(){

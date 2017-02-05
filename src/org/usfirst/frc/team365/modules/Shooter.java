@@ -2,11 +2,42 @@ package org.usfirst.frc.team365.modules;
 
 import org.usfirst.frc.team365.util.RobotModule;
 
+import edu.wpi.first.wpilibj.SpeedController;
+
 public class Shooter extends RobotModule
 {
-	public Shooter(){
-		super();
+	SpeedController collector;
+	SpeedController shooter;
+	SpeedController chute;
+	SpeedController turret;
+	double shootSpeed;
+	double collectSpeed;
+	
+	public Shooter(RobotInputs inputs, RobotOutputs outputs){
+		super(inputs, outputs);
 	}
+	
+	void turnChuteToAngle(double theta){
+		
+	}
+	void turnChuteDegrees(double theta){
+		
+	}
+	void turnTurretToAngle(double theta){
+		
+	}
+	void turnTurretDegrees(double theta){
+		
+	}
+	void runShooter(){
+		collector.set(collectSpeed);
+		shooter.set(shootSpeed);
+	}
+	void stopShooter(){
+		collector.set(0);
+		shooter.set(0);
+	}
+	
 	@Override
 	public void robotInit(){
 		
