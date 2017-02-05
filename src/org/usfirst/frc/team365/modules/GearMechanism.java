@@ -4,8 +4,8 @@ import org.usfirst.frc.team365.util.RobotModule;
 
 public class GearMechanism extends RobotModule
 {
-	public GearMechanism(){
-		super();
+	public GearMechanism(RobotInputs inputs, RobotOutputs outputs){
+		super(inputs, outputs);
 	}
 	@Override
 	public void robotInit(){

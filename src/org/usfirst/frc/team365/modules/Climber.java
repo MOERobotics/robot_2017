@@ -4,8 +4,8 @@ import org.usfirst.frc.team365.util.RobotModule;
 
 public class Climber extends RobotModule
 {
-	public Climber(){
-		super();
+	public Climber(RobotInputs inputs, RobotOutputs outputs){
+		super(inputs, outputs);
 	}
 	@Override
 	public void robotInit(){
