@@ -16,56 +16,71 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 
 public class Robot extends IterativeRobot {
 	List<RobotModule>modules;
-	
+	int robotLoopCounter;
+	int disabledLoopCounter;
+	int autoLoopCounter; 
+	int teleopLoopCounter;
+	int testLoopCounter;
 	public Robot(){
+		
 		RobotInputs inputs = new RobotInputs();
 		RobotOutputs outputs = new RobotOutputs();
 		
 		modules=new ArrayList<>();
-		modules.add(new Climber(inputs, outputs));
+	//	modules.add(new Climber(inputs, outputs));
 		modules.add(new Drivetrain(inputs, outputs));
-		modules.add(new GearMechanism(inputs, outputs));
-		modules.add(new Shooter(inputs, outputs));
+	//	modules.add(new GearMechanism(inputs, outputs));
+	//	modules.add(new Shooter(inputs, outputs));
 	}
 
 	@Override
 	public void robotInit() {
+		robotLoopCounter = 0;
 		modules.forEach((x)->x.robotInit());
 	}
 	@Override
 	public void robotPeriodic() {
-		modules.forEach((x)->x.robotPeriodic());
+		robotLoopCounter++;
+		modules.forEach((x)->x.robotPeriodic(robotLoopCounter));
 	}
 	@Override
 	public void disabledInit() {
+		disabledLoopCounter = 0;
 		modules.forEach((x)->x.disabledInit());
 	}
 	@Override
 	public void disabledPeriodic() {
-		modules.forEach((x)->x.disabledPeriodic());
+		disabledLoopCounter++;
+		modules.forEach((x)->x.disabledPeriodic(disabledLoopCounter));
 	}
 	@Override
 	public void autonomousInit() {
+		autoLoopCounter = 0;
 		modules.forEach((x)->x.autonomousInit());
 	}
 	@Override
 	public void autonomousPeriodic() {
-		modules.forEach((x)->x.autonomousPeriodic());
+		autoLoopCounter++;
+		modules.forEach((x)->x.autonomousPeriodic(autoLoopCounter));
 	}
 	@Override
 	public void teleopInit() {
+		teleopLoopCounter = 0;
 		modules.forEach((x)->x.teleopInit());
 	}
 	@Override
 	public void teleopPeriodic() {
-		modules.forEach((x)->x.teleopPeriodic());
+		teleopLoopCounter++;
+		modules.forEach((x)->x.teleopPeriodic(teleopLoopCounter));
 	}
 	@Override
 	public void testInit() {
+		testLoopCounter = 0;
 		modules.forEach((x)->x.testInit());
 	}
 	@Override
 	public void testPeriodic() {
-		modules.forEach((x)->x.testPeriodic());
+		testLoopCounter++;
+		modules.forEach((x)->x.testPeriodic(testLoopCounter));
 	}
 }

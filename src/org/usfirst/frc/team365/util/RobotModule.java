@@ -11,13 +11,13 @@ public abstract class RobotModule{
 		this.outputs=outputs;
 	}
 	public abstract void robotInit();
-	public abstract void robotPeriodic();
+	public abstract void robotPeriodic(int loopCounter);
 	public abstract void disabledInit();
-	public abstract void disabledPeriodic();
+	public abstract void disabledPeriodic(int loopCounter);
 	public abstract void autonomousInit();
-	public abstract void autonomousPeriodic();
+	public abstract void autonomousPeriodic(int loopCounter);
 	public abstract void teleopInit();
-	public abstract void teleopPeriodic();
+	public abstract void teleopPeriodic(int loopCounter);
 	public abstract void testInit();
-	public abstract void testPeriodic();
+	public abstract void testPeriodic(int loopCounter);
 }

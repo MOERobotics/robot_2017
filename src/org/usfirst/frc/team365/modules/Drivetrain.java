@@ -20,37 +20,43 @@ public class Drivetrain extends RobotModule{
     }
 	
     public void robotInit(){    	
-    	outputs.gearShift.set(Value.kReverse);
-    	driveCorrection=new PIDOut();
+    	outputs.setGearShift(Value.kReverse);
+    	driveCorrection = new PIDOut();
     	driveStraight = new PIDController(0.04, 0.00005, 0.03, inputs.navx, driveCorrection);
     	driveStraight.setContinuous();
     	driveStraight.setInputRange(-180.0, 180.0);
     	driveStraight.setOutputRange(-1.0, 1.0);
     }
+	@Override
+	public void robotPeriodic(int loopCounter){
+		
+	}
+	
     public void disabledInit () {
     	if (driveStraight.isEnabled()) {
     		driveStraight.disable();
     	}
     }
-    public void disabledPeriodic () {
+    public void disabledPeriodic (int loopCounter) {
     	if(inputs.driveStick.getTrigger()) {
     		//leftEncoder.reset();
     	}
     }
+    
     public void autonomousInit() {
     	autoLoopCounter = 0;
     	autoStep = 1;
     }
-    public void autonomousPeriodic() {
+    public void autonomousPeriodic(int loopCounter) {
     	
     }
 
     
     public void teleopInit(){
     	teleopLoopCounter = 0;
-    	outputs.gearShift.set(Value.kForward);
+    	outputs.setGearShift(Value.kForward);
     }
-    public void teleopPeriodic() {
+    public void teleopPeriodic(int loopCounter) {
     	teleopLoopCounter ++;
         double xJoy = inputs.driveStick.getX();
         double yJoy = -inputs.driveStick.getY();
@@ -58,9 +64,9 @@ public class Drivetrain extends RobotModule{
         double leftMotor;
         double rightMotor;
         if (inputs.driveStick.getRawButton(6)) {
-        	outputs.gearShift.set(Value.kReverse);
+        	outputs.setGearShift(Value.kReverse);
         } else {
-        	outputs.gearShift.set(Value.kForward);
+        	outputs.setGearShift(Value.kForward);
         }
         
         if (inputs.driveStick.getTrigger()) {
@@ -76,13 +82,13 @@ public class Drivetrain extends RobotModule{
         }
         driveRobot(leftMotor, rightMotor);
     }
-    public void testInit() {
+    public void testInit(){
     	
     }
-    public void testPeriodic() {
+    public void testPeriodic(int loopCounter){
     	LiveWindow.run();
     }
-    public void pidDrive() {
+    public void pidDrive(){
     	double output = driveCorrection.getOutput();
     	double right = direction - output;
     	double left = direction + output;
@@ -90,23 +96,18 @@ public class Drivetrain extends RobotModule{
     }
     
     public void driveRobot(double leftMotor, double rightMotor){
-        outputs.driveLF.set(leftMotor);
-        outputs.driveLM.set(leftMotor);
-        outputs.driveLR.set(leftMotor);
-        outputs.driveRF.set(rightMotor);
-        outputs.driveRM.set(rightMotor);
-        outputs.driveRR.set(rightMotor);
+    	outputs.setDriveL1(leftMotor);
+    	outputs.setDriveL2(leftMotor);
+    	outputs.setDriveL3(leftMotor);
+    	outputs.setDriveR1(rightMotor);
+    	outputs.setDriveR2(rightMotor);
+    	outputs.setDriveR3(rightMotor);
     }
    
-    double limitMotor(double motorLimit) { // 
-    	if (motorLimit > 1) return 1; // 
-    	else if (motorLimit < -1) return -1; // 
-    	else return motorLimit; // 
-    } // 
+    double limitMotor(double motorLimit) {
+    	if (motorLimit > 1) return 1;
+    	else if (motorLimit < -1) return -1;
+    	else return motorLimit;
+    }
 
-	@Override
-	public void robotPeriodic()
-	{
-		
-	}
 }

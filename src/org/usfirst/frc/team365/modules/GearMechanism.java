@@ -12,7 +12,7 @@ public class GearMechanism extends RobotModule
 		
 	}
 	@Override
-	public void robotPeriodic(){
+	public void robotPeriodic(int loopCounter){
 		
 	}
 	@Override
@@ -20,7 +20,7 @@ public class GearMechanism extends RobotModule
 		
 	}
 	@Override
-	public void disabledPeriodic(){
+	public void disabledPeriodic(int loopCounter){
 		
 	}
 	@Override
@@ -28,7 +28,7 @@ public class GearMechanism extends RobotModule
 		
 	}
 	@Override
-	public void autonomousPeriodic(){
+	public void autonomousPeriodic(int loopCounter){
 		
 	}
 	@Override
@@ -36,7 +36,7 @@ public class GearMechanism extends RobotModule
 		
 	}
 	@Override
-	public void teleopPeriodic(){
+	public void teleopPeriodic(int loopCounter){
 		
 	}
 	@Override
@@ -44,7 +44,7 @@ public class GearMechanism extends RobotModule
 		
 	}
 	@Override
-	public void testPeriodic(){
+	public void testPeriodic(int loopCounter){
 		
 	}
 }

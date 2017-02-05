@@ -2,14 +2,8 @@ package org.usfirst.frc.team365.modules;
 
 import org.usfirst.frc.team365.util.RobotModule;
 
-import edu.wpi.first.wpilibj.SpeedController;
-
 public class Shooter extends RobotModule
 {
-	SpeedController collector;
-	SpeedController shooter;
-	SpeedController chute;
-	SpeedController turret;
 	double shootSpeed;
 	double collectSpeed;
 	
@@ -30,12 +24,12 @@ public class Shooter extends RobotModule
 		
 	}
 	void runShooter(){
-		collector.set(collectSpeed);
-		shooter.set(shootSpeed);
+		outputs.setCollector(collectSpeed);
+		outputs.setShooter(shootSpeed);
 	}
 	void stopShooter(){
-		collector.set(0);
-		shooter.set(0);
+		outputs.setCollector(0);
+		outputs.setShooter(0);
 	}
 	
 	@Override
@@ -43,7 +37,7 @@ public class Shooter extends RobotModule
 		
 	}
 	@Override
-	public void robotPeriodic(){
+	public void robotPeriodic(int loopCounter){
 		
 	}
 	@Override
@@ -51,7 +45,7 @@ public class Shooter extends RobotModule
 		
 	}
 	@Override
-	public void disabledPeriodic(){
+	public void disabledPeriodic(int loopCounter){
 		
 	}
 	@Override
@@ -59,7 +53,7 @@ public class Shooter extends RobotModule
 		
 	}
 	@Override
-	public void autonomousPeriodic(){
+	public void autonomousPeriodic(int loopCounter){
 		
 	}
 	@Override
@@ -67,7 +61,7 @@ public class Shooter extends RobotModule
 		
 	}
 	@Override
-	public void teleopPeriodic(){
+	public void teleopPeriodic(int loopCounter){
 		
 	}
 	@Override
@@ -75,7 +69,7 @@ public class Shooter extends RobotModule
 		
 	}
 	@Override
-	public void testPeriodic(){
+	public void testPeriodic(int loopCounter){
 		
 	}
 }
