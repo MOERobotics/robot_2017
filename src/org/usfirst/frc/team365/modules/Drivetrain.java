@@ -180,7 +180,6 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
      * This function is called periodically during test mode
      */
     
-    
     public void testInit() {
     	
     }
@@ -188,6 +187,7 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
     public void testPeriodic() {
     	LiveWindow.run();
     }
+    
     
     public void pidWrite(double output) { // 
     	double right = direction - output; // 
