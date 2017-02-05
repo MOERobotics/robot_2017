@@ -30,13 +30,13 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
 
 	AHRS navX;
 	
-	CANTalon driveLA = new CANTalon(12); // 
-	CANTalon driveLB = new CANTalon(13); //
-	CANTalon driveLC = new CANTalon(14); //
+	CANTalon driveLA = new CANTalon(0); // 
+	CANTalon driveLB = new CANTalon(1); //
+	CANTalon driveLC = new CANTalon(2); //
 	//CANTalon driveLD = new CANTalon(15);
-	CANTalon driveRA = new CANTalon(1); //
-	CANTalon driveRB = new CANTalon(2); //
-	CANTalon driveRC = new CANTalon(3);  //
+	CANTalon driveRA = new CANTalon(13); //
+	CANTalon driveRB = new CANTalon(14); //
+	CANTalon driveRC = new CANTalon(15);  //
 	//CANTalon driveRD = new CANTalon(4);
 	
 	
@@ -163,7 +163,7 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
             rightMotor = 0.5 * rightMotor; // 
         } // 
         driveRobot(leftMotor, rightMotor); // 
-        //recommeded
+        //recommended
         /* 
         if (driveStick.getRawButton(8))
         {
