@@ -2,23 +2,58 @@ package org.usfirst.frc.team365.modules;
 import org.usfirst.frc.team365.math.PIDOut;
 import org.usfirst.frc.team365.util.RobotModule;
 
+import com.ctre.CANTalon;
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
+//import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
+/**
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the IterativeRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the manifest file in the resource
+ * directory.
+ */
+
 public class Drivetrain extends RobotModule{
-	int autoLoopCounter;
-	int autoStep;
-	int teleopLoopCounter;
-	double direction;
+
+	public Drivetrain(RobotInputs inputs, RobotOutputs outputs) {
+		super(inputs, outputs);
+		// TODO Auto-generated constructor stub
+	}
+
+	AHRS navX;
+	
+	CANTalon driveLA = new CANTalon(0); // Left 1 
+	CANTalon driveLB = new CANTalon(1); // Left 2
+	CANTalon driveLC = new CANTalon(2); // Left 3
+	//CANTalon driveLD = new CANTalon(15);
+	CANTalon driveRA = new CANTalon(13); // Right 1
+	CANTalon driveRB = new CANTalon(14); // Right 2
+	CANTalon driveRC = new CANTalon(15);  // Right 3
+	//CANTalon driveRD = new CANTalon(4);
+	
+	Joystick driveStick; // the drive stick
+	Joystick funStick; // the function stick
+	Encoder leftEncoder;
+	int autoLoopCounter; // counts the loops of autonomous
+	int autoStep; 
+	int teleopLoopCounter; // 
+	double direction; //
+	
+	DoubleSolenoid gearShift = new DoubleSolenoid(0,1); //
 	
 	PIDOut driveCorrection;
+	
 	PIDController driveStraight;
 	
-    public Drivetrain(RobotInputs inputs, RobotOutputs outputs){
-    	super(inputs, outputs);
-    }
-	
+	@Override
     public void robotInit(){    	
     	outputs.setGearShift(Value.kReverse);
     	driveCorrection = new PIDOut();
@@ -31,31 +66,33 @@ public class Drivetrain extends RobotModule{
 	public void robotPeriodic(int loopCounter){
 		
 	}
-	
+	@Override
     public void disabledInit () {
-    	if (driveStraight.isEnabled()) {
-    		driveStraight.disable();
-    	}
+    	if (driveStraight.isEnabled()) { // 
+    		driveStraight.disable(); // 
+    	} // 
     }
+	@Override
     public void disabledPeriodic (int loopCounter) {
     	if(inputs.driveStick.getTrigger()) {
     		//leftEncoder.reset();
     	}
     }
-    
+	@Override
     public void autonomousInit() {
     	autoLoopCounter = 0;
     	autoStep = 1;
     }
+	@Override
     public void autonomousPeriodic(int loopCounter) {
     	
     }
-
-    
+	@Override
     public void teleopInit(){
     	teleopLoopCounter = 0;
     	outputs.setGearShift(Value.kForward);
     }
+	@Override
     public void teleopPeriodic(int loopCounter) {
     	teleopLoopCounter ++;
         double xJoy = inputs.driveStick.getX();
@@ -69,25 +106,29 @@ public class Drivetrain extends RobotModule{
         	outputs.setGearShift(Value.kForward);
         }
         
-        if (inputs.driveStick.getTrigger()) {
+        if (driveStick.getTrigger()) {
         	rightMotor = yJoy;
         	leftMotor = yJoy;
         } else {
         	rightMotor = limitMotor(yJoy - xJoy);
         	leftMotor = limitMotor(yJoy + xJoy);
         }
-        if (inputs.driveStick.getRawButton(8)){
+        
+        if (driveStick.getRawButton(8)) {
         	leftMotor = 0.5 * leftMotor;
             rightMotor = 0.5 * rightMotor;
         }
         driveRobot(leftMotor, rightMotor);
     }
+	@Override
     public void testInit(){
     	
     }
+	@Override
     public void testPeriodic(int loopCounter){
     	LiveWindow.run();
     }
+	
     public void pidDrive(){
     	double output = driveCorrection.getOutput();
     	double right = direction - output;
@@ -103,11 +144,9 @@ public class Drivetrain extends RobotModule{
     	outputs.setDriveR2(rightMotor);
     	outputs.setDriveR3(rightMotor);
     }
-   
     double limitMotor(double motorLimit) {
     	if (motorLimit > 1) return 1;
     	else if (motorLimit < -1) return -1;
     	else return motorLimit;
     }
-
 }
