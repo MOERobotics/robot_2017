@@ -1,3 +1,5 @@
+package org.usfirst.frc.team365.vision;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,12 +26,12 @@ import org.opencv.objdetect.*;
 public class Gear{
 
 	//Outputs
-	private Mat resizeImageOutput = new Mat();
-	private Mat hsvThresholdOutput = new Mat();
-	private Mat cvErodeOutput = new Mat();
-	private Mat cvDilateOutput = new Mat();
-	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
-	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
+	private static Mat resizeImageOutput = new Mat();
+	private static Mat hsvThresholdOutput = new Mat();
+	private static Mat cvErodeOutput = new Mat();
+	private static Mat cvDilateOutput = new Mat();
+	private static ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
+	private static ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 
 	static {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -38,7 +40,7 @@ public class Gear{
 	/**
 	 * This is the primary method that runs the entire pipeline and updates the outputs.
 	 */
-	public void process(Mat source0) {
+	static public void process(Mat source0) {
 		// Step Resize_Image0:
 		Mat resizeImageInput = source0;
 		double resizeImageWidth = 640.0;
@@ -150,7 +152,7 @@ public class Gear{
 	 * @param interpolation The type of interpolation.
 	 * @param output The image in which to store the output.
 	 */
-	private void resizeImage(Mat input, double width, double height,
+	private static void resizeImage(Mat input, double width, double height,
 		int interpolation, Mat output) {
 		Imgproc.resize(input, output, new Size(width, height), 0.0, 0.0, interpolation);
 	}
@@ -164,7 +166,7 @@ public class Gear{
 	 * @param val The min and max value
 	 * @param output The image in which to store the output.
 	 */
-	private void hsvThreshold(Mat input, double[] hue, double[] sat, double[] val,
+	private static void hsvThreshold(Mat input, double[] hue, double[] sat, double[] val,
 	    Mat out) {
 		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2HSV);
 		Core.inRange(out, new Scalar(hue[0], sat[0], val[0]),
@@ -181,7 +183,7 @@ public class Gear{
 	 * @param borderValue value to be used for a constant border.
 	 * @param dst Output Image.
 	 */
-	private void cvErode(Mat src, Mat kernel, Point anchor, double iterations,
+	private static void cvErode(Mat src, Mat kernel, Point anchor, double iterations,
 		int borderType, Scalar borderValue, Mat dst) {
 		if (kernel == null) {
 			kernel = new Mat();
@@ -205,7 +207,7 @@ public class Gear{
 	 * @param borderValue value to be used for a constant border.
 	 * @param dst Output Image.
 	 */
-	private void cvDilate(Mat src, Mat kernel, Point anchor, double iterations,
+	private static void cvDilate(Mat src, Mat kernel, Point anchor, double iterations,
 	int borderType, Scalar borderValue, Mat dst) {
 		if (kernel == null) {
 			kernel = new Mat();
@@ -226,7 +228,7 @@ public class Gear{
 	 * @param maskSize the size of the mask.
 	 * @param output The image in which to store the output.
 	 */
-	private void findContours(Mat input, boolean externalOnly,
+	private static void findContours(Mat input, boolean externalOnly,
 		List<MatOfPoint> contours) {
 		Mat hierarchy = new Mat();
 		contours.clear();
@@ -258,7 +260,7 @@ public class Gear{
 	 * @param minRatio minimum ratio of width to height
 	 * @param maxRatio maximum ratio of width to height
 	 */
-	private void filterContours(List<MatOfPoint> inputContours, double minArea,
+	private static void filterContours(List<MatOfPoint> inputContours, double minArea,
 		double minPerimeter, double minWidth, double maxWidth, double minHeight, double
 		maxHeight, double[] solidity, double maxVertexCount, double minVertexCount, double
 		minRatio, double maxRatio, List<MatOfPoint> output) {
