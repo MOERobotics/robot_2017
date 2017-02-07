@@ -61,9 +61,9 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
      */
     public void robotInit() {
     	
-    	driveRA.setInverted(true); // 
-    	driveRB.setInverted(true); // 
-    	driveRC.setInverted(true); // 
+    	driveLA.setInverted(true); // 
+    	driveLB.setInverted(true); // 
+    	driveLC.setInverted(true); // 
     	
     	driveLA.enableBrakeMode(true); // 
     	driveLB.enableBrakeMode(true); // 
@@ -99,12 +99,6 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
     		leftEncoder.reset(); // 
     	} // 
     }
-    
-    
-    
-    
-    
-    
     
     public void autonomousInit() {
     	autoLoopCounter = 0;
@@ -163,6 +157,18 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
         	leftMotor = 0.5 * leftMotor; // 
             rightMotor = 0.5 * rightMotor; // 
         } // 
+        
+        if (driveStick.getRawButton(2)) // 
+        { // 
+        	leftMotor = 0.35; // 
+            rightMotor = -0.35; // 
+        } // 
+        
+        else if (driveStick.getRawButton(4)) // 
+        { // 
+        	leftMotor = -0.35; // 
+            rightMotor = 0.35; // 
+        } // 
         driveRobot(leftMotor, rightMotor); // 
         //recommended
         /* 
@@ -181,14 +187,14 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
      */
     
     public void testInit() {
-    	
+    
     }
     
     public void testPeriodic() {
     	LiveWindow.run();
     }
-    
-    
+    //ball advance 5
+    //collector 10
     public void pidWrite(double output) { // 
     	double right = direction - output; // 
     	double left = direction + output; // 
