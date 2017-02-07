@@ -1,3 +1,5 @@
+package org.usfirst.frc.team365.vision;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
