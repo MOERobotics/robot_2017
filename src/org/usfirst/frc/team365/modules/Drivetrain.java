@@ -136,7 +136,7 @@ public class Drivetrain extends RobotModule{
     	driveRobot(left, right);
     }
     
-    public void driveRobot(double leftMotor, double rightMotor){
+    public static void driveRobot(double leftMotor, double rightMotor){
     	outputs.setDriveL1(leftMotor);
     	outputs.setDriveL2(leftMotor);
     	outputs.setDriveL3(leftMotor);
