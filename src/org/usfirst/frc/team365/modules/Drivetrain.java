@@ -2,13 +2,11 @@ package org.usfirst.frc.team365.modules;
 import org.usfirst.frc.team365.math.PIDOut;
 import org.usfirst.frc.team365.util.RobotModule;
 
-import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 //import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -30,17 +28,6 @@ public class Drivetrain extends RobotModule{
 
 	AHRS navX;
 	
-	CANTalon driveLA = new CANTalon(0); // Left 1 
-	CANTalon driveLB = new CANTalon(1); // Left 2
-	CANTalon driveLC = new CANTalon(2); // Left 3
-	//CANTalon driveLD = new CANTalon(15);
-	CANTalon driveRA = new CANTalon(13); // Right 1
-	CANTalon driveRB = new CANTalon(14); // Right 2
-	CANTalon driveRC = new CANTalon(15);  // Right 3
-	//CANTalon driveRD = new CANTalon(4);
-	
-	Joystick driveStick; // the drive stick
-	Joystick funStick; // the function stick
 	Encoder leftEncoder;
 	int autoLoopCounter; // counts the loops of autonomous
 	int autoStep; 
@@ -106,7 +93,7 @@ public class Drivetrain extends RobotModule{
         	outputs.setGearShift(Value.kForward);
         }
         
-        if (driveStick.getTrigger()) {
+        if (inputs.driveStick.getTrigger()) {
         	rightMotor = yJoy;
         	leftMotor = yJoy;
         } else {
@@ -114,7 +101,7 @@ public class Drivetrain extends RobotModule{
         	leftMotor = limitMotor(yJoy + xJoy);
         }
         
-        if (driveStick.getRawButton(8)) {
+        if (inputs.driveStick.getRawButton(8)) {
         	leftMotor = 0.5 * leftMotor;
             rightMotor = 0.5 * rightMotor;
         }
