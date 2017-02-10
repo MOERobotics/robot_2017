@@ -16,9 +16,12 @@ public final class RobotOutputs{
 	private CANTalon driveR2;
 	private CANTalon driveR3;
 	private SpeedController collector;
-	private SpeedController shooter;
+	private SpeedController shooterA;
+	private SpeedController shooterB;
+	private SpeedController feeder;
+	private SpeedController conveyer;
+	private SpeedController azimuth;
 	private SpeedController chute;
-	private SpeedController turret;
 	
 	private DoubleSolenoid gearShift;
 	
@@ -64,13 +67,20 @@ public final class RobotOutputs{
 		collector.set(value);
 	}
 	public void setShooter(double value){
-		shooter.set(value);
+		shooterA.set(value);
+		shooterB.set(value);
+	}
+	public void setFeeder(double value){
+		feeder.set(value);
+	}
+	public void setConveyer(double value){
+		conveyer.set(value);
+	}
+	public void setAzimuth(double value){
+		azimuth.set(value);
 	}
 	public void setChute(double value){
 		chute.set(value);
-	}
-	public void setTurret(double value){
-		turret.set(value);
 	}
 	public void setGearShift(Value value){
 		gearShift.set(value);

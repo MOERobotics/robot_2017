@@ -9,10 +9,10 @@
 	<classpathentry kind="lib" path="lib/navx_frc.jar"/>
 	<classpathentry kind="lib" path="lib/TalonSRXLibJava.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/TalonSRXLibJava.jar"/>
-	<classpathentry kind="lib" path="C:/Users/vasis/OneDrive/MOE/GitHub/robot_2017/lib/javacpp.jar"/>
-	<classpathentry kind="lib" path="C:/Users/vasis/OneDrive/MOE/GitHub/robot_2017/lib/javacv.jar"/>
-	<classpathentry kind="lib" path="C:/Users/vasis/OneDrive/MOE/GitHub/robot_2017/lib/opencv.jar"/>
-	<classpathentry kind="lib" path="C:/Users/vasis/OneDrive/MOE/GitHub/robot_2017/lib/opencv-linux-armhf.jar"/>
-	<classpathentry kind="lib" path="C:/Users/vasis/OneDrive/MOE/GitHub/robot_2017/lib/opencv-windows-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/javacpp.jar"/>
+	<classpathentry kind="lib" path="lib/javacv.jar"/>
+	<classpathentry kind="lib" path="lib/opencv.jar"/>
+	<classpathentry kind="lib" path="lib/opencv-linux-armhf.jar"/>
+	<classpathentry kind="lib" path="lib/opencv-windows-x86_64.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -4,32 +4,48 @@ import org.usfirst.frc.team365.util.RobotModule;
 
 public class Shooter extends RobotModule
 {
-	double shootSpeed;
 	double collectSpeed;
+	double dAngleCoefficientChute;
+	double dAngleCoefficientTurret;
+	double angleDeadBand;
+	
+	boolean runConveyer;
+	boolean runShooter;
+	boolean adjAzimuth;
 	
 	public Shooter(RobotInputs inputs, RobotOutputs outputs){
 		super(inputs, outputs);
 	}
 	
+	/* for when we add in the chute
+	 * 
 	void turnChuteToAngle(double theta){
-		
+		double dTheta = theta;// - inputs.ChuteAngleSensor.get()
+		double chuteTurnSpeed = 0;
+		if(Math.abs(dTheta)>angleDeadBand)
+			chuteTurnSpeed = sigmoid(dTheta, dAngleCoefficientChute);
+		outputs.setChute(chuteTurnSpeed);
 	}
 	void turnChuteDegrees(double theta){
 		
 	}
+	*/
+	
+	/* for when the turret is implemented (if ever)
+	 * 
 	void turnTurretToAngle(double theta){
-		
+		double dTheta = theta;// - inputs.TurretAngleSensor.get()
+		double turretTurnSpeed = 0;
+		if(Math.abs(dTheta)>angleDeadBand)
+			turretTurnSpeed = sigmoid(dTheta, dAngleCoefficientTurret);
+		outputs.setTurret(turretTurnSpeed);
 	}
 	void turnTurretDegrees(double theta){
 		
 	}
-	void runShooter(){
-		outputs.setCollector(collectSpeed);
-		outputs.setShooter(shootSpeed);
-	}
-	void stopShooter(){
-		outputs.setCollector(0);
-		outputs.setShooter(0);
+	*/
+	double sigmoid(double t, double k){
+		return 2/(1+Math.pow(Math.E, -t))-1;
 	}
 	
 	@Override
@@ -70,6 +86,21 @@ public class Shooter extends RobotModule
 	}
 	@Override
 	public void testPeriodic(int loopCounter){
+		boolean runFeeder = inputs.funcStick.getRawButton(1);
+		boolean shooterOn = inputs.funcStick.getRawButton(4);
+		boolean shooterOff = inputs.funcStick.getRawButton(5);
+		boolean azimUp = inputs.funcStick.getRawButton(6);
+		boolean azimDown = inputs.funcStick.getRawButton(7);
+		boolean conveyerOn = inputs.funcStick.getRawButton(8);
+		double shootPow = (inputs.funcStick.getRawAxis(2)+1.0)/2.0;
 		
+		runShooter = shooterOn? true : shooterOff? false : runShooter;
+		runConveyer = conveyerOn? true : shooterOff? false : runConveyer;
+		adjAzimuth = azimUp | azimDown;
+
+		outputs.setShooter(runShooter ? shootPow : 0.0);
+		outputs.setFeeder(runFeeder ? 1.0 : 0.0);
+		outputs.setConveyer(runConveyer ? 1.0 : 0.0);
+		outputs.setAzimuth(adjAzimuth? azimUp? 0.2 : -0.2 : 0.0);
 	}
 }
