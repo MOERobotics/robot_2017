@@ -1,4 +1,4 @@
-package testpackage;
+package org.usfirst.frc.team365.vision;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -13,19 +13,32 @@ import org.bytedeco.javacpp.opencv_core.Mat;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 
+
+
 public class MJPEGserver {
 	private int listeningport;
 	private OpenCVFrameConverter.ToMat FrameToMatConverter = new OpenCVFrameConverter.ToMat();
 	private Set<Socket> socketSet = new HashSet();
 	private ServerSocket serverSocket;
 	private Thread serverThread;
+	
+	
+	
+	
+	/**
+	 * Creates an MJPEG server 
+	 *
+	 * @param  port the local port on which the server should listen
+	 */
 	public MJPEGserver(int port){
 		listeningport = port;
 	}
 
 	 
 
-
+	/**
+	 * Starts the MJPEG server 
+	 */
 	public void start(){
 		serverThread = new Thread() {
 			public void run() {
@@ -53,23 +66,48 @@ public class MJPEGserver {
 		serverThread.start();
 	}
 	
+	
+	
+	/**
+	 * Stops the MJPEG server 
+	 */
 	public void stop() throws IOException, InterruptedException{
 		serverSocket.close();
 		serverThread.join();
 	}
 	
+	
+	
+	
+	/**
+	 * streams a frame
+	 *
+	 * @param  frame a frame that is to be streamed
+	 */
 	public void streamFrame(Frame frame){
 		BytePointer ptr = new BytePointer();
 		opencv_imgcodecs.imencode(".jpeg", FrameToMatConverter.convert(frame), ptr);
 		streamData(ptr.getStringBytes());
 	}
 	
+	
+	/**
+	 * streams a mat
+	 *
+	 * @param  mat a mat that is to be streamed
+	 */
 	public void streamMat(Mat mat){
 		BytePointer ptr = new BytePointer();
 		opencv_imgcodecs.imencode(".jpeg", mat, ptr);
 		streamData(ptr.getStringBytes());
 	}
 	
+	
+	/**
+	 * streams data
+	 *
+	 * @param  data the data (byte[]) to be streamed
+	 */
 	public void streamData(byte[] data){
 		try{
 			for (Socket socket : socketSet) {
@@ -88,9 +126,7 @@ public class MJPEGserver {
 					//e.printStackTrace();
 					socketSet.remove(socket);
 				}
-			}
-			
+			}	
 		} catch(Exception e){/*e.printStackTrace();*/}	
 	}
-
 } //end file

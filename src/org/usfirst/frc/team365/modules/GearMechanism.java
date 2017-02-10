@@ -62,7 +62,7 @@ public class GearMechanism extends RobotModule {
 		//driveEncoder = new Encoder(2, 3, true, EncodingType.k2X);
 	}
 	@Override
-	public void robotPeriodic(){
+	public void robotPeriodic(int loopCounter){
 		
 	}
 	@Override
@@ -70,7 +70,7 @@ public class GearMechanism extends RobotModule {
 		
 	}
 	@Override
-	public void disabledPeriodic(){
+	public void disabledPeriodic(int loopCounter){
 		
 	}
 	@Override
@@ -78,7 +78,7 @@ public class GearMechanism extends RobotModule {
 		
 	}
 	@Override
-	public void autonomousPeriodic(){
+	public void autonomousPeriodic(int loopCounter){
 		
 	}
 	@Override
@@ -87,7 +87,7 @@ public class GearMechanism extends RobotModule {
 		teleopStep = 1;
 	}
 	@Override
-	public void teleopPeriodic(){
+	public void teleopPeriodic(int loopCounter){
 		if (funStick.getRawButton(9)) {
 			collectGear.set(true);
 		}
@@ -150,7 +150,7 @@ public class GearMechanism extends RobotModule {
 		
 	}
 	@Override
-	public void testPeriodic(){
+	public void testPeriodic(int loopCounter){
 		
 	}
 	
