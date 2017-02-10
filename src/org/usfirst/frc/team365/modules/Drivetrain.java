@@ -186,6 +186,66 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
     
     public void testPeriodic() {
     	LiveWindow.run();
+    	
+    	if (driveStick.getRawButton(5)) { //LA
+    		driveLA.set(1);
+    	}
+    	else if (driveStick.getRawButton(6)) {
+    		driveLA.set(-1);
+    	}
+    	else {
+    		driveLA.set(0);
+    	}
+    	
+    	if (driveStick.getRawButton(7)) { //LB
+    		driveLB.set(1);
+    	}
+    	else if (driveStick.getRawButton(8)) {
+    		driveLB.set(-1);
+    	}
+    	else {
+    		driveLB.set(0);
+    	}
+    	
+    	if (driveStick.getRawButton(9)) { //LC
+    		driveLC.set(1);
+    	}
+    	else if (driveStick.getRawButton(10)) {
+    		driveLC.set(-1);
+    	}
+    	else {
+    		driveLC.set(0);
+    	}
+    	
+    	if (driveStick.getRawButton(11)) { //RA
+    		driveRA.set(1);
+    	}
+    	else if (driveStick.getRawButton(12)) {
+    		driveRA.set(-1);
+    	}
+    	else {
+    		driveRA.set(0);
+    	}
+    	
+    	if (funStick.getRawButton(6)) { //RB
+    		driveRB.set(1);
+    	}
+    	else if (funStick.getRawButton(7)) {
+    		driveRB.set(-1);
+    	}
+    	else {
+    		driveRB.set(0);
+    	}
+    	
+    	if (funStick.getRawButton(11)) { //RC
+    		driveRC.set(1);
+    	}
+    	else if (funStick.getRawButton(10)) {
+    		driveRC.set(-1);
+    	}
+    	else {
+    		driveRC.set(0);
+    	}
     }
     
     

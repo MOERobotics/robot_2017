@@ -5,6 +5,8 @@ import org.usfirst.frc.team365.util.RobotModule;
 import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
@@ -23,11 +25,13 @@ public class GearMechanism extends RobotModule {
 	CANTalon driveRC = new CANTalon(3); 
 	//CANTalon driveRD = new CANTalon(4);
 	
+	CANTalon collector = new CANTalon(11);
+	
 	Jaguar leftSide;
 	Jaguar rightSide;
 	
 	Solenoid collectGear;
-	Solenoid releaseGear;
+	DoubleSolenoid releaseGear;
 	Joystick funStick;
 	Encoder driveEncoder;
 	
@@ -52,9 +56,9 @@ public class GearMechanism extends RobotModule {
 		
 		funStick = new Joystick(1);
 		collectGear = new Solenoid(2);
-		releaseGear = new Solenoid(3);
+		releaseGear = new DoubleSolenoid(3,4);
 		collectGear.set(false);
-		releaseGear.set(false);
+		releaseGear.set(Value.kReverse);
 		//driveEncoder = new Encoder(2, 3, true, EncodingType.k2X);
 	}
 	@Override
@@ -84,21 +88,28 @@ public class GearMechanism extends RobotModule {
 	}
 	@Override
 	public void teleopPeriodic(){
-		if (funStick.getRawButton(7)) {
+		if (funStick.getRawButton(9)) {
 			collectGear.set(true);
 		}
 		else {
 			collectGear.set(false);
 		}
 		
-		if (funStick.getRawButton(8)) {
-			releaseGear.set(true);
+		if (funStick.getRawButton(11)) {
+			releaseGear.set(Value.kForward);
 		}
-		else if (!funStick.getRawButton(10)) {
-			releaseGear.set(false);
+		else if (funStick.getRawButton(10)) {
+			releaseGear.set(Value.kReverse);
 		}
 		
-		/*if (funStick.getRawButton(10)) {
+		if (funStick.getRawButton(2)) { //turns [ball] collector on
+			collector.set(1);
+		}
+		else if (funStick.getRawButton(3)) { //turns [ball] collector off
+			collector.set(0);
+		}
+		
+		/*if (funStick.getRawButton(10)) { //need to change from button 10
 			switch (teleopStep) {
 			
 			case 1: //release gear for 1.5 seconds (75 loops)
