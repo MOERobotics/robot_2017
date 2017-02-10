@@ -20,6 +20,11 @@ public final class IOPortPage
 	public static final int DRIVE_R1_PORT = 01;
 	public static final int DRIVE_R2_PORT = 02;
 	public static final int DRIVE_R3_PORT = 03;
+	public static final int SHOOT_SPIN_A = 
+	public static final int SHOOT_SPIN_B = 
+	public static final int SHOOT_FEEDER = 
+	public static final int SHOOT_CONVEYER = 
+	public static final int SHOOT_AZIMUTH = 
 	public static final int SHIFT_FWD_CH  = 00;
 	public static final int SHIFT_BAK_CH  = 01;
 }

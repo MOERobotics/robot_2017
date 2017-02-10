@@ -15,10 +15,13 @@ public final class RobotOutputs{
 	private CANTalon driveR1;
 	private CANTalon driveR2;
 	private CANTalon driveR3;
-	private SpeedController collector;
-	private SpeedController shooter;
+	private CANTalon collector;
+	private CANTalon shooterA;
+	private CANTalon shooterB;
+	private CANTalon feeder;
+	private CANTalon conveyer;
+	private CANTalon azimuth;
 	private SpeedController chute;
-	private SpeedController turret;
 	
 	private DoubleSolenoid gearShift;
 	
@@ -29,6 +32,11 @@ public final class RobotOutputs{
 		driveR1 = new CANTalon(IOPortPage.DRIVE_R1_PORT);
 		driveR2 = new CANTalon(IOPortPage.DRIVE_R2_PORT);
 		driveR3 = new CANTalon(IOPortPage.DRIVE_R3_PORT);
+		shooterA = new CANTalon(IOPortPage.SHOOT_SPIN_A);
+		shooterB = new CANTalon(IOPortPage.SHOOT_SPIN_B);
+		feeder = new CANTalon(IOPortPage.SHOOT_FEEDER);
+		conveyer = new CANTalon(IOPortPage.SHOOT_CONVEYER);
+		azimuth = new CANTalon(IOPortPage.SHOOT_AZIMUTH);
 		gearShift = new DoubleSolenoid(IOPortPage.SHIFT_FWD_CH,IOPortPage.SHIFT_BAK_CH);
 	}
 	public void init(){
@@ -64,13 +72,20 @@ public final class RobotOutputs{
 		collector.set(value);
 	}
 	public void setShooter(double value){
-		shooter.set(value);
+		shooterA.set(value);
+		shooterB.set(value);
+	}
+	public void setFeeder(double value){
+		feeder.set(value);
+	}
+	public void setConveyer(double value){
+		conveyer.set(value);
+	}
+	public void setAzimuth(double value){
+		azimuth.set(value);
 	}
 	public void setChute(double value){
 		chute.set(value);
-	}
-	public void setTurret(double value){
-		turret.set(value);
 	}
 	public void setGearShift(Value value){
 		gearShift.set(value);
