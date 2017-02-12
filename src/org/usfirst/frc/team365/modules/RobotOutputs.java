@@ -6,6 +6,7 @@ import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public final class RobotOutputs{
@@ -24,6 +25,8 @@ public final class RobotOutputs{
 	private SpeedController chute;
 	
 	private DoubleSolenoid gearShift;
+	private DoubleSolenoid releaseGear;
+	private Solenoid collectGear;
 	
 	public RobotOutputs(){
 		driveL1 = new CANTalon(IOPortPage.DRIVE_L1_PORT);
@@ -38,6 +41,7 @@ public final class RobotOutputs{
 		conveyer = new CANTalon(IOPortPage.SHOOT_CONVEYER);
 		azimuth = new CANTalon(IOPortPage.SHOOT_AZIMUTH);
 		gearShift = new DoubleSolenoid(IOPortPage.SHIFT_FWD_CH,IOPortPage.SHIFT_BAK_CH);
+		
 	}
 	public void init(){
 		driveL1.enableBrakeMode(true);
@@ -50,22 +54,22 @@ public final class RobotOutputs{
 		driveR2.setInverted(true);
 		driveR3.setInverted(true);
 	}
-	public void setDriveL1(double value){
+	public void setDriveLA(double value){
 		driveL1.set(value);
 	}
-	public void setDriveL2(double value){
+	public void setDriveLB(double value){
 		driveL2.set(value);
 	}
-	public void setDriveL3(double value){
+	public void setDriveLC(double value){
 		driveL3.set(value);
 	}
-	public void setDriveR1(double value){
+	public void setDriveRA(double value){
 		driveR1.set(value);
 	}
-	public void setDriveR2(double value){
+	public void setDriveRB(double value){
 		driveR2.set(value);
 	}
-	public void setDriveR3(double value){
+	public void setDriveRC(double value){
 		driveR3.set(value);
 	}
 	public void setCollector(double value){
@@ -89,5 +93,11 @@ public final class RobotOutputs{
 	}
 	public void setGearShift(Value value){
 		gearShift.set(value);
+	}
+	public void setGearReleaser(Value value){
+		releaseGear.set(value);
+	}
+	public void setGearCollector(boolean value){
+		collectGear.set(value);
 	}
 }

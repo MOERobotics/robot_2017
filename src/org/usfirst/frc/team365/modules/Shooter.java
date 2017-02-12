@@ -78,21 +78,13 @@ public class Shooter extends RobotModule
 	}
 	@Override
 	public void teleopPeriodic(int loopCounter){
-		
-	}
-	@Override
-	public void testInit(){
-		
-	}
-	@Override
-	public void testPeriodic(int loopCounter){
-		boolean runFeeder = inputs.funcStick.getRawButton(1);
-		boolean shooterOn = inputs.funcStick.getRawButton(4);
-		boolean shooterOff = inputs.funcStick.getRawButton(5);
-		boolean azimUp = inputs.funcStick.getRawButton(6);
-		boolean azimDown = inputs.funcStick.getRawButton(7);
-		boolean conveyerOn = inputs.funcStick.getRawButton(8);
-		double shootPow = (inputs.funcStick.getRawAxis(2)+1.0)/2.0;
+		boolean runFeeder = inputs.funStick.getRawButton(1);
+		boolean shooterOn = inputs.funStick.getRawButton(4);
+		boolean shooterOff = inputs.funStick.getRawButton(5);
+		boolean azimUp = inputs.funStick.getRawButton(6);
+		boolean azimDown = inputs.funStick.getRawButton(7);
+		boolean conveyerOn = inputs.funStick.getRawButton(8);
+		double shootPow = (inputs.funStick.getRawAxis(2)+1.0)/2.0;
 		
 		runShooter = shooterOn? true : shooterOff? false : runShooter;
 		runConveyer = conveyerOn? true : shooterOff? false : runConveyer;
@@ -102,5 +94,13 @@ public class Shooter extends RobotModule
 		outputs.setFeeder(runFeeder ? 1.0 : 0.0);
 		outputs.setConveyer(runConveyer ? 1.0 : 0.0);
 		outputs.setAzimuth(adjAzimuth? azimUp? 0.2 : -0.2 : 0.0);
+	}
+	@Override
+	public void testInit(){
+		
+	}
+	@Override
+	public void testPeriodic(int loopCounter){
+		
 	}
 }

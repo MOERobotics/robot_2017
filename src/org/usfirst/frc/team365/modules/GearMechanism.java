@@ -2,39 +2,9 @@ package org.usfirst.frc.team365.modules;
 
 import org.usfirst.frc.team365.util.RobotModule;
 
-import com.ctre.CANTalon;
-import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Jaguar;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Solenoid;
 
 public class GearMechanism extends RobotModule {
-	
-	AHRS navX;
-	
-	CANTalon driveLA = new CANTalon(12);
-	CANTalon driveLB = new CANTalon(13);
-	CANTalon driveLC = new CANTalon(14);
-	//CANTalon driveLD = new CANTalon(15);
-	CANTalon driveRA = new CANTalon(1);
-	CANTalon driveRB = new CANTalon(2);
-	CANTalon driveRC = new CANTalon(3); 
-	//CANTalon driveRD = new CANTalon(4);
-	
-	CANTalon collector = new CANTalon(11);
-	
-	Jaguar leftSide;
-	Jaguar rightSide;
-	
-	Solenoid collectGear;
-	DoubleSolenoid releaseGear;
-	Joystick funStick;
-	Encoder driveEncoder;
-	
 	int teleopStep;
 	int teleopLoopCounter;
 	
@@ -43,22 +13,13 @@ public class GearMechanism extends RobotModule {
 	}
 	@Override
 	public void robotInit(){
-		driveRA.setInverted(true);
-    	driveRB.setInverted(true);
-    	driveRC.setInverted(true);
-    	
-    	driveLA.enableBrakeMode(true);
-    	driveLB.enableBrakeMode(true);
-    	driveLC.enableBrakeMode(true);
-    	driveRA.enableBrakeMode(true);
-    	driveRB.enableBrakeMode(true);
-    	driveRC.enableBrakeMode(true);
-		
+		/*
 		funStick = new Joystick(1);
 		collectGear = new Solenoid(2);
 		releaseGear = new DoubleSolenoid(3,4);
-		collectGear.set(false);
-		releaseGear.set(Value.kReverse);
+		*/
+		outputs.setGearCollector(false);
+		outputs.setGearReleaser(Value.kReverse);
 		//driveEncoder = new Encoder(2, 3, true, EncodingType.k2X);
 	}
 	@Override
@@ -88,26 +49,26 @@ public class GearMechanism extends RobotModule {
 	}
 	@Override
 	public void teleopPeriodic(int loopCounter){
-		if (funStick.getRawButton(9)) {
-			collectGear.set(true);
+		if (inputs.funStick.getRawButton(9)) {
+			outputs.setGearCollector(true);
 		}
 		else {
-			collectGear.set(false);
+			outputs.setGearCollector(false);
 		}
 		
-		if (funStick.getRawButton(11)) {
-			releaseGear.set(Value.kForward);
+		if (inputs.funStick.getRawButton(11)) {
+			outputs.setGearReleaser(Value.kForward);
 		}
-		else if (funStick.getRawButton(10)) {
-			releaseGear.set(Value.kReverse);
+		else if (inputs.funStick.getRawButton(10)) {
+			outputs.setGearReleaser(Value.kReverse);
 		}
-		
-		if (funStick.getRawButton(2)) { //turns [ball] collector on
+		/*
+		if (inputs.funStick.getRawButton(2)) { //turns [ball] collector on
 			collector.set(1);
 		}
-		else if (funStick.getRawButton(3)) { //turns [ball] collector off
+		else if (inputs.funStick.getRawButton(3)) { //turns [ball] collector off
 			collector.set(0);
-		}
+		}*/
 		
 		/*if (funStick.getRawButton(10)) { //need to change from button 10
 			switch (teleopStep) {

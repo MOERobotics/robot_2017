@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
-//import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,7 +21,6 @@ public class Drivetrain extends RobotModule{
 
 	public Drivetrain(RobotInputs inputs, RobotOutputs outputs) {
 		super(inputs, outputs);
-		// TODO Auto-generated constructor stub
 	}
 
 	AHRS navX;
@@ -112,67 +109,65 @@ public class Drivetrain extends RobotModule{
     	
     }
 	@Override
-    public void testPeriodic(int loopCounter){
-    	LiveWindow.run();
-    	
-    	if (driveStick.getRawButton(5)) { //LA
-    		driveLA.set(1);
+    public void testPeriodic(int loopCounter){    	
+    	if (inputs.driveStick.getRawButton(5)) { //LA
+    		outputs.setDriveLA(1);
     	}
-    	else if (driveStick.getRawButton(6)) {
-    		driveLA.set(-1);
+    	else if (inputs.driveStick.getRawButton(6)) {
+    		outputs.setDriveLA(-1);
     	}
     	else {
-    		driveLA.set(0);
+    		outputs.setDriveLA(0);
     	}
     	
-    	if (driveStick.getRawButton(7)) { //LB
-    		driveLB.set(1);
+    	if (inputs.driveStick.getRawButton(7)) { //LB
+    		outputs.setDriveLB(1);
     	}
-    	else if (driveStick.getRawButton(8)) {
-    		driveLB.set(-1);
+    	else if (inputs.driveStick.getRawButton(8)) {
+    		outputs.setDriveLB(-1);
     	}
     	else {
-    		driveLB.set(0);
+    		outputs.setDriveLB(0);
     	}
     	
-    	if (driveStick.getRawButton(9)) { //LC
-    		driveLC.set(1);
+    	if (inputs.driveStick.getRawButton(9)) { //LC
+    		outputs.setDriveLC(1);
     	}
-    	else if (driveStick.getRawButton(10)) {
-    		driveLC.set(-1);
+    	else if (inputs.driveStick.getRawButton(10)) {
+    		outputs.setDriveLC(-1);
     	}
     	else {
-    		driveLC.set(0);
+    		outputs.setDriveLC(0);
     	}
     	
-    	if (driveStick.getRawButton(11)) { //RA
-    		driveRA.set(1);
+    	if (inputs.driveStick.getRawButton(11)) { //RA
+    		outputs.setDriveRA(1);
     	}
-    	else if (driveStick.getRawButton(12)) {
-    		driveRA.set(-1);
+    	else if (inputs.driveStick.getRawButton(12)) {
+    		outputs.setDriveRA(-1);
     	}
     	else {
-    		driveRA.set(0);
+    		outputs.setDriveRA(0);
     	}
     	
-    	if (funStick.getRawButton(6)) { //RB
-    		driveRB.set(1);
+    	if (inputs.funStick.getRawButton(6)) { //RB
+    		outputs.setDriveRB(1);
     	}
-    	else if (funStick.getRawButton(7)) {
-    		driveRB.set(-1);
+    	else if (inputs.funStick.getRawButton(7)) {
+    		outputs.setDriveRB(-1);
     	}
     	else {
-    		driveRB.set(0);
+    		outputs.setDriveRB(0);
     	}
     	
-    	if (funStick.getRawButton(11)) { //RC
-    		driveRC.set(1);
+    	if (inputs.funStick.getRawButton(11)) { //RC
+    		outputs.setDriveRC(1);
     	}
-    	else if (funStick.getRawButton(10)) {
-    		driveRC.set(-1);
+    	else if (inputs.funStick.getRawButton(10)) {
+    		outputs.setDriveRC(-1);
     	}
     	else {
-    		driveRC.set(0);
+    		outputs.setDriveRC(0);
     	}
     }
 	
@@ -184,12 +179,12 @@ public class Drivetrain extends RobotModule{
     }
     
     public static void driveRobot(double leftMotor, double rightMotor){
-    	outputs.setDriveL1(leftMotor);
-    	outputs.setDriveL2(leftMotor);
-    	outputs.setDriveL3(leftMotor);
-    	outputs.setDriveR1(rightMotor);
-    	outputs.setDriveR2(rightMotor);
-    	outputs.setDriveR3(rightMotor);
+    	outputs.setDriveLA(leftMotor);
+    	outputs.setDriveLB(leftMotor);
+    	outputs.setDriveLC(leftMotor);
+    	outputs.setDriveRA(rightMotor);
+    	outputs.setDriveRB(rightMotor);
+    	outputs.setDriveRC(rightMotor);
     }
     double limitMotor(double motorLimit) {
     	if (motorLimit > 1) return 1;
