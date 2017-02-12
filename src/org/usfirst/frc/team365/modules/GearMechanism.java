@@ -5,22 +5,14 @@ import org.usfirst.frc.team365.util.RobotModule;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class GearMechanism extends RobotModule {
-	int teleopStep;
-	int teleopLoopCounter;
 	
 	public GearMechanism(RobotInputs inputs, RobotOutputs outputs){
 		super(inputs, outputs);
 	}
 	@Override
 	public void robotInit(){
-		/*
-		funStick = new Joystick(1);
-		collectGear = new Solenoid(2);
-		releaseGear = new DoubleSolenoid(3,4);
-		*/
 		outputs.setGearCollector(false);
 		outputs.setGearReleaser(Value.kReverse);
-		//driveEncoder = new Encoder(2, 3, true, EncodingType.k2X);
 	}
 	@Override
 	public void robotPeriodic(int loopCounter){
@@ -44,8 +36,7 @@ public class GearMechanism extends RobotModule {
 	}
 	@Override
 	public void teleopInit(){
-		teleopLoopCounter = 0;
-		teleopStep = 1;
+		
 	}
 	@Override
 	public void teleopPeriodic(int loopCounter){
@@ -114,13 +105,4 @@ public class GearMechanism extends RobotModule {
 	public void testPeriodic(int loopCounter){
 		
 	}
-	
-	/*public void driveRobot(double leftMotor, double rightMotor){
-        driveLA.set(leftMotor);
-        driveLB.set(leftMotor);
-        driveLC.set(leftMotor);
-        driveRA.set(rightMotor);
-        driveRB.set(rightMotor);
-        driveRC.set(rightMotor);
-    }*/
 }

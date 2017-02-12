@@ -2,20 +2,8 @@ package org.usfirst.frc.team365.modules;
 import org.usfirst.frc.team365.math.PIDOut;
 import org.usfirst.frc.team365.util.RobotModule;
 
-import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
-
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
- */
 
 public class Drivetrain extends RobotModule{
 
@@ -23,15 +11,8 @@ public class Drivetrain extends RobotModule{
 		super(inputs, outputs);
 	}
 
-	AHRS navX;
-	
-	Encoder leftEncoder;
-	int autoLoopCounter; // counts the loops of autonomous
 	int autoStep; 
-	int teleopLoopCounter; // 
 	double direction; //
-	
-	DoubleSolenoid gearShift = new DoubleSolenoid(0,1); //
 	
 	PIDOut driveCorrection;
 	
@@ -64,7 +45,6 @@ public class Drivetrain extends RobotModule{
     }
 	@Override
     public void autonomousInit() {
-    	autoLoopCounter = 0;
     	autoStep = 1;
     }
 	@Override
@@ -73,12 +53,10 @@ public class Drivetrain extends RobotModule{
     }
 	@Override
     public void teleopInit(){
-    	teleopLoopCounter = 0;
     	outputs.setGearShift(Value.kForward);
     }
 	@Override
     public void teleopPeriodic(int loopCounter) {
-    	teleopLoopCounter ++;
         double xJoy = inputs.driveStick.getX();
         double yJoy = -inputs.driveStick.getY();
       

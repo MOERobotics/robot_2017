@@ -78,7 +78,7 @@ public class Shooter extends RobotModule
 	}
 	@Override
 	public void teleopPeriodic(int loopCounter){
-		boolean runFeeder = inputs.funStick.getRawButton(1);
+		boolean runIndexer = inputs.funStick.getRawButton(1);
 		boolean shooterOn = inputs.funStick.getRawButton(4);
 		boolean shooterOff = inputs.funStick.getRawButton(5);
 		boolean azimUp = inputs.funStick.getRawButton(6);
@@ -91,7 +91,7 @@ public class Shooter extends RobotModule
 		adjAzimuth = azimUp | azimDown;
 
 		outputs.setShooter(runShooter ? shootPow : 0.0);
-		outputs.setFeeder(runFeeder ? 1.0 : 0.0);
+		outputs.setIndexer(runIndexer ? 1.0 : 0.0);
 		outputs.setConveyer(runConveyer ? 1.0 : 0.0);
 		outputs.setAzimuth(adjAzimuth? azimUp? 0.2 : -0.2 : 0.0);
 	}

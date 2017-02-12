@@ -13,6 +13,7 @@ import org.usfirst.frc.team365.modules.Shooter;
 import org.usfirst.frc.team365.util.RobotModule;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 public class Robot extends IterativeRobot {
 	List<RobotModule>modules;
@@ -27,10 +28,10 @@ public class Robot extends IterativeRobot {
 		RobotOutputs outputs = new RobotOutputs();
 		
 		modules=new ArrayList<>();
-	//	modules.add(new Climber(inputs, outputs));
+		modules.add(new Climber(inputs, outputs));
 		modules.add(new Drivetrain(inputs, outputs));
-	//	modules.add(new GearMechanism(inputs, outputs));
-	//	modules.add(new Shooter(inputs, outputs));
+		modules.add(new GearMechanism(inputs, outputs));
+		modules.add(new Shooter(inputs, outputs));
 	}
 
 	@Override
@@ -80,6 +81,7 @@ public class Robot extends IterativeRobot {
 	}
 	@Override
 	public void testPeriodic() {
+		LiveWindow.run();
 		testLoopCounter++;
 		modules.forEach((x)->x.testPeriodic(testLoopCounter));
 	}

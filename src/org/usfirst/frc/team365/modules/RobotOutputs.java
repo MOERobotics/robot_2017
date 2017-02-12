@@ -19,7 +19,7 @@ public final class RobotOutputs{
 	private CANTalon collector;
 	private CANTalon shooterA;
 	private CANTalon shooterB;
-	private CANTalon feeder;
+	private CANTalon indexer;
 	private CANTalon conveyer;
 	private CANTalon azimuth;
 	private SpeedController chute;
@@ -37,7 +37,7 @@ public final class RobotOutputs{
 		driveR3 = new CANTalon(IOPortPage.DRIVE_R3_PORT);
 		shooterA = new CANTalon(IOPortPage.SHOOT_SPIN_A);
 		shooterB = new CANTalon(IOPortPage.SHOOT_SPIN_B);
-		feeder = new CANTalon(IOPortPage.SHOOT_FEEDER);
+		indexer = new CANTalon(IOPortPage.SHOOT_INDEXER);
 		conveyer = new CANTalon(IOPortPage.SHOOT_CONVEYER);
 		azimuth = new CANTalon(IOPortPage.SHOOT_AZIMUTH);
 		gearShift = new DoubleSolenoid(IOPortPage.SHIFT_FWD_CH,IOPortPage.SHIFT_BAK_CH);
@@ -79,8 +79,8 @@ public final class RobotOutputs{
 		shooterA.set(value);
 		shooterB.set(value);
 	}
-	public void setFeeder(double value){
-		feeder.set(value);
+	public void setIndexer(double value){
+		indexer.set(value);
 	}
 	public void setConveyer(double value){
 		conveyer.set(value);
