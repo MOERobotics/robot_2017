@@ -6,18 +6,20 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PIDController;
 
 public class Drivetrain extends RobotModule{
-
-	public Drivetrain(RobotInputs inputs, RobotOutputs outputs) {
-		super(inputs, outputs);
-	}
-
+	
+	final Value HI_GEAR = Value.kReverse;
+	final Value LO_GEAR = Value.kForward;
+	
 	int autoStep; 
 	double direction; //
 	
 	PIDOut driveCorrection;
-	
 	PIDController driveStraight;
 	
+	public Drivetrain(RobotInputs inputs, RobotOutputs outputs) {
+		super(inputs, outputs);
+	}
+
 	@Override
     public void robotInit(){    	
     	outputs.setGearShift(Value.kReverse);

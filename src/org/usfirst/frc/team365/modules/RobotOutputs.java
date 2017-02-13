@@ -7,7 +7,6 @@ import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.SpeedController;
 
 public final class RobotOutputs{
 	private CANTalon driveL1;
@@ -20,9 +19,8 @@ public final class RobotOutputs{
 	private CANTalon shooterA;
 	private CANTalon shooterB;
 	private CANTalon indexer;
-	private CANTalon conveyer;
+	private CANTalon feeder;
 	private CANTalon azimuth;
-	private SpeedController chute;
 	
 	private DoubleSolenoid gearShift;
 	private DoubleSolenoid releaseGear;
@@ -38,7 +36,7 @@ public final class RobotOutputs{
 		shooterA = new CANTalon(IOPortPage.SHOOT_SPIN_A);
 		shooterB = new CANTalon(IOPortPage.SHOOT_SPIN_B);
 		indexer = new CANTalon(IOPortPage.SHOOT_INDEXER);
-		conveyer = new CANTalon(IOPortPage.SHOOT_CONVEYER);
+		feeder = new CANTalon(IOPortPage.SHOOT_FEEDER);
 		azimuth = new CANTalon(IOPortPage.SHOOT_AZIMUTH);
 		gearShift = new DoubleSolenoid(IOPortPage.SHIFT_FWD_CH,IOPortPage.SHIFT_BAK_CH);
 		
@@ -82,14 +80,11 @@ public final class RobotOutputs{
 	public void setIndexer(double value){
 		indexer.set(value);
 	}
-	public void setConveyer(double value){
-		conveyer.set(value);
+	public void setFeeder(double value){
+		feeder.set(value);
 	}
 	public void setAzimuth(double value){
 		azimuth.set(value);
-	}
-	public void setChute(double value){
-		chute.set(value);
 	}
 	public void setGearShift(Value value){
 		gearShift.set(value);

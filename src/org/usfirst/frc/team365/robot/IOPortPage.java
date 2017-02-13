@@ -13,6 +13,8 @@ public final class IOPortPage
 	public static final int RIGHT_ENCODER_CH_A = 2;
 	public static final int RIGHT_ENCODER_CH_B = 3;
 	
+	public static final int COUNTER_SHOOT_SPEED;
+	
 	public static final Port NAVX_SPI_PORT = SPI.Port.kMXP;
 	public static final byte NAVX_UPDATE_HZ = 50;
 	
@@ -25,7 +27,7 @@ public final class IOPortPage
 	public static final int SHOOT_SPIN_A = 11;
 	public static final int SHOOT_SPIN_B = 12;
 	public static final int SHOOT_INDEXER = 5;
-	public static final int SHOOT_CONVEYER = 4;
+	public static final int SHOOT_FEEDER = 4;
 	public static final int SHOOT_AZIMUTH = 10;
 	
 	public static final int SHIFT_FWD_CH  = 00;

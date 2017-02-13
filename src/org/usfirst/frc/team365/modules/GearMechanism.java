@@ -6,13 +6,18 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class GearMechanism extends RobotModule {
 	
+	final Value GEAR_DN = Value.kForward;
+	final Value GEAR_UP = Value.kReverse;
+	final boolean GEAR_GRAB = true;
+	final boolean GEAR_DROP = false;
+	
 	public GearMechanism(RobotInputs inputs, RobotOutputs outputs){
 		super(inputs, outputs);
 	}
 	@Override
 	public void robotInit(){
-		outputs.setGearCollector(false);
-		outputs.setGearReleaser(Value.kReverse);
+		outputs.setGearCollector(GEAR_DROP);
+		outputs.setGearReleaser(GEAR_UP);
 	}
 	@Override
 	public void robotPeriodic(int loopCounter){
@@ -41,25 +46,18 @@ public class GearMechanism extends RobotModule {
 	@Override
 	public void teleopPeriodic(int loopCounter){
 		if (inputs.funStick.getRawButton(9)) {
-			outputs.setGearCollector(true);
+			outputs.setGearCollector(GEAR_GRAB);
 		}
 		else {
-			outputs.setGearCollector(false);
+			outputs.setGearCollector(GEAR_DROP);
 		}
 		
 		if (inputs.funStick.getRawButton(11)) {
-			outputs.setGearReleaser(Value.kForward);
+			outputs.setGearReleaser(GEAR_UP);
 		}
 		else if (inputs.funStick.getRawButton(10)) {
-			outputs.setGearReleaser(Value.kReverse);
+			outputs.setGearReleaser(GEAR_DN);
 		}
-		/*
-		if (inputs.funStick.getRawButton(2)) { //turns [ball] collector on
-			collector.set(1);
-		}
-		else if (inputs.funStick.getRawButton(3)) { //turns [ball] collector off
-			collector.set(0);
-		}*/
 		
 		/*if (funStick.getRawButton(10)) { //need to change from button 10
 			switch (teleopStep) {
@@ -104,5 +102,23 @@ public class GearMechanism extends RobotModule {
 	@Override
 	public void testPeriodic(int loopCounter){
 		
+	}
+	
+	int gearStep;
+	public void gearRoutine(int loopCounter){
+		switch(gearStep){
+			case 1:
+				
+				break;
+			case 2:
+				
+				break;
+			case 3:
+				
+				break;
+			default:
+				
+				break;
+		}
 	}
 }
