@@ -1,18 +1,21 @@
 package org.usfirst.frc.team365.modules;
 import org.usfirst.frc.team365.robot.SharedVariables;
 import org.usfirst.frc.team365.util.RobotModule;
-
 import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 //import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import java.util.Timer;
+import java.util.TimerTask;
+
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,9 +25,11 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  * directory.
  */
 
-public class Drivetrain extends RobotModule  implements PIDOutput {
+public class Drivetrain extends RobotModule  implements PIDOutput 
+{
 
-	public Drivetrain(RobotInputs inputs, RobotOutputs outputs) {
+	public Drivetrain(RobotInputs inputs, RobotOutputs outputs) 
+	{
 		super(inputs, outputs);
 		// TODO Auto-generated constructor stub
 	}
@@ -44,11 +49,16 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
 	
 	Joystick driveStick; // the drive stick
 	Joystick funStick; // the function stick
-	Encoder leftEncoder;
+	Encoder leftEncoder = new Encoder(0,1,false,EncodingType.k1X);
+	Encoder rightEncoder = new Encoder(2,3,true,EncodingType.k1X);
 	int autoLoopCounter; // counts the loops of autonomous
 	int autoStep; 
 	int teleopLoopCounter; // 
 	double direction; //
+	
+	int autoRoutine;
+	
+	Timer timer;
 	
 	DoubleSolenoid gearShift = new DoubleSolenoid(0,1); //
 	
@@ -59,7 +69,8 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
-    public void robotInit() {
+    public void robotInit() 
+    {
     	
     	driveLA.setInverted(true); // 
     	driveLB.setInverted(true); // 
@@ -89,36 +100,82 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
      * This function is run once each time the robot enters autonomous mode
      */
     public void disabledInit () {
-    	if (driveStraight.isEnabled()) { // 
+    	if (driveStraight.isEnabled()) 
+    	{ // 
     		driveStraight.disable(); // 
     	} // 
     }
     
-    public void disabledPeriodic () {
-    	if(driveStick.getTrigger()) { // 
+    public void disabledPeriodic () 
+    {
+    	if(driveStick.getTrigger()) 
+    	{ // 
     		leftEncoder.reset(); // 
-    	} // 
-    }
+    		rightEncoder.reset();
+    		
+    	} //
+    	if (driveStick.getRawButton(6))
+    	{
+    		autoRoutine = 1;
+    	}
+    	else if (driveStick.getRawButton(8))
+    	{
+    		autoRoutine = 2;
+    	}
+    	else if (driveStick.getRawButton(10))
+    	{
+    		autoRoutine = 3;
+    	}
+    	else if (driveStick.getRawButton(12))
+    	{
+    		autoRoutine = 4;
+    	}
+    	else if (driveStick.getRawButton(11))
+    	{
+    		autoRoutine = 5;
+    	}
+    	}
+   
     
-    public void autonomousInit() {
+    public void autonomousInit() 
+    {
     	autoLoopCounter = 0;
     	autoStep = 1;
     }
 
-    public void autonomousPeriodic() {
+    public void autonomousPeriodic() 
+    {
+    switch(autoRoutine)
+    
+    {
+    case 1: 
+    	if (leftEncoder.getRaw() > 1500) {
+			autoStep = 2;
+			navX.zeroYaw();
+		}
+		else {
+			driveRobot(0.5,0.5);
+		}
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	case 4:
+		break;
+	case 5:
+		break;
+    }
     	
     }
+
+    
    
-    
-    
-    
-    
-    
-    
     /**
      * This function is called once each time the robot enters tele-operated mode
      */
-    public void teleopInit(){
+    public void teleopInit()
+    {
     	teleopLoopCounter = 0; // 
     	gearShift.set(Value.kForward); // 
     	
@@ -143,7 +200,8 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
         	gearShift.set(Value.kForward); // 
         } // 
         
-        if (driveStick.getTrigger()) { // 
+        if (driveStick.getTrigger()) 
+        { // 
         	rightMotor = yJoy; // 
         	leftMotor = yJoy; // 
         } // 
@@ -190,18 +248,21 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
     
     }
     
-    public void testPeriodic() {
+    public void testPeriodic() 
+    {
     	LiveWindow.run();
     }
     //ball advance 5
     //collector 10
-    public void pidWrite(double output) { // 
+    public void pidWrite(double output) 
+    { // 
     	double right = direction - output; // 
     	double left = direction + output; // 
     	driveRobot(left, right); // 
     } // 
     
-    public void driveRobot(double leftMotor, double rightMotor){
+    public void driveRobot(double leftMotor, double rightMotor)
+    	{
         driveLA.set(leftMotor);
         driveLB.set(leftMotor);
         driveLC.set(leftMotor);
@@ -212,7 +273,8 @@ public class Drivetrain extends RobotModule  implements PIDOutput {
         //driveRD.set(rightMotor); 
     	}
    
-    double limitMotor(double motorLimit) { // 
+    double limitMotor(double motorLimit) 	
+    { // 
     	if (motorLimit > 1) return 1; // 
     	else if (motorLimit < -1) return -1; // 
     	else return motorLimit; // 
