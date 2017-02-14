@@ -1,0 +1,31 @@
+****************BUTTON NUMBERS****************
+	Function Stick:
+		1	::	indexer run
+		2	::	collector fw
+		3	::	collector bw
+		4	::	shooter on
+		5	::	shooter off
+		6	::	feeder on
+		7	::	feeder off
+		8	::	
+		9	::	gear collector run
+		10	::	gear dn
+		11	::	gear up
+	Drive Stick:
+		11	::	azimuth up
+		12	::	azimuth dn
+		
+***************FORWARD POLARITY***************
+	Right Drive		::	-
+	Left Drive		::	+
+	Collector		::	?
+	Shooter			::	-
+	Indexer			::	-
+	Feeder			::	-
+	Azimuth			::	?
+	Gear Shift		::	kReverse (HiGear)
+	Gear Releaser	::	kReverse (up)
+	Gear Collector	::	true
+	
+*******************ROUTINES*******************
+	
