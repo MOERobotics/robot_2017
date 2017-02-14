@@ -104,10 +104,13 @@ public class GearMechanism extends RobotModule {
 		
 	}
 	
-	int gearStep;
+	int gearRoutineStep;
+	int loopCounterInit;
 	public void gearRoutine(int loopCounter){
-		switch(gearStep){
-			case 1:
+		if(loopCounterInit==-1)
+			loopCounterInit = loopCounter;
+		switch(gearRoutineStep){
+			case 1: // release gear for 1 sec : 50
 				
 				break;
 			case 2:

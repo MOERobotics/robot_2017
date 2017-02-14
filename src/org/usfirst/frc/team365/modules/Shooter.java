@@ -80,14 +80,14 @@ public class Shooter extends RobotModule
 	@Override
 	public void teleopPeriodic(int loopCounter){
 		boolean runIndexer = inputs.funStick.getRawButton(1);
-		boolean collectorFw = inputs.funStick.getRawButton(2);
-		boolean collectorBw = inputs.funStick.getRawButton(3);
+		boolean azimUp = inputs.funStick.getRawButton(2);
+		boolean azimDown = inputs.funStick.getRawButton(3);
 		boolean shooterOn = inputs.funStick.getRawButton(4);
 		boolean shooterOff = inputs.funStick.getRawButton(5);
 		boolean feederOn = inputs.funStick.getRawButton(6);
 		boolean feederOff = inputs.funStick.getRawButton(7);
-		boolean azimUp = inputs.driveStick.getRawButton(11);
-		boolean azimDown = inputs.driveStick.getRawButton(12);
+		boolean collectorIn = inputs.driveStick.getRawButton(5);
+		boolean collectorOut = inputs.driveStick.getRawButton(6);
 		double shootPow = (inputs.funStick.getRawAxis(2)+1.0)/2.0;
 		
 		runShooter = shooterOn? true : shooterOff? false : runShooter;
@@ -97,7 +97,7 @@ public class Shooter extends RobotModule
 		outputs.setIndexer(runIndexer ? 1.0 : 0.0);
 		outputs.setFeeder(runFeeder ? 1.0 : 0.0);
 		outputs.setAzimuth( azimUp? azimSpeed : azimDown? -azimSpeed : 0.0);
-		outputs.setCollector(collectorFw? collectSpeed : collectorBw? -collectSpeed : 0.0);
+		outputs.setCollector(collectorIn? collectSpeed : collectorOut? -collectSpeed : 0.0);
 	}
 	@Override
 	public void testInit(){
