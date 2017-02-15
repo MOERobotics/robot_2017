@@ -145,13 +145,13 @@ public class Drivetrain extends RobotModule
         	rightMotor = limitMotor(yJoy - xJoy); // 
         	leftMotor = limitMotor(yJoy + xJoy); // 
         	
-        } // 
+        /* // 
         if (inputs.driveStick.getRawButton(8)) // 
         { // 
         	leftMotor = 0.5 * leftMotor; // 
             rightMotor = 0.5 * rightMotor; // 
         } // 
-        
+        */
         if (inputs.driveStick.getRawButton(2)) // 
         { // 
         	leftMotor = 0.35; // 
