@@ -9,39 +9,48 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public final class RobotOutputs{
-	private CANTalon driveL1;
-	private CANTalon driveL2;
-	private CANTalon driveL3;
-	private CANTalon driveR1;
-	private CANTalon driveR2;
-	private CANTalon driveR3;
-	private CANTalon collector;
-	private CANTalon shooterA;
-	private CANTalon shooterB;
-	private CANTalon indexer;
-	private CANTalon feeder;
-	private CANTalon azimuth;
+	private static CANTalon driveL1;
+	private static CANTalon driveL2;
+	private static CANTalon driveL3;
+	private static CANTalon driveR1;
+	private static CANTalon driveR2;
+	private static CANTalon driveR3;
+	private static CANTalon collector;
+	private static CANTalon shooterA;
+	private static CANTalon shooterB;
+	private static CANTalon indexer;
+	private static CANTalon feeder;
+	private static CANTalon azimuth;
+	private static CANTalon climber;
 	
-	private DoubleSolenoid gearShift;
-	private DoubleSolenoid releaseGear;
-	private Solenoid collectGear;
+	private static DoubleSolenoid gearShift;
+	private static DoubleSolenoid releaseGear;
+	private static Solenoid collectGear;
 	
-	public RobotOutputs(){
-		driveL1 = new CANTalon(IOPortPage.DRIVE_L1_PORT);
-		driveL2 = new CANTalon(IOPortPage.DRIVE_L2_PORT);
-		driveL3 = new CANTalon(IOPortPage.DRIVE_L3_PORT);
-		driveR1 = new CANTalon(IOPortPage.DRIVE_R1_PORT);
-		driveR2 = new CANTalon(IOPortPage.DRIVE_R2_PORT);
-		driveR3 = new CANTalon(IOPortPage.DRIVE_R3_PORT);
+	private static boolean notInit = true;
+	private static RobotOutputs out;
+	public static RobotOutputs init(){
+		return notInit?(out = new RobotOutputs()):out;
+	}
+	
+	private RobotOutputs(){
+		driveL1 = new CANTalon(IOPortPage.DRIVE_L1);
+		driveL2 = new CANTalon(IOPortPage.DRIVE_L2);
+		driveL3 = new CANTalon(IOPortPage.DRIVE_L3);
+		driveR1 = new CANTalon(IOPortPage.DRIVE_R1);
+		driveR2 = new CANTalon(IOPortPage.DRIVE_R2);
+		driveR3 = new CANTalon(IOPortPage.DRIVE_R3);
 		shooterA = new CANTalon(IOPortPage.SHOOT_SPIN_A);
 		shooterB = new CANTalon(IOPortPage.SHOOT_SPIN_B);
-		indexer = new CANTalon(IOPortPage.SHOOT_INDEXER);
-		feeder = new CANTalon(IOPortPage.SHOOT_FEEDER);
-		azimuth = new CANTalon(IOPortPage.SHOOT_AZIMUTH);
+		indexer = new CANTalon(IOPortPage.INDEXER);
+		feeder = new CANTalon(IOPortPage.FEEDER);
+		azimuth = new CANTalon(IOPortPage.AZIMUTH);
+		climber = new CANTalon(IOPortPage.CLIMBER);
 		gearShift = new DoubleSolenoid(IOPortPage.SHIFT_FWD_CH,IOPortPage.SHIFT_BAK_CH);
 		
+		motorInit();
 	}
-	public void init(){
+	public void motorInit(){
 		driveL1.enableBrakeMode(true);
 		driveL2.enableBrakeMode(true);
 		driveL3.enableBrakeMode(true);
@@ -94,5 +103,8 @@ public final class RobotOutputs{
 	}
 	public void setGearCollector(boolean value){
 		collectGear.set(value);
+	}
+	public void setClimber(double value){
+		climber.set(value);
 	}
 }

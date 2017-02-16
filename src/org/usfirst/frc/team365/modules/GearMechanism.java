@@ -47,15 +47,13 @@ public class GearMechanism extends RobotModule {
 	public void teleopPeriodic(int loopCounter){
 		if (inputs.funStick.getRawButton(9)) {
 			outputs.setGearCollector(GEAR_GRAB);
-		}
-		else {
+		}else {
 			outputs.setGearCollector(GEAR_DROP);
 		}
 		
 		if (inputs.funStick.getRawButton(11)) {
 			outputs.setGearReleaser(GEAR_UP);
-		}
-		else if (inputs.funStick.getRawButton(10)) {
+		}else if (inputs.funStick.getRawButton(10)) {
 			outputs.setGearReleaser(GEAR_DN);
 		}
 		
@@ -109,15 +107,27 @@ public class GearMechanism extends RobotModule {
 	public void gearRoutine(int loopCounter){
 		if(loopCounterInit==-1)
 			loopCounterInit = loopCounter;
+		int dLoopCounter = loopCounter-loopCounterInit;
 		switch(gearRoutineStep){
 			case 1: // release gear for 1 sec : 50
-				
+				if(dLoopCounter<50){
+					outputs.setGearReleaser(GEAR_DN);
+				}else{
+					outputs.setGearReleaser(GEAR_UP);
+					gearRoutineStep = 2;
+					inputs.leftEncoder.reset();
+					inputs.rightEncoder.reset();
+				}
 				break;
-			case 2:
-				
-				break;
-			case 3:
-				
+			case 2: // back up for 50 iterations
+				int dist = (inputs.leftEncoder.getRaw()+inputs.rightEncoder.getRaw())/2;
+				if(dist>-50){
+					Drivetrain.driveRobot(-0.4, -0.4);
+				}else{
+					Drivetrain.driveRobot(0, 0);
+					inputs.leftEncoder.reset();
+					inputs.rightEncoder.reset();
+				}
 				break;
 			default:
 				

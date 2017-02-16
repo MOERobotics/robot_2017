@@ -1,29 +1,39 @@
 ****************BUTTON NUMBERS****************
 	Function Stick:
 		1	::	indexer run
-		2	::	azimuth up
-		3	::	azimuth dn
+		2	::	azimuth dn
+		3	::	azimuth up
 		4	::	shooter on
 		5	::	shooter off
-		6	::	feeder on
-		7	::	feeder off
-		8	::	
-		9	::	gear collector run
-		10	::	gear dn
-		11	::	gear up
+		6	::	gear up
+		7	::	gear down
+		8	::	feeder on
+		9	::	feeder off
+		10	::	
+		11	::	
 	Drive Stick:
+		1	::	= power
+		2	::	left move
+		3	::	back up distance from boiler
+		4	::	right move
 		5	::	collector out
 		6	::	collector in
+		7	::
 		8	::	shift gear
+		9	::
+		10	::
+		11	::
+		12	::
 		
 ***************FORWARD POLARITY***************
 	Right Drive		::	-
 	Left Drive		::	+
-	Collector		::	?
+	Collector		::	+ .75
 	Shooter			::	-
 	Indexer			::	-
 	Feeder			::	-
 	Azimuth			::	?
+	Climber			::	-
 	Gear Shift		::	kReverse (HiGear)
 	Gear Releaser	::	kReverse (up)
 	Gear Collector	::	true

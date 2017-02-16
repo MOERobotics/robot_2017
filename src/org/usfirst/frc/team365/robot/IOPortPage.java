@@ -18,17 +18,19 @@ public final class IOPortPage
 	public static final Port NAVX_SPI_PORT = SPI.Port.kMXP;
 	public static final byte NAVX_UPDATE_HZ = 50;
 	
-	public static final int DRIVE_L1_PORT = 13;
-	public static final int DRIVE_L2_PORT = 14;
-	public static final int DRIVE_L3_PORT = 15;
-	public static final int DRIVE_R1_PORT = 0;
-	public static final int DRIVE_R2_PORT = 1;
-	public static final int DRIVE_R3_PORT = 2;
+	public static final int DRIVE_L1 = 13;
+	public static final int DRIVE_L2 = 14;
+	public static final int DRIVE_L3 = 15;
+	public static final int DRIVE_R1 = 0;
+	public static final int DRIVE_R2 = 1;
+	public static final int DRIVE_R3 = 2;
+	public static final int CLIMBER = 3;
+	public static final int FEEDER = 4;
+	public static final int INDEXER = 5;
+	public static final int COLLECTOR = 9;
+	public static final int AZIMUTH = 10;
 	public static final int SHOOT_SPIN_A = 11;
 	public static final int SHOOT_SPIN_B = 12;
-	public static final int SHOOT_INDEXER = 5;
-	public static final int SHOOT_FEEDER = 4;
-	public static final int SHOOT_AZIMUTH = 10;
 	
 	public static final int SHIFT_FWD_CH  = 00;
 	public static final int SHIFT_BAK_CH  = 01;

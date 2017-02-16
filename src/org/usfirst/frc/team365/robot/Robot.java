@@ -25,7 +25,7 @@ public class Robot extends IterativeRobot {
 	public Robot(){
 		
 		RobotInputs inputs = new RobotInputs();
-		RobotOutputs outputs = new RobotOutputs();
+		RobotOutputs outputs = RobotOutputs.init();
 		
 		modules=new ArrayList<>();
 		modules.add(new Climber(inputs, outputs));
