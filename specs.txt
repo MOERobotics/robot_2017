@@ -3,13 +3,13 @@
 		1	::	indexer run
 		2	::	azimuth dn
 		3	::	azimuth up
-		4	::	shooter on
-		5	::	shooter off
+		4	::	shooter on & collector on in
+		5	::	shooter off & collector off
 		6	::	gear up
 		7	::	gear down
 		8	::	feeder on
 		9	::	feeder off
-		10	::	
+		10	::	\gear collector flap thing ::tmp
 		11	::	
 	Drive Stick:
 		1	::	= power
