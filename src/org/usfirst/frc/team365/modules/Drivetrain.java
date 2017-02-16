@@ -4,6 +4,7 @@ import org.usfirst.frc.team365.math.PIDOut;
 import org.usfirst.frc.team365.util.RobotModule;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 
 public class Drivetrain extends RobotModule
@@ -14,7 +15,8 @@ public class Drivetrain extends RobotModule
 	int autoStep;
 	double direction; //
 	int autoRoutine;
-
+	double distance;
+	
 	PIDOut driveCorrection;
 	PIDController driveStraight;
 
@@ -78,15 +80,32 @@ public class Drivetrain extends RobotModule
 	@Override
 	public void autonomousInit()
 	{
-		autoStep = 1;
+		//autoStep = 1;
+		
+		}
+	private Object abs(double d) {
+		// TODO Auto-generated method stub
+		return null;
+	
 	}
 	@Override
 	public void autonomousPeriodic(int loopCounter)
 	{
+		
+		if (Math.abs(inputs.leftEncoder.getRaw()) > Math.abs(inputs.rightEncoder.getRaw()))
+		{
+		distance = inputs.leftEncoder.getRaw();
+		}
+		else
+		{
+		distance = inputs.rightEncoder.getRaw();
+		}
+		
+		
 		switch (autoRoutine)
 		{
 			case 1:
-				if (inputs.leftEncoder.getRaw() > 1500)
+				if (distance > 1500)
 				{
 					autoStep = 2;
 					inputs.navx.zeroYaw();
@@ -97,12 +116,48 @@ public class Drivetrain extends RobotModule
 				}
 				break;
 			case 2:
+				if (distance > 1501)
+				{
+					autoStep = 2;
+					inputs.navx.zeroYaw();
+				}
+				else
+				{
+					driveRobot(0.5, 0.5);
+				}
 				break;
 			case 3:
+				if (distance > 1502)
+				{
+					autoStep = 2;
+					inputs.navx.zeroYaw();
+				}
+				else
+				{
+					driveRobot(0.5, 0.5);
+				}
 				break;
 			case 4:
+				if (distance > 1503)
+				{
+					autoStep = 2;
+					inputs.navx.zeroYaw();
+				}
+				else
+				{
+					driveRobot(0.5, 0.5);
+				}
 				break;
 			case 5:
+				if (distance > 1504)
+				{
+					autoStep = 2;
+					inputs.navx.zeroYaw();
+				}
+				else
+				{
+					driveRobot(0.5, 0.5);
+				}
 				break;
 		}
 	}
@@ -172,7 +227,6 @@ public class Drivetrain extends RobotModule
 	@Override
 	public void testInit()
 	{
-
 	}
 	@Override
 	public void testPeriodic(int loopCounter)
