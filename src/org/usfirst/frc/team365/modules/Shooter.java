@@ -84,14 +84,15 @@ public class Shooter extends RobotModule
 		boolean azimDown = inputs.funStick.getRawButton(3);
 		boolean shooterOn = inputs.funStick.getRawButton(4);
 		boolean shooterOff = inputs.funStick.getRawButton(5);
-		boolean feederOn = inputs.funStick.getRawButton(6);
-		boolean feederOff = inputs.funStick.getRawButton(7);
+		boolean feederOn = inputs.funStick.getRawButton(8);
+		boolean feederOff = inputs.funStick.getRawButton(9);
 		boolean collectorIn = inputs.driveStick.getRawButton(5);
 		boolean collectorOut = inputs.driveStick.getRawButton(6);
 		double shootPow = (inputs.funStick.getRawAxis(2)+1.0)/2.0;
 		
 		runShooter = shooterOn? true : shooterOff? false : runShooter;
 		runFeeder = feederOn? true : feederOff? false : runFeeder;
+		collectorIn = shooterOn? true: shooterOff? false: collectorIn;
 
 		outputs.setShooter(runShooter ? shootPow : 0.0);
 		outputs.setIndexer(runIndexer ? 1.0 : 0.0);

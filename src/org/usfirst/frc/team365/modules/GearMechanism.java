@@ -45,15 +45,15 @@ public class GearMechanism extends RobotModule {
 	}
 	@Override
 	public void teleopPeriodic(int loopCounter){
-		if (inputs.funStick.getRawButton(9)) {
+		if (inputs.funStick.getRawButton(10)) {
 			outputs.setGearCollector(GEAR_GRAB);
 		}else {
 			outputs.setGearCollector(GEAR_DROP);
 		}
 		
-		if (inputs.funStick.getRawButton(11)) {
+		if (inputs.funStick.getRawButton(6)) {
 			outputs.setGearReleaser(GEAR_UP);
-		}else if (inputs.funStick.getRawButton(10)) {
+		}else if (inputs.funStick.getRawButton(7)) {
 			outputs.setGearReleaser(GEAR_DN);
 		}
 		
