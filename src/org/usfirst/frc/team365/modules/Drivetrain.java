@@ -107,6 +107,7 @@ public class Drivetrain extends RobotModule
 		}
 	}
 	@Override
+
 	public void teleopInit()
 	{
 		outputs.setGearShift(LO_GEAR); //
@@ -119,50 +120,30 @@ public class Drivetrain extends RobotModule
 
 		double leftMotor;
 		double rightMotor;
-		if (inputs.driveStick.getRawButton(6))
-		{
+		if (inputs.driveStick.getRawButton(6)){
 			outputs.setGearShift(HI_GEAR);
-		}
-		else
-		{
+		}else{
 			outputs.setGearShift(LO_GEAR);
 		}
 
-		if (inputs.driveStick.getTrigger())
-		{
+		if (inputs.driveStick.getTrigger()){
 			rightMotor = yJoy;
 			leftMotor = yJoy;
-		}
-		else
-		{
+		}else{
 			rightMotor = limitMotor(yJoy - xJoy);
 			leftMotor = limitMotor(yJoy + xJoy);
 		}
-		if (inputs.driveStick.getTrigger())
-		{ //
-			rightMotor = yJoy; //
-			leftMotor = yJoy; //
-		} //
-		else
-		{ //
-			rightMotor = limitMotor(yJoy - xJoy); //
-			leftMotor = limitMotor(yJoy + xJoy); //
-
-		} //
-		if (inputs.driveStick.getRawButton(8)) //
-		{ //
+		/* is no longeer needed per specs
+		if (inputs.driveStick.getRawButton(8)){ //
 			leftMotor = 0.5 * leftMotor; //
 			rightMotor = 0.5 * rightMotor; //
 		} //
-
+		*/
 		if (inputs.driveStick.getRawButton(2)) //
 		{ //
 			leftMotor = 0.35; //
 			rightMotor = -0.35; //
-		} //
-
-		else if (inputs.driveStick.getRawButton(4)) //
-		{ //
+		} else if (inputs.driveStick.getRawButton(4)) { //
 			leftMotor = -0.35; //
 			rightMotor = 0.35; //
 		} //
