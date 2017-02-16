@@ -51,15 +51,21 @@ public final class RobotOutputs{
 		motorInit();
 	}
 	public void motorInit(){
+		driveR1.setInverted(true);
+		driveR2.setInverted(true);
+		driveR3.setInverted(true);
+		shooterA.setInverted(true);
+		shooterB.setInverted(true);
+		indexer.setInverted(true);
+		feeder.setInverted(true);
+		climber.setInverted(true);
+		
 		driveL1.enableBrakeMode(true);
 		driveL2.enableBrakeMode(true);
 		driveL3.enableBrakeMode(true);
 		driveR1.enableBrakeMode(true);
 		driveR2.enableBrakeMode(true);
 		driveR3.enableBrakeMode(true);
-		driveR1.setInverted(true);
-		driveR2.setInverted(true);
-		driveR3.setInverted(true);
 	}
 	public void setDriveLA(double value){
 		driveL1.set(value);
@@ -104,7 +110,14 @@ public final class RobotOutputs{
 	public void setGearCollector(boolean value){
 		collectGear.set(value);
 	}
+	final double climberLoad = 1;
+	final double climberPowInc = 5;
 	public void setClimber(double value){
+		if(climber.getOutputCurrent()>climberLoad){
+			value=Math.tanh(value*climberPowInc);
+		}climber.set(value);
+	}
+	public void setClimberRaw(double value){
 		climber.set(value);
 	}
 }
