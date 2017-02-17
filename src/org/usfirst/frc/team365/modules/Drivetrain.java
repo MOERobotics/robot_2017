@@ -4,7 +4,6 @@ import org.usfirst.frc.team365.math.PIDOut;
 import org.usfirst.frc.team365.util.RobotModule;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 
 public class Drivetrain extends RobotModule
@@ -82,11 +81,6 @@ public class Drivetrain extends RobotModule
 	{
 		//autoStep = 1;
 		
-		}
-	private Object abs(double d) {
-		// TODO Auto-generated method stub
-		return null;
-	
 	}
 	@Override
 	public void autonomousPeriodic(int loopCounter)
