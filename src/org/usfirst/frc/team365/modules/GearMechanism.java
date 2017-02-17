@@ -56,42 +56,6 @@ public class GearMechanism extends RobotModule {
 		}else if (inputs.funStick.getRawButton(7)) {
 			outputs.setGearReleaser(GEAR_DN);
 		}
-		
-		/*if (funStick.getRawButton(10)) { //need to change from button 10
-			switch (teleopStep) {
-			
-			case 1: //release gear for 1.5 seconds (75 loops)
-				if (teleopLoopCounter > 75) {
-					releaseGear.set(false); //do I need this?
-					teleopStep = 2;
-					driveEncoder.reset();
-				}
-				else {
-					releaseGear.set(true);
-					teleopLoopCounter++;
-				}
-				break;
-				
-			case 2: //back up for 2 seconds (100 loops)
-				if (driveEncoder.getRaw() < -100) { //teleopLoopCounter > 175
-					teleopStep = 3;
-					driveEncoder.reset();
-				}
-				else {
-					driveRobot(-0.4, -0.4);
-				}
-				break;
-				
-			case 3: //stop
-				driveRobot(0, 0);
-				break;
-			}
-		}
-		else {
-			teleopStep = 1;
-			teleopLoopCounter = 0;
-			driveEncoder.reset();
-		}*/
 	}
 	@Override
 	public void testInit(){
@@ -120,8 +84,8 @@ public class GearMechanism extends RobotModule {
 				}
 				break;
 			case 2: // back up for 50 iterations
-				int dist = (inputs.leftEncoder.getRaw()+inputs.rightEncoder.getRaw())/2;
-				if(dist>-50){
+				int dist = inputs.getDriveEncoderRaw();
+				if(dist<50){
 					Drivetrain.driveRobot(-0.4, -0.4);
 				}else{
 					Drivetrain.driveRobot(0, 0);
