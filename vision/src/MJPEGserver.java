@@ -1,12 +1,13 @@
-package org.usfirst.frc.team365.vision;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.opencv_imgcodecs;
 import org.bytedeco.javacpp.opencv_core.Mat;
@@ -14,11 +15,10 @@ import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 
 
-
 public class MJPEGserver {
 	private int listeningport;
 	private OpenCVFrameConverter.ToMat FrameToMatConverter = new OpenCVFrameConverter.ToMat();
-	private Set<Socket> socketSet = new HashSet();
+	private Set<clientThread> socketSet = new HashSet();
 	private ServerSocket serverSocket;
 	private Thread serverThread;
 	
@@ -48,15 +48,9 @@ public class MJPEGserver {
 						Socket socket = serverSocket.accept();
 						socket.setSoTimeout(2);
 						System.out.println("Client connected");
-
-						OutputStream outputStream = socket.getOutputStream();
-						outputStream.write(
-								("HTTP/1.0 200 OK\n" + "Server: YourServerName\r\n" + "Connection: close\r\n" + "Max-Age: 0\r\n"
-										+ "Expires: 0\r\n" + "Cache-Control: no-cache, private\r\n" + "Pragma: no-cache\r\n"
-										+ "Content-Type: multipart/x-mixed-replace; " + "boundary=--BoundaryString\r\n\r\n")
-												.getBytes());
-						outputStream.flush();
-						socketSet.add(socket);
+						clientThread t = new clientThread(socket);
+						t.start();
+						socketSet.add(t);
 					}
 				} catch (Exception e) {
 					//e.printStackTrace();
@@ -71,9 +65,14 @@ public class MJPEGserver {
 	/**
 	 * Stops the MJPEG server 
 	 */
-	public void stop() throws IOException, InterruptedException{
-		serverSocket.close();
-		serverThread.join();
+	public void stop() {
+		try {
+			serverThread.join();
+			serverSocket.close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -110,23 +109,76 @@ public class MJPEGserver {
 	 */
 	public void streamData(byte[] data){
 		try{
-			for (Socket socket : socketSet) {
+			for (
+				Iterator<clientThread> i = socketSet.iterator();
+				i.hasNext();
+			) {
+				clientThread t = i.next();
 				try {
-					OutputStream outputStream = socket.getOutputStream();
-					outputStream.write((
-					        "--BoundaryString\r\n" +
-					        "Content-type: image/jpg\r\n" +
-					        "Content-Length: " +
-					        data.length +
-					        "\r\n\r\n").getBytes());
-					    outputStream.write(data);
-					    outputStream.write("\r\n\r\n".getBytes());
-					    outputStream.flush();
+					t.queueWrite(data);
 				} catch (Exception e) {
-					//e.printStackTrace();
-					socketSet.remove(socket);
+					t.join();
+					i.remove();
 				}
-			}	
-		} catch(Exception e){/*e.printStackTrace();*/}	
+			}
+		} catch(Exception e){e.printStackTrace();}
+	}
+
+	class clientThread extends Thread {
+		public Socket socket;
+		public OutputStream outputStream;
+		byte[] newFrame = null;
+		byte[] oldFrame = null; //just a pointer
+		boolean online;
+
+		public clientThread (Socket socket) throws java.lang.Exception {
+			online=true;
+			this.socket       = socket;
+			this.outputStream = socket.getOutputStream();
+			outputStream.write((
+				"HTTP/1.0 200 OK\r\n" +
+				"Server: YourServerName\r\n" +
+				"Connection: close\r\n" +
+				"Max-Age: 0\r\n" +
+				"Expires: 0\r\n" +
+				"Cache-Control: no-cache, private\r\n" +
+				"Pragma: no-cache\r\n" +
+				"Content-Type: multipart/x-mixed-replace; " +
+				"boundary=--BoundaryString\r\n\r\n"
+			).getBytes());
+			outputStream.flush();
+		}
+
+		public void queueWrite(byte[] frame) throws IOException {
+			if (!online) throw new IOException("Socket failed, waiting for close");
+			newFrame = frame;
+		}
+
+		public void run() {
+			while (true) try {
+				byte[] frame = newFrame; //get ptr now, use it for rest of loop
+				if (frame == oldFrame) {
+					Thread.sleep(50);
+					continue;
+				}
+				outputStream.write((
+					"--BoundaryString\r\n" +
+					"Content-type: image/jpg\r\n" +
+					"Content-Length: " +
+					frame.length +
+					"\r\n\r\n"
+				).getBytes());
+				outputStream.write(frame);
+				outputStream.write("\r\n\r\n".getBytes());
+				outputStream.flush();
+
+			} catch (java.lang.Exception e) {
+				break;
+				//e.printStackTrace();
+			}
+			online = false;
+		}
+
+
 	}
 } //end file
