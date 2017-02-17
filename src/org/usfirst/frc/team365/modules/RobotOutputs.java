@@ -66,6 +66,7 @@ public final class RobotOutputs{
 		driveR1.enableBrakeMode(true);
 		driveR2.enableBrakeMode(true);
 		driveR3.enableBrakeMode(true);
+		climber.enableBrakeMode(true);
 	}
 	public void setDriveLA(double value){
 		driveL1.set(value);
@@ -110,8 +111,8 @@ public final class RobotOutputs{
 	public void setGearCollector(boolean value){
 		collectGear.set(value);
 	}
-	final double climberLoad = 1;
-	final double climberPowInc = 5;
+	final private double climberLoad = 1;
+	final private double climberPowInc = 5;
 	public void setClimber(double value){
 		if(climber.getOutputCurrent()>climberLoad){
 			value=Math.tanh(value*climberPowInc);

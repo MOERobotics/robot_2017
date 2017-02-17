@@ -30,4 +30,7 @@ public class RobotInputs{
 	public final Counter shooterSpeed = new Counter(
 		IOPortPage.COUNTER_SHOOT_SPEED
 	);
+	public int getDriveEncoderRaw(){
+		return Math.max(Math.abs(leftEncoder.getRaw()), Math.abs(rightEncoder.getRaw()));
+	}
 }
