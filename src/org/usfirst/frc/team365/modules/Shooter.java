@@ -4,8 +4,8 @@ import org.usfirst.frc.team365.util.RobotModule;
 
 public class Shooter extends RobotModule
 {
-	double collectSpeed;
-	double azimSpeed;
+	double collectSpeed=0.75;
+	double azimSpeed=0.25;
 	
 	double dAngleCoefficientChute;
 	double dAngleCoefficientTurret;
