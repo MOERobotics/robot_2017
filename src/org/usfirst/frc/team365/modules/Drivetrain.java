@@ -17,6 +17,13 @@ public class Drivetrain extends RobotModule
 	int autoRoutine;
 	double distance;
 	
+	double currentYaw;
+	double lastOffYaw;
+	double turnSum;
+	double kDer;
+	double straightSum;
+	double kProp;
+	
 	PIDOut driveCorrection;
 	PIDController driveStraight;
 
@@ -83,15 +90,11 @@ public class Drivetrain extends RobotModule
 		//autoStep = 1;
 		
 		}
-	private Object abs(double d) {
-		// TODO Auto-generated method stub
-		return null;
 	
-	}
 	@Override
 	public void autonomousPeriodic(int loopCounter)
 	{
-		
+		currentYaw = inputs.navx.getYaw();
 		if (Math.abs(inputs.leftEncoder.getRaw()) > Math.abs(inputs.rightEncoder.getRaw()))
 		{
 		distance = inputs.leftEncoder.getRaw();
@@ -105,20 +108,14 @@ public class Drivetrain extends RobotModule
 		switch (autoRoutine)
 		{
 			case 1:
-				if (distance > 1500)
-				{
-					autoStep = 2;
-					inputs.navx.zeroYaw();
-				}
-				else
-				{
-					driveRobot(0.5, 0.5);
-				}
+				turnToAngle(-10);
+				auto1(currentYaw);
+				
 				break;
 			case 2:
-				if (distance > 1501)
+				if (distance > 1500)
 				{
-					autoStep = 2;
+					autoStep = 3;
 					inputs.navx.zeroYaw();
 				}
 				else
@@ -127,9 +124,9 @@ public class Drivetrain extends RobotModule
 				}
 				break;
 			case 3:
-				if (distance > 1502)
+				if (distance > 1500)
 				{
-					autoStep = 2;
+					autoStep = 4;
 					inputs.navx.zeroYaw();
 				}
 				else
@@ -138,9 +135,9 @@ public class Drivetrain extends RobotModule
 				}
 				break;
 			case 4:
-				if (distance > 1503)
+				if (distance > 1500)
 				{
-					autoStep = 2;
+					autoStep = 5;
 					inputs.navx.zeroYaw();
 				}
 				else
@@ -149,9 +146,9 @@ public class Drivetrain extends RobotModule
 				}
 				break;
 			case 5:
-				if (distance > 1504)
+				if (distance > 1500)
 				{
-					autoStep = 2;
+					autoStep = 6;
 					inputs.navx.zeroYaw();
 				}
 				else
@@ -325,6 +322,78 @@ public class Drivetrain extends RobotModule
 		else return motorLimit; //
 	} //
 
+	public void auto1(double currentYaw) 
+	
+	{
+		if (distance > 5350)
+		{
+			
+			
+			while (currentYaw < 10) {					
+				driveRobot(-.3, 0.3);
+			}
+			for (inputs.leftLight.get(); inputs.leftLight.get() == false;)
+			{
+				driveRobot(.3, -0.3);
+			}
+		
+			
+			
+		
+		}
+		else
+		{
+			driveRobot(0.5, 0.5);
+			distance++;
+		}
+	}
+	
+	public void turnToAngle (double setBearing)
+	{
+		currentYaw = inputs.navx.getYaw();
+		double offYaw = setBearing - currentYaw;
+		
+		if (offYaw * lastOffYaw <= 0)
+		{
+			turnSum = 0;
+		}
+		if(offYaw > 0.6 || offYaw < -0.6)
+		{
+			if (offYaw < 20 && offYaw > -20) 
+			{
+				if (offYaw > 0) turnSum = turnSum = 0.01;
+				else turnSum = turnSum - 0.01;
+			}
+			double newPower = .02 * offYaw + turnSum + kDer * (offYaw - lastOffYaw);
+			if (newPower > 0.6) newPower = 0.6;
+			else if (newPower < -0.6) newPower = -0.6;
+			
+			driveRobot(newPower, -newPower);
+			lastOffYaw = offYaw;
+		}
+		else {
+			driveRobot(0,0);
+			lastOffYaw = offYaw;
+		}
+	}
+	
+	void goStraight (double setBearing, double speed) 
+	{
+	currentYaw = inputs.navx.getYaw();
+	double offYaw = setBearing - currentYaw;
+	
+	if (offYaw > 0.7 || offYaw < -0.7) {
+		if (offYaw > 0 && offYaw < 6) straightSum = straightSum + 0.0005;
+		else if (offYaw < 0 && offYaw > -6) straightSum = straightSum - 0.0005;
+	}
+	else offYaw = 0;
+	
+	double newPower = kProp * offYaw + straightSum;
+	double leftSide = speed + newPower;
+	double rightSide = speed - newPower;
+	driveRobot(leftSide, rightSide);
+	}
+	
 	public static void driveRobot(double leftMotor, double rightMotor)
 	{
 		outputs.setDriveLA(leftMotor);
