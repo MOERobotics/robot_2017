@@ -5,6 +5,8 @@ import org.usfirst.frc.team365.robot.IOPortPage;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Counter;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -21,15 +23,21 @@ public class RobotInputs{
 	);
 	public final Encoder leftEncoder = new Encoder(
 		IOPortPage.LEFT_ENCODER_CH_A, 
-		IOPortPage.LEFT_ENCODER_CH_B
+		IOPortPage.LEFT_ENCODER_CH_B,
+		false,
+		EncodingType.k1X
 	);
 	public final Encoder rightEncoder = new Encoder(
 		IOPortPage.RIGHT_ENCODER_CH_A, 
-		IOPortPage.RIGHT_ENCODER_CH_B
+		IOPortPage.RIGHT_ENCODER_CH_B,
+		true,
+		EncodingType.k1X
 	);
 	public final Counter shooterSpeed = new Counter(
 		IOPortPage.COUNTER_SHOOT_SPEED
 	);
+	public final DigitalInput lightRight = new DigitalInput(4);
+	public final DigitalInput ligtLeft = new DigitalInput(5);
 	public int getDriveEncoderRaw(){
 		return Math.max(Math.abs(leftEncoder.getRaw()), Math.abs(rightEncoder.getRaw()));
 	}

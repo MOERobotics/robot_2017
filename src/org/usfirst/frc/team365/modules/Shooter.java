@@ -88,16 +88,16 @@ public class Shooter extends RobotModule
 		boolean feederOff = inputs.funStick.getRawButton(9);
 		boolean collectorIn = inputs.driveStick.getRawButton(5);
 		boolean collectorOut = inputs.driveStick.getRawButton(6);
-		double shootPow = (inputs.funStick.getRawAxis(2)+1.0)/2.0;
+		double shootPow = (inputs.driveStick.getRawAxis(2)+1.0)/2.0;
 		
 		runShooter = shooterOn? true : shooterOff? false : runShooter;
 		runFeeder = feederOn? true : feederOff? false : runFeeder;
-		collectorIn = shooterOn? true: shooterOff? false: collectorIn;
+		collectorIn = runShooter? true: collectorIn;
 
 		outputs.setShooter(runShooter ? shootPow : 0.0);
 		outputs.setIndexer(runIndexer ? 1.0 : 0.0);
-		outputs.setFeeder(runFeeder ? 1.0 : 0.0);
-		outputs.setAzimuth( azimUp? azimSpeed : azimDown? -azimSpeed : 0.0);
+		outputs.setFeeder(runFeeder ? .75 : 0.0);
+		outputs.setAzimuth( azimUp? -azimSpeed : azimDown? azimSpeed : 0.0);
 		outputs.setCollector(collectorIn? collectSpeed : collectorOut? -collectSpeed : 0.0);
 	}
 	@Override

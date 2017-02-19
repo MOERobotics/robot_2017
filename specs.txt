@@ -40,3 +40,16 @@
 	
 *******************ROUTINES*******************
 	
+	
+*******************PRINTOUT*******************
+	left light
+	right light
+	left encoder
+	right encoder
+	shoot power
+	60/12*shoot period
+	azimuth
+	climber amp
+	yaw
+	pitch
+	roll

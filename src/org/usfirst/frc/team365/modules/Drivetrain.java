@@ -169,7 +169,7 @@ public class Drivetrain extends RobotModule
 
 		double leftMotor;
 		double rightMotor;
-		if (inputs.driveStick.getRawButton(6)){
+		if (inputs.driveStick.getRawButton(8)){
 			outputs.setGearShift(HI_GEAR);
 		}else{
 			outputs.setGearShift(LO_GEAR);

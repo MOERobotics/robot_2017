@@ -32,7 +32,7 @@ public class Climber extends RobotModule
 	@Override
 	public void teleopPeriodic(int loopCounter){
 		if(inputs.funStick.getY()>.5)
-			outputs.setClimber(0.5);
+			outputs.setClimberRaw(0.5);
 	}
 	@Override
 	public void testInit(){

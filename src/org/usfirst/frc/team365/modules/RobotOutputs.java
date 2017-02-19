@@ -9,44 +9,42 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public final class RobotOutputs{
-	private static CANTalon driveL1;
-	private static CANTalon driveL2;
-	private static CANTalon driveL3;
-	private static CANTalon driveR1;
-	private static CANTalon driveR2;
-	private static CANTalon driveR3;
-	private static CANTalon collector;
-	private static CANTalon shooterA;
-	private static CANTalon shooterB;
-	private static CANTalon indexer;
-	private static CANTalon feeder;
-	private static CANTalon azimuth;
-	private static CANTalon climber;
+	private CANTalon driveL1;
+	private CANTalon driveL2;
+	private CANTalon driveL3;
+	private CANTalon driveR1;
+	private CANTalon driveR2;
+	private CANTalon driveR3;
+	private CANTalon collector;
+	private CANTalon shooterA;
+	private CANTalon shooterB;
+	private CANTalon indexer;
+	private CANTalon feeder;
+	private CANTalon azimuth;
+	private CANTalon climber;
 	
-	private static DoubleSolenoid gearShift;
-	private static DoubleSolenoid releaseGear;
-	private static Solenoid collectGear;
+	private DoubleSolenoid gearShift;
+	private DoubleSolenoid releaseGear;
+	private Solenoid collectGear;
 	
-	private static boolean notInit = true;
-	private static RobotOutputs out;
-	public static RobotOutputs init(){
-		return notInit?(out = new RobotOutputs()):out;
-	}
-	
-	private RobotOutputs(){
-		driveL1 = new CANTalon(IOPortPage.DRIVE_L1);
+	public RobotOutputs(){
+		driveL1 = new CANTalon(IOPortPage.DRIVE_L1);//
 		driveL2 = new CANTalon(IOPortPage.DRIVE_L2);
 		driveL3 = new CANTalon(IOPortPage.DRIVE_L3);
 		driveR1 = new CANTalon(IOPortPage.DRIVE_R1);
 		driveR2 = new CANTalon(IOPortPage.DRIVE_R2);
 		driveR3 = new CANTalon(IOPortPage.DRIVE_R3);
+		collector = new CANTalon(IOPortPage.COLLECTOR);
 		shooterA = new CANTalon(IOPortPage.SHOOT_SPIN_A);
 		shooterB = new CANTalon(IOPortPage.SHOOT_SPIN_B);
 		indexer = new CANTalon(IOPortPage.INDEXER);
 		feeder = new CANTalon(IOPortPage.FEEDER);
 		azimuth = new CANTalon(IOPortPage.AZIMUTH);
 		climber = new CANTalon(IOPortPage.CLIMBER);
+		
 		gearShift = new DoubleSolenoid(IOPortPage.SHIFT_FWD_CH,IOPortPage.SHIFT_BAK_CH);
+		releaseGear = new DoubleSolenoid(2,3);
+		collectGear = new Solenoid(4);
 		
 		motorInit();
 	}
@@ -111,14 +109,21 @@ public final class RobotOutputs{
 	public void setGearCollector(boolean value){
 		collectGear.set(value);
 	}
+	/*
 	final private double climberLoad = 1;
 	final private double climberPowInc = 5;
 	public void setClimber(double value){
 		if(climber.getOutputCurrent()>climberLoad){
 			value=Math.tanh(value*climberPowInc);
 		}climber.set(value);
-	}
+	}*/
 	public void setClimberRaw(double value){
 		climber.set(value);
+	}
+	public double getClimberAmps(){
+		return climber.getOutputCurrent();
+	}
+	public double getAzimuthPosition(){
+		return azimuth.getPulseWidthPosition();
 	}
 }
