@@ -12,6 +12,8 @@ public final class IOPortPage
 	public static final int LEFT_ENCODER_CH_B = 1;
 	public static final int RIGHT_ENCODER_CH_A = 2;
 	public static final int RIGHT_ENCODER_CH_B = 3;
+	public static final int RIGHT_LIGHT_CH = 4;
+	public static final int LEFT_LIGHT_CH = 5;
 	
 	public static final int COUNTER_SHOOT_SPEED=6;
 	

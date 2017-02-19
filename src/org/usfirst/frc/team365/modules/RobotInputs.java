@@ -36,9 +36,15 @@ public class RobotInputs{
 	public final Counter shooterSpeed = new Counter(
 		IOPortPage.COUNTER_SHOOT_SPEED
 	);
-	public final DigitalInput lightRight = new DigitalInput(4);
-	public final DigitalInput ligtLeft = new DigitalInput(5);
-	public int getDriveEncoderRaw(){
+	public final DigitalInput lightRight = new DigitalInput(
+		IOPortPage.RIGHT_LIGHT_CH
+	);
+	public final DigitalInput lightLeft = new DigitalInput(
+		IOPortPage.LEFT_LIGHT_CH
+	);
+	public boolean isDriveOverrided = false;
+	
+	public int getDriveEncoderRawMax(){
 		return Math.max(Math.abs(leftEncoder.getRaw()), Math.abs(rightEncoder.getRaw()));
 	}
 }

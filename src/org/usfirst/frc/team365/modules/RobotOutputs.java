@@ -109,14 +109,12 @@ public final class RobotOutputs{
 	public void setGearCollector(boolean value){
 		collectGear.set(value);
 	}
-	/*
-	final private double climberLoad = 1;
-	final private double climberPowInc = 5;
+	final private double climberLoad = 1000;
 	public void setClimber(double value){
 		if(climber.getOutputCurrent()>climberLoad){
-			value=Math.tanh(value*climberPowInc);
+			value*=2;
 		}climber.set(value);
-	}*/
+	}
 	public void setClimberRaw(double value){
 		climber.set(value);
 	}

@@ -66,12 +66,13 @@ public class GearMechanism extends RobotModule {
 		
 	}
 	
-	int gearRoutineStep;
-	int loopCounterInit;
+	int gearRoutineStep = 1;
+	int loopCounterInit = -1;
 	public void gearRoutine(int loopCounter){
 		if(loopCounterInit==-1)
 			loopCounterInit = loopCounter;
 		int dLoopCounter = loopCounter-loopCounterInit;
+		inputs.isDriveOverrided=true;
 		switch(gearRoutineStep){
 			case 1: // release gear for 1 sec : 50
 				if(dLoopCounter<50){
@@ -84,17 +85,19 @@ public class GearMechanism extends RobotModule {
 				}
 				break;
 			case 2: // back up for 50 iterations
-				int dist = inputs.getDriveEncoderRaw();
+				int dist = inputs.getDriveEncoderRawMax();
 				if(dist<50){
 					Drivetrain.driveRobot(-0.4, -0.4);
 				}else{
 					Drivetrain.driveRobot(0, 0);
+					gearRoutineStep = 1;
+					inputs.isDriveOverrided=false;
 					inputs.leftEncoder.reset();
 					inputs.rightEncoder.reset();
 				}
 				break;
 			default:
-				
+				System.err.println("a bad thing happeded");
 				break;
 		}
 	}

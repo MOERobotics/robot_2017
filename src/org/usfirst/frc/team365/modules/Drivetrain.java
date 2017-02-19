@@ -85,16 +85,7 @@ public class Drivetrain extends RobotModule
 	@Override
 	public void autonomousPeriodic(int loopCounter)
 	{
-		
-		if (Math.abs(inputs.leftEncoder.getRaw()) > Math.abs(inputs.rightEncoder.getRaw()))
-		{
-		distance = inputs.leftEncoder.getRaw();
-		}
-		else
-		{
-		distance = inputs.rightEncoder.getRaw();
-		}
-		
+		distance = inputs.getDriveEncoderRawMax();
 		
 		switch (autoRoutine)
 		{
@@ -197,8 +188,8 @@ public class Drivetrain extends RobotModule
 			rightMotor = 0.35; //
 		} //
 		
-		
-		driveRobot(leftMotor, rightMotor); //
+		if(!inputs.isDriveOverrided)
+			driveRobot(leftMotor, rightMotor); //
 	}
 	@Override
 	public void testInit()

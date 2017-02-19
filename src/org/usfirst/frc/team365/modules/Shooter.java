@@ -6,10 +6,9 @@ public class Shooter extends RobotModule
 {
 	double collectSpeed=0.75;
 	double azimSpeed=0.25;
+	double feederSpeed=0.75;
 	
-	double dAngleCoefficientChute;
-	double dAngleCoefficientTurret;
-	double angleDeadBand;
+	double closeEnough = 2;
 	
 	boolean runFeeder;
 	boolean runShooter;
@@ -18,35 +17,23 @@ public class Shooter extends RobotModule
 		super(inputs, outputs);
 	}
 	
-	/* for when we add in the chute
-	 * 
-	void turnChuteToAngle(double theta){
-		double dTheta = theta;// - inputs.ChuteAngleSensor.get()
-		double chuteTurnSpeed = 0;
-		if(Math.abs(dTheta)>angleDeadBand)
-			chuteTurnSpeed = sigmoid(dTheta, dAngleCoefficientChute);
-		outputs.setChute(chuteTurnSpeed);
+	void turnAzimuthToAngle(double theta){
+		double dTheta = theta - outputs.getAzimuthPosition();
+		double turnPower = 0;
+		if(Math.abs(dTheta)<closeEnough)
+			return;
+		turnPower = azimSpeed * Math.tanh(dTheta);
+		outputs.setAzimuth(turnPower);
 	}
-	void turnChuteDegrees(double theta){
-		
+	void startShootRoutine(){
+		outputs.setCollector(collectSpeed);
+		outputs.setFeeder(feederSpeed);
+		outputs.setIndexer(1.0);
 	}
-	*/
-	
-	/* for when the turret is implemented (if ever)
-	 * 
-	void turnTurretToAngle(double theta){
-		double dTheta = theta;// - inputs.TurretAngleSensor.get()
-		double turretTurnSpeed = 0;
-		if(Math.abs(dTheta)>angleDeadBand)
-			turretTurnSpeed = sigmoid(dTheta, dAngleCoefficientTurret);
-		outputs.setTurret(turretTurnSpeed);
-	}
-	void turnTurretDegrees(double theta){
-		
-	}
-	*/
-	double sigmoid(double t, double k){
-		return 2/(1+Math.pow(Math.E, -t))-1;
+	void stopShootRouting(){
+		outputs.setCollector(0);
+		outputs.setFeeder(0);
+		outputs.setIndexer(0);
 	}
 	
 	@Override
@@ -67,7 +54,7 @@ public class Shooter extends RobotModule
 	}
 	@Override
 	public void autonomousInit(){
-		
+		outputs.setShooter(.75);
 	}
 	@Override
 	public void autonomousPeriodic(int loopCounter){
@@ -75,7 +62,7 @@ public class Shooter extends RobotModule
 	}
 	@Override
 	public void teleopInit(){
-		
+		outputs.setShooter(0.0);
 	}
 	@Override
 	public void teleopPeriodic(int loopCounter){
@@ -96,7 +83,7 @@ public class Shooter extends RobotModule
 
 		outputs.setShooter(runShooter ? shootPow : 0.0);
 		outputs.setIndexer(runIndexer ? 1.0 : 0.0);
-		outputs.setFeeder(runFeeder ? .75 : 0.0);
+		outputs.setFeeder(runFeeder ? feederSpeed : 0.0);
 		outputs.setAzimuth( azimUp? -azimSpeed : azimDown? azimSpeed : 0.0);
 		outputs.setCollector(collectorIn? collectSpeed : collectorOut? -collectSpeed : 0.0);
 	}

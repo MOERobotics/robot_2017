@@ -44,7 +44,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotPeriodic() {
 		robotLoopCounter++;
-		SmartDashboard.putBoolean("left light", inputs.ligtLeft.get());
+		SmartDashboard.putBoolean("left light", inputs.lightLeft.get());
 		SmartDashboard.putBoolean("right light", inputs.lightRight.get());
 		SmartDashboard.putNumber("right encoder", inputs.rightEncoder.getDistance());
 		SmartDashboard.putNumber("left encoder", inputs.leftEncoder.getDistance());
