@@ -213,6 +213,13 @@ public class Drivetrain extends RobotModule
 			leftMotor = 0.35; //
 			rightMotor = -0.35; //
 		} //
+		
+		if (inputs.driveStick.getRawButton(3))
+		{
+			if (distance < 1500)
+			{
+				driveRobot(.3,.3);
+			}
 
 		else if (inputs.driveStick.getRawButton(4)) //
 		{ //
@@ -220,6 +227,7 @@ public class Drivetrain extends RobotModule
 			rightMotor = 0.35; //
 		} //
 		driveRobot(leftMotor, rightMotor); //
+	}
 	}
 	@Override
 	public void testInit()
