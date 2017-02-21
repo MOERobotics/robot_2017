@@ -1,4 +1,3 @@
-package org.usfirst.frc.team365.vision;
 
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.opencv_core.IplImage;

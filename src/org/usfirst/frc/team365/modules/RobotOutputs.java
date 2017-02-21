@@ -21,36 +21,50 @@ public final class RobotOutputs{
 	private CANTalon indexer;
 	private CANTalon feeder;
 	private CANTalon azimuth;
+	private CANTalon climber;
 	
 	private DoubleSolenoid gearShift;
 	private DoubleSolenoid releaseGear;
 	private Solenoid collectGear;
 	
 	public RobotOutputs(){
-		driveL1 = new CANTalon(IOPortPage.DRIVE_L1_PORT);
-		driveL2 = new CANTalon(IOPortPage.DRIVE_L2_PORT);
-		driveL3 = new CANTalon(IOPortPage.DRIVE_L3_PORT);
-		driveR1 = new CANTalon(IOPortPage.DRIVE_R1_PORT);
-		driveR2 = new CANTalon(IOPortPage.DRIVE_R2_PORT);
-		driveR3 = new CANTalon(IOPortPage.DRIVE_R3_PORT);
+		driveL1 = new CANTalon(IOPortPage.DRIVE_L1);//
+		driveL2 = new CANTalon(IOPortPage.DRIVE_L2);
+		driveL3 = new CANTalon(IOPortPage.DRIVE_L3);
+		driveR1 = new CANTalon(IOPortPage.DRIVE_R1);
+		driveR2 = new CANTalon(IOPortPage.DRIVE_R2);
+		driveR3 = new CANTalon(IOPortPage.DRIVE_R3);
+		collector = new CANTalon(IOPortPage.COLLECTOR);
 		shooterA = new CANTalon(IOPortPage.SHOOT_SPIN_A);
 		shooterB = new CANTalon(IOPortPage.SHOOT_SPIN_B);
-		indexer = new CANTalon(IOPortPage.SHOOT_INDEXER);
-		feeder = new CANTalon(IOPortPage.SHOOT_FEEDER);
-		azimuth = new CANTalon(IOPortPage.SHOOT_AZIMUTH);
-		gearShift = new DoubleSolenoid(IOPortPage.SHIFT_FWD_CH,IOPortPage.SHIFT_BAK_CH);
+		indexer = new CANTalon(IOPortPage.INDEXER);
+		feeder = new CANTalon(IOPortPage.FEEDER);
+		azimuth = new CANTalon(IOPortPage.AZIMUTH);
+		climber = new CANTalon(IOPortPage.CLIMBER);
 		
+		gearShift = new DoubleSolenoid(IOPortPage.SHIFT_FWD_CH,IOPortPage.SHIFT_BAK_CH);
+		releaseGear = new DoubleSolenoid(2,3);
+		collectGear = new Solenoid(4);
+		
+		motorInit();
 	}
-	public void init(){
+	public void motorInit(){
+		driveR1.setInverted(true);
+		driveR2.setInverted(true);
+		driveR3.setInverted(true);
+		shooterA.setInverted(true);
+		shooterB.setInverted(true);
+		indexer.setInverted(true);
+		feeder.setInverted(true);
+		climber.setInverted(true);
+		
 		driveL1.enableBrakeMode(true);
 		driveL2.enableBrakeMode(true);
 		driveL3.enableBrakeMode(true);
 		driveR1.enableBrakeMode(true);
 		driveR2.enableBrakeMode(true);
 		driveR3.enableBrakeMode(true);
-		driveR1.setInverted(true);
-		driveR2.setInverted(true);
-		driveR3.setInverted(true);
+		climber.enableBrakeMode(true);
 	}
 	public void setDriveLA(double value){
 		driveL1.set(value);
@@ -94,5 +108,20 @@ public final class RobotOutputs{
 	}
 	public void setGearCollector(boolean value){
 		collectGear.set(value);
+	}
+	final private double climberLoad = 1000;
+	public void setClimber(double value){
+		if(climber.getOutputCurrent()>climberLoad){
+			value*=2;
+		}climber.set(value);
+	}
+	public void setClimberRaw(double value){
+		climber.set(value);
+	}
+	public double getClimberAmps(){
+		return climber.getOutputCurrent();
+	}
+	public double getAzimuthPosition(){
+		return azimuth.getPulseWidthPosition();
 	}
 }

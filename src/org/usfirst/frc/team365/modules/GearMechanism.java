@@ -45,55 +45,17 @@ public class GearMechanism extends RobotModule {
 	}
 	@Override
 	public void teleopPeriodic(int loopCounter){
-		if (inputs.funStick.getRawButton(9)) {
+		if (inputs.funStick.getY()<-0.5) {
 			outputs.setGearCollector(GEAR_GRAB);
-		}
-		else {
+		}else {
 			outputs.setGearCollector(GEAR_DROP);
 		}
 		
-		if (inputs.funStick.getRawButton(11)) {
+		if (inputs.funStick.getRawButton(6)) {
 			outputs.setGearReleaser(GEAR_UP);
-		}
-		else if (inputs.funStick.getRawButton(10)) {
+		}else if (inputs.funStick.getRawButton(7)) {
 			outputs.setGearReleaser(GEAR_DN);
 		}
-		
-		/*if (funStick.getRawButton(10)) { //need to change from button 10
-			switch (teleopStep) {
-			
-			case 1: //release gear for 1.5 seconds (75 loops)
-				if (teleopLoopCounter > 75) {
-					releaseGear.set(false); //do I need this?
-					teleopStep = 2;
-					driveEncoder.reset();
-				}
-				else {
-					releaseGear.set(true);
-					teleopLoopCounter++;
-				}
-				break;
-				
-			case 2: //back up for 2 seconds (100 loops)
-				if (driveEncoder.getRaw() < -100) { //teleopLoopCounter > 175
-					teleopStep = 3;
-					driveEncoder.reset();
-				}
-				else {
-					driveRobot(-0.4, -0.4);
-				}
-				break;
-				
-			case 3: //stop
-				driveRobot(0, 0);
-				break;
-			}
-		}
-		else {
-			teleopStep = 1;
-			teleopLoopCounter = 0;
-			driveEncoder.reset();
-		}*/
 	}
 	@Override
 	public void testInit(){
@@ -104,23 +66,38 @@ public class GearMechanism extends RobotModule {
 		
 	}
 	
-	int gearRoutineStep;
-	int loopCounterInit;
+	int gearRoutineStep = 1;
+	int loopCounterInit = -1;
 	public void gearRoutine(int loopCounter){
 		if(loopCounterInit==-1)
 			loopCounterInit = loopCounter;
+		int dLoopCounter = loopCounter-loopCounterInit;
+		inputs.isDriveOverrided=true;
 		switch(gearRoutineStep){
 			case 1: // release gear for 1 sec : 50
-				
+				if(dLoopCounter<50){
+					outputs.setGearReleaser(GEAR_DN);
+				}else{
+					outputs.setGearReleaser(GEAR_UP);
+					gearRoutineStep = 2;
+					inputs.leftEncoder.reset();
+					inputs.rightEncoder.reset();
+				}
 				break;
-			case 2:
-				
-				break;
-			case 3:
-				
+			case 2: // back up for 50 iterations
+				int dist = inputs.getDriveEncoderRawMax();
+				if(dist<50){
+					Drivetrain.driveRobot(-0.4, -0.4);
+				}else{
+					Drivetrain.driveRobot(0, 0);
+					gearRoutineStep = 1;
+					inputs.isDriveOverrided=false;
+					inputs.leftEncoder.reset();
+					inputs.rightEncoder.reset();
+				}
 				break;
 			default:
-				
+				System.err.println("a bad thing happeded");
 				break;
 		}
 	}

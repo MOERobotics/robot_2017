@@ -4,7 +4,6 @@ import org.usfirst.frc.team365.math.PIDOut;
 import org.usfirst.frc.team365.util.RobotModule;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 
 public class Drivetrain extends RobotModule
@@ -88,8 +87,7 @@ public class Drivetrain extends RobotModule
 	public void autonomousInit()
 	{
 		autoStep = 1;
-		
-		}
+	}
 	
 	@Override
 	public void autonomousPeriodic(int loopCounter)
@@ -104,6 +102,11 @@ public class Drivetrain extends RobotModule
 		distance = inputs.rightEncoder.getRaw();
 		}
 		
+	}
+	@Override
+	public void autonomousPeriodic(int loopCounter)
+	{
+		distance = inputs.getDriveEncoderRawMax();
 		
 		switch (autoRoutine)
 		{
@@ -176,17 +179,13 @@ public class Drivetrain extends RobotModule
 
 		double leftMotor;
 		double rightMotor;
-		if (inputs.driveStick.getRawButton(6))
-		{
+		if (inputs.driveStick.getRawButton(8)){
 			outputs.setGearShift(HI_GEAR);
-		}
-		else
-		{
+		}else{
 			outputs.setGearShift(LO_GEAR);
 		}
 
-		if (inputs.driveStick.getTrigger())
-		{
+		if(inputs.driveStick.getTrigger()){
 			rightMotor = yJoy;
 			leftMotor = yJoy;
 		}
@@ -194,79 +193,47 @@ public class Drivetrain extends RobotModule
 		{
 			rightMotor = limitMotor(yJoy - xJoy);
 			leftMotor = limitMotor(yJoy + xJoy);
-			
-			if (inputs.driveStick.getRawButton(7))
-			{
-				teleopLoopCounter = 0;
-				if(teleopLoopCounter <= 12.5)
-				{
-					driveRobot(-.5, .5);
-					teleopLoopCounter++;
-				}
-				
-				else if(teleopLoopCounter <= 25 && teleopLoopCounter > 12.5)
-				{
-					driveRobot(0, 0);
-					teleopLoopCounter++;
-				}
-				
-				else if(teleopLoopCounter <= 37.5 && teleopLoopCounter > 25)
-				{
-					driveRobot(0.5, -0.5);
-					teleopLoopCounter++;
-				}
-				
-				else if(teleopLoopCounter <= 50 && teleopLoopCounter > 37.5)
-				{
-					driveRobot(0, 0);
-					teleopLoopCounter++;
-				}
-				else 
-				{
-					teleopLoopCounter++;
-				}
-				teleopLoopCounter = 0;
-					}
-			}
-			
-		
-		if (inputs.driveStick.getTrigger())
-		{ //
-			rightMotor = yJoy; //
-			leftMotor = yJoy; //
-		} //
-		else
-		{ //
-			rightMotor = limitMotor(yJoy - xJoy); //
-			leftMotor = limitMotor(yJoy + xJoy); //
-
-		} //
+		}
 		if (inputs.driveStick.getRawButton(8)) //
 		{ //
 			leftMotor = 0.5 * leftMotor; //
 			rightMotor = 0.5 * rightMotor; //
 		} //
-
 		if (inputs.driveStick.getRawButton(2)) //
 		{ //
 			leftMotor = 0.35; //
 			rightMotor = -0.35; //
 		} //
-		
-		if (inputs.driveStick.getRawButton(3))
+		if (inputs.driveStick.getRawButton(3) && distance < 1500)
 		{
-			if (distance < 1500)
-			{
-				driveRobot(.3,.3);
-			}
+			leftMotor=0.3;
+			rightMotor=0.3;
+	}
 
 		else if (inputs.driveStick.getRawButton(4)) //
-		{ //
+		{ 
 			leftMotor = -0.35; //
 			rightMotor = 0.35; //
-		} //
-		driveRobot(leftMotor, rightMotor); //
-	}
+		}else if(inputs.funStick.getRawButton(7)){
+			loopCounter%=48;
+			if(loopCounter<=12){
+				leftMotor = -.4;
+				rightMotor = .4;
+			}else if(loopCounter>=36){
+				leftMotor=.4;
+				rightMotor=-4;
+			}else{
+				leftMotor=0;
+				rightMotor=0;
+			}
+		}else{
+			rightMotor = limitMotor(yJoy - xJoy);
+			leftMotor = limitMotor(yJoy + xJoy);
+		}
+		
+		
+		if(!inputs.isDriveOverrided)
+			driveRobot(leftMotor, rightMotor); //
 	}
 	@Override
 	public void testInit()

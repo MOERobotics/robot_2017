@@ -14,18 +14,20 @@ import org.usfirst.frc.team365.util.RobotModule;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 	List<RobotModule>modules;
+	RobotInputs inputs;
+	RobotOutputs outputs;
 	int robotLoopCounter;
 	int disabledLoopCounter;
 	int autoLoopCounter; 
 	int teleopLoopCounter;
 	int testLoopCounter;
 	public Robot(){
-		
-		RobotInputs inputs = new RobotInputs();
-		RobotOutputs outputs = new RobotOutputs();
+		inputs = new RobotInputs();
+		outputs = new RobotOutputs();
 		
 		modules=new ArrayList<>();
 		modules.add(new Climber(inputs, outputs));
@@ -42,7 +44,18 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotPeriodic() {
 		robotLoopCounter++;
+		SmartDashboard.putBoolean("left light", inputs.lightLeft.get());
+		SmartDashboard.putBoolean("right light", inputs.lightRight.get());
+		SmartDashboard.putNumber("right encoder", inputs.rightEncoder.getDistance());
+		SmartDashboard.putNumber("left encoder", inputs.leftEncoder.getDistance());
+		SmartDashboard.putNumber("shoot power", (inputs.driveStick.getRawAxis(2)+1)/2);
+		SmartDashboard.putNumber("azimuth", outputs.getAzimuthPosition());
+		SmartDashboard.putNumber("climberAmps", outputs.getClimberAmps());
+		SmartDashboard.putNumber("yaw", inputs.navx.getYaw());
+		SmartDashboard.putNumber("pitch", inputs.navx.getPitch());
+		SmartDashboard.putNumber("roll", inputs.navx.getRoll());
 		modules.forEach((x)->x.robotPeriodic(robotLoopCounter));
+		
 	}
 	@Override
 	public void disabledInit() {
