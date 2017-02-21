@@ -87,7 +87,7 @@ public class Drivetrain extends RobotModule
 	@Override
 	public void autonomousInit()
 	{
-		//autoStep = 1;
+		autoStep = 1;
 		
 		}
 	
@@ -163,12 +163,16 @@ public class Drivetrain extends RobotModule
 	public void teleopInit()
 	{
 		outputs.setGearShift(LO_GEAR); //
+		
+		
 	}
 	@Override
 	public void teleopPeriodic(int loopCounter)
 	{
+		double teleopLoopCounter;
 		double xJoy = inputs.driveStick.getX();
 		double yJoy = -inputs.driveStick.getY();
+		
 
 		double leftMotor;
 		double rightMotor;
@@ -190,7 +194,42 @@ public class Drivetrain extends RobotModule
 		{
 			rightMotor = limitMotor(yJoy - xJoy);
 			leftMotor = limitMotor(yJoy + xJoy);
-		}
+			
+			if (inputs.driveStick.getRawButton(7))
+			{
+				teleopLoopCounter = 0;
+				if(teleopLoopCounter <= 12.5)
+				{
+					driveRobot(-.5, .5);
+					teleopLoopCounter++;
+				}
+				
+				else if(teleopLoopCounter <= 25 && teleopLoopCounter > 12.5)
+				{
+					driveRobot(0, 0);
+					teleopLoopCounter++;
+				}
+				
+				else if(teleopLoopCounter <= 37.5 && teleopLoopCounter > 25)
+				{
+					driveRobot(0.5, -0.5);
+					teleopLoopCounter++;
+				}
+				
+				else if(teleopLoopCounter <= 50 && teleopLoopCounter > 37.5)
+				{
+					driveRobot(0, 0);
+					teleopLoopCounter++;
+				}
+				else 
+				{
+					teleopLoopCounter++;
+				}
+				teleopLoopCounter = 0;
+					}
+			}
+			
+		
 		if (inputs.driveStick.getTrigger())
 		{ //
 			rightMotor = yJoy; //

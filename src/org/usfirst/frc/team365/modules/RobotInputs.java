@@ -5,6 +5,7 @@ import org.usfirst.frc.team365.robot.IOPortPage;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Counter;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -30,4 +31,6 @@ public class RobotInputs{
 	public final Counter shooterSpeed = new Counter(
 		IOPortPage.COUNTER_SHOOT_SPEED
 	);
+	DigitalInput leftLight = new DigitalInput(5);
+	DigitalInput rightLight = new DigitalInput(4);
 }
