@@ -88,21 +88,6 @@ public class Drivetrain extends RobotModule
 	{
 		autoStep = 1;
 	}
-	
-	@Override
-	public void autonomousPeriodic(int loopCounter)
-	{
-		currentYaw = inputs.navx.getYaw();
-		if (Math.abs(inputs.leftEncoder.getRaw()) > Math.abs(inputs.rightEncoder.getRaw()))
-		{
-		distance = inputs.leftEncoder.getRaw();
-		}
-		else
-		{
-		distance = inputs.rightEncoder.getRaw();
-		}
-		
-	}
 	@Override
 	public void autonomousPeriodic(int loopCounter)
 	{
@@ -172,48 +157,31 @@ public class Drivetrain extends RobotModule
 	@Override
 	public void teleopPeriodic(int loopCounter)
 	{
-		double teleopLoopCounter;
 		double xJoy = inputs.driveStick.getX();
 		double yJoy = -inputs.driveStick.getY();
-		
-
 		double leftMotor;
 		double rightMotor;
+		
+		
 		if (inputs.driveStick.getRawButton(8)){
 			outputs.setGearShift(HI_GEAR);
 		}else{
 			outputs.setGearShift(LO_GEAR);
 		}
 
+		
 		if(inputs.driveStick.getTrigger()){
 			rightMotor = yJoy;
 			leftMotor = yJoy;
-		}
-		else
-		{
-			rightMotor = limitMotor(yJoy - xJoy);
-			leftMotor = limitMotor(yJoy + xJoy);
-		}
-		if (inputs.driveStick.getRawButton(8)) //
-		{ //
-			leftMotor = 0.5 * leftMotor; //
-			rightMotor = 0.5 * rightMotor; //
-		} //
-		if (inputs.driveStick.getRawButton(2)) //
-		{ //
-			leftMotor = 0.35; //
-			rightMotor = -0.35; //
-		} //
-		if (inputs.driveStick.getRawButton(3) && distance < 1500)
-		{
+		}else if (inputs.driveStick.getRawButton(2)){
+			leftMotor = 0.35;
+			rightMotor = -0.35;
+		}else if (inputs.driveStick.getRawButton(4)){ 
+			leftMotor = -0.35;
+			rightMotor = 0.35;
+		}else if (inputs.driveStick.getRawButton(3) && distance < 1500){
 			leftMotor=0.3;
 			rightMotor=0.3;
-	}
-
-		else if (inputs.driveStick.getRawButton(4)) //
-		{ 
-			leftMotor = -0.35; //
-			rightMotor = 0.35; //
 		}else if(inputs.funStick.getRawButton(7)){
 			loopCounter%=48;
 			if(loopCounter<=12){
@@ -230,10 +198,14 @@ public class Drivetrain extends RobotModule
 			rightMotor = limitMotor(yJoy - xJoy);
 			leftMotor = limitMotor(yJoy + xJoy);
 		}
+		if (inputs.driveStick.getRawButton(8)){
+			leftMotor = 0.5 * leftMotor;
+			rightMotor = 0.5 * rightMotor;
+		}
 		
 		
 		if(!inputs.isDriveOverrided)
-			driveRobot(leftMotor, rightMotor); //
+			driveRobot(leftMotor, rightMotor);
 	}
 	@Override
 	public void testInit()
@@ -346,7 +318,7 @@ public class Drivetrain extends RobotModule
 			while (currentYaw < 10) {					
 				driveRobot(-.3, 0.3);
 			}
-			for (inputs.leftLight.get(); inputs.leftLight.get() == false;)
+			for (inputs.lightLeft.get(); inputs.lightRight.get() == false;)
 			{
 				driveRobot(.3, -0.3);
 			}
@@ -375,8 +347,8 @@ public class Drivetrain extends RobotModule
 		{
 			if (offYaw < 20 && offYaw > -20) 
 			{
-				if (offYaw > 0) turnSum = turnSum = 0.01;
-				else turnSum = turnSum - 0.01;
+				if (offYaw > 0) turnSum = turnSum + 0.01;
+				else 			turnSum = turnSum - 0.01;
 			}
 			double newPower = .02 * offYaw + turnSum + kDer * (offYaw - lastOffYaw);
 			if (newPower > 0.6) newPower = 0.6;
