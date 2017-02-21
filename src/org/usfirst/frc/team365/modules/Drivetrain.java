@@ -166,27 +166,32 @@ public class Drivetrain extends RobotModule
 			outputs.setGearShift(LO_GEAR);
 		}
 
-		if (inputs.driveStick.getTrigger()){
+		if(inputs.driveStick.getTrigger()){
 			rightMotor = yJoy;
 			leftMotor = yJoy;
+		}else if (inputs.driveStick.getRawButton(2)){ //
+			leftMotor = 0.35; //
+			rightMotor = -0.35; //
+		}else if (inputs.driveStick.getRawButton(4)){ //
+			leftMotor = -0.35; //
+			rightMotor = 0.35; //
+		}else if(inputs.funStick.getRawButton(7)){
+			loopCounter%=48;
+			if(loopCounter<=12){
+				leftMotor = -.4;
+				rightMotor = .4;
+			}else if(loopCounter>=36){
+				leftMotor=.4;
+				rightMotor=-4;
+			}else{
+				leftMotor=0;
+				rightMotor=0;
+			}
 		}else{
 			rightMotor = limitMotor(yJoy - xJoy);
 			leftMotor = limitMotor(yJoy + xJoy);
 		}
-		/* is no longeer needed per specs
-		if (inputs.driveStick.getRawButton(8)){ //
-			leftMotor = 0.5 * leftMotor; //
-			rightMotor = 0.5 * rightMotor; //
-		} //
-		*/
-		if (inputs.driveStick.getRawButton(2)) //
-		{ //
-			leftMotor = 0.35; //
-			rightMotor = -0.35; //
-		} else if (inputs.driveStick.getRawButton(4)) { //
-			leftMotor = -0.35; //
-			rightMotor = 0.35; //
-		} //
+		
 		
 		if(!inputs.isDriveOverrided)
 			driveRobot(leftMotor, rightMotor); //

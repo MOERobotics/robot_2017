@@ -20,7 +20,7 @@
 		4	::	right move
 		5	::	collector out
 		6	::	collector in
-		7	::
+		7	::	shake
 		8	::	shift gear
 		9	::
 		10	::
