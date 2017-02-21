@@ -9,6 +9,7 @@ public class Shooter extends RobotModule
 	double feederSpeed=0.75;
 	
 	double closeEnough = 2;
+	double dThetaCoeff = 1;
 	
 	boolean runFeeder;
 	boolean runShooter;
@@ -20,19 +21,24 @@ public class Shooter extends RobotModule
 	void turnAzimuthToAngle(double theta){
 		double dTheta = theta - outputs.getAzimuthPosition();
 		double turnPower = 0;
-		if(Math.abs(dTheta)<closeEnough)
+		if(Math.abs(dTheta)<closeEnough){
 			return;
-		turnPower = azimSpeed * Math.tanh(dTheta);
+		}
+		turnPower = azimSpeed * Math.tanh(dTheta * dThetaCoeff);
 		outputs.setAzimuth(turnPower);
 	}
 	void startShootRoutine(){
 		outputs.setCollector(collectSpeed);
 		outputs.setFeeder(feederSpeed);
+		outputs.setShooter(.80);
+	}
+	void startShooting(){
 		outputs.setIndexer(1.0);
 	}
-	void stopShootRouting(){
+	void stopShootRoutine(){
 		outputs.setCollector(0);
 		outputs.setFeeder(0);
+		outputs.setShooter(0);
 		outputs.setIndexer(0);
 	}
 	

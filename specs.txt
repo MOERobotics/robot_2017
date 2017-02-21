@@ -9,8 +9,10 @@
 		7	::	gear down
 		8	::	feeder on
 		9	::	feeder off
-		10	::	\gear collector flap thing ::tmp
+		10	::	
 		11	::	
+		bw	::	climber run
+		fw	::	flap
 	Drive Stick:
 		1	::	= power
 		2	::	left move
