@@ -6,7 +6,7 @@ import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Solenoid;
 
 public final class RobotOutputs{
 	private CANTalon driveL1;
@@ -18,54 +18,70 @@ public final class RobotOutputs{
 	private CANTalon collector;
 	private CANTalon shooterA;
 	private CANTalon shooterB;
+	private CANTalon indexer;
 	private CANTalon feeder;
-	private CANTalon conveyer;
 	private CANTalon azimuth;
-	private SpeedController chute;
+	private CANTalon climber;
 	
 	private DoubleSolenoid gearShift;
+	private DoubleSolenoid releaseGear;
+	private Solenoid collectGear;
 	
 	public RobotOutputs(){
-		driveL1 = new CANTalon(IOPortPage.DRIVE_L1_PORT);
-		driveL2 = new CANTalon(IOPortPage.DRIVE_L2_PORT);
-		driveL3 = new CANTalon(IOPortPage.DRIVE_L3_PORT);
-		driveR1 = new CANTalon(IOPortPage.DRIVE_R1_PORT);
-		driveR2 = new CANTalon(IOPortPage.DRIVE_R2_PORT);
-		driveR3 = new CANTalon(IOPortPage.DRIVE_R3_PORT);
+		driveL1 = new CANTalon(IOPortPage.DRIVE_L1);//
+		driveL2 = new CANTalon(IOPortPage.DRIVE_L2);
+		driveL3 = new CANTalon(IOPortPage.DRIVE_L3);
+		driveR1 = new CANTalon(IOPortPage.DRIVE_R1);
+		driveR2 = new CANTalon(IOPortPage.DRIVE_R2);
+		driveR3 = new CANTalon(IOPortPage.DRIVE_R3);
+		collector = new CANTalon(IOPortPage.COLLECTOR);
 		shooterA = new CANTalon(IOPortPage.SHOOT_SPIN_A);
 		shooterB = new CANTalon(IOPortPage.SHOOT_SPIN_B);
-		feeder = new CANTalon(IOPortPage.SHOOT_FEEDER);
-		conveyer = new CANTalon(IOPortPage.SHOOT_CONVEYER);
-		azimuth = new CANTalon(IOPortPage.SHOOT_AZIMUTH);
+		indexer = new CANTalon(IOPortPage.INDEXER);
+		feeder = new CANTalon(IOPortPage.FEEDER);
+		azimuth = new CANTalon(IOPortPage.AZIMUTH);
+		climber = new CANTalon(IOPortPage.CLIMBER);
+		
 		gearShift = new DoubleSolenoid(IOPortPage.SHIFT_FWD_CH,IOPortPage.SHIFT_BAK_CH);
+		releaseGear = new DoubleSolenoid(2,3);
+		collectGear = new Solenoid(4);
+		
+		motorInit();
 	}
-	public void init(){
+	public void motorInit(){
+		driveR1.setInverted(true);
+		driveR2.setInverted(true);
+		driveR3.setInverted(true);
+		shooterA.setInverted(true);
+		shooterB.setInverted(true);
+		indexer.setInverted(true);
+		feeder.setInverted(true);
+		climber.setInverted(true);
+		
 		driveL1.enableBrakeMode(true);
 		driveL2.enableBrakeMode(true);
 		driveL3.enableBrakeMode(true);
 		driveR1.enableBrakeMode(true);
 		driveR2.enableBrakeMode(true);
 		driveR3.enableBrakeMode(true);
-		driveR1.setInverted(true);
-		driveR2.setInverted(true);
-		driveR3.setInverted(true);
+		climber.enableBrakeMode(true);
 	}
-	public void setDriveL1(double value){
+	public void setDriveLA(double value){
 		driveL1.set(value);
 	}
-	public void setDriveL2(double value){
+	public void setDriveLB(double value){
 		driveL2.set(value);
 	}
-	public void setDriveL3(double value){
+	public void setDriveLC(double value){
 		driveL3.set(value);
 	}
-	public void setDriveR1(double value){
+	public void setDriveRA(double value){
 		driveR1.set(value);
 	}
-	public void setDriveR2(double value){
+	public void setDriveRB(double value){
 		driveR2.set(value);
 	}
-	public void setDriveR3(double value){
+	public void setDriveRC(double value){
 		driveR3.set(value);
 	}
 	public void setCollector(double value){
@@ -75,19 +91,37 @@ public final class RobotOutputs{
 		shooterA.set(value);
 		shooterB.set(value);
 	}
+	public void setIndexer(double value){
+		indexer.set(value);
+	}
 	public void setFeeder(double value){
 		feeder.set(value);
-	}
-	public void setConveyer(double value){
-		conveyer.set(value);
 	}
 	public void setAzimuth(double value){
 		azimuth.set(value);
 	}
-	public void setChute(double value){
-		chute.set(value);
-	}
 	public void setGearShift(Value value){
 		gearShift.set(value);
+	}
+	public void setGearReleaser(Value value){
+		releaseGear.set(value);
+	}
+	public void setGearCollector(boolean value){
+		collectGear.set(value);
+	}
+	final private double climberLoad = 1000;
+	public void setClimber(double value){
+		if(climber.getOutputCurrent()>climberLoad){
+			value*=2;
+		}climber.set(value);
+	}
+	public void setClimberRaw(double value){
+		climber.set(value);
+	}
+	public double getClimberAmps(){
+		return climber.getOutputCurrent();
+	}
+	public double getAzimuthPosition(){
+		return azimuth.getPulseWidthPosition();
 	}
 }

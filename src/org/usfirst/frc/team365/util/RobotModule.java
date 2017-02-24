@@ -20,4 +20,7 @@ public abstract class RobotModule{
 	public abstract void teleopPeriodic(int loopCounter);
 	public abstract void testInit();
 	public abstract void testPeriodic(int loopCounter);
+	public double pulsesToInch(double pulses){
+		return pulses / 107.0 ;
+	}
 }
