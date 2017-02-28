@@ -2,6 +2,8 @@ package org.usfirst.frc.team365.modules;
 
 import org.usfirst.frc.team365.util.RobotModule;
 
+import edu.wpi.first.wpilibj.PIDController;
+
 public class Shooter extends RobotModule
 {
 	double collectSpeed=0.75;
@@ -14,8 +16,15 @@ public class Shooter extends RobotModule
 	boolean runFeeder;
 	boolean runShooter;
 	
+	final double P=1, I=1, D=1, F=1;
+	PIDController shooterpid;
+	
+	
 	public Shooter(RobotInputs inputs, RobotOutputs outputs){
 		super(inputs, outputs);
+		shooterpid = new PIDController(P, I, D, F, inputs.shooterSpeed, outputs::setShooter);
+		shooterpid.setInputRange(-1400, 0);
+		shooterpid.setOutputRange(-1, 1);
 	}
 	
 	void turnAzimuthToAngle(double theta){
@@ -63,7 +72,7 @@ public class Shooter extends RobotModule
 		outputs.setShooter(.75);
 	}
 	@Override
-	public void autonomousPeriodic(int loopCounter){
+	public void autonomousPeriodic(int loopCounter, int autoRoutine){
 		
 	}
 	@Override

@@ -10,6 +10,9 @@ import org.usfirst.frc.team365.modules.GearMechanism;
 import org.usfirst.frc.team365.modules.RobotInputs;
 import org.usfirst.frc.team365.modules.RobotOutputs;
 import org.usfirst.frc.team365.modules.Shooter;
+import org.usfirst.frc.team365.net.GripTracker;
+import org.usfirst.frc.team365.net.MOETracker;
+import org.usfirst.frc.team365.net.UDPTracker;
 import org.usfirst.frc.team365.util.RobotModule;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -20,24 +23,36 @@ public class Robot extends IterativeRobot {
 	List<RobotModule>modules;
 	RobotInputs inputs;
 	RobotOutputs outputs;
+	
+	volatile MOETracker tracker;
+	Thread trackingThread;
+	
 	int robotLoopCounter;
 	int disabledLoopCounter;
 	int autoLoopCounter; 
 	int teleopLoopCounter;
 	int testLoopCounter;
+	int autoRoutine;
 	public Robot(){
 		inputs = new RobotInputs();
 		outputs = new RobotOutputs();
+		//tracker = new GripTracker("GRIP");
+		tracker = UDPTracker.getTracker("Tracker7", 5801);
+		trackingThread = new Thread(tracker);
+		
 		
 		modules=new ArrayList<>();
 		modules.add(new Climber(inputs, outputs));
-		modules.add(new Drivetrain(inputs, outputs));
+		modules.add(new Drivetrain(inputs, outputs, tracker));
 		modules.add(new GearMechanism(inputs, outputs));
 		modules.add(new Shooter(inputs, outputs));
+		
+		
 	}
 
 	@Override
 	public void robotInit() {
+		trackingThread.start();
 		robotLoopCounter = 0;
 		modules.forEach((x)->x.robotInit());
 	}
@@ -54,6 +69,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("yaw", inputs.navx.getYaw());
 		SmartDashboard.putNumber("pitch", inputs.navx.getPitch());
 		SmartDashboard.putNumber("roll", inputs.navx.getRoll());
+		targetTest();
 		modules.forEach((x)->x.robotPeriodic(robotLoopCounter));
 		
 	}
@@ -65,6 +81,20 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledPeriodic() {
 		disabledLoopCounter++;
+		if(inputs.driveStick.getTrigger()){
+			inputs.leftEncoder.reset();
+			inputs.rightEncoder.reset();
+		}
+		if(inputs.driveStick.getRawButton(6))
+			autoRoutine = 1;
+		else if(inputs.driveStick.getRawButton(8))
+			autoRoutine = 2;
+		else if (inputs.driveStick.getRawButton(10))
+			autoRoutine = 3;
+		else if (inputs.driveStick.getRawButton(12))
+			autoRoutine = 4;
+		else if (inputs.driveStick.getRawButton(11))
+			autoRoutine = 5;
 		modules.forEach((x)->x.disabledPeriodic(disabledLoopCounter));
 	}
 	@Override
@@ -75,7 +105,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		autoLoopCounter++;
-		modules.forEach((x)->x.autonomousPeriodic(autoLoopCounter));
+		modules.forEach((x)->x.autonomousPeriodic(autoLoopCounter, autoRoutine));
 	}
 	@Override
 	public void teleopInit() {
@@ -97,5 +127,12 @@ public class Robot extends IterativeRobot {
 		LiveWindow.run();
 		testLoopCounter++;
 		modules.forEach((x)->x.testPeriodic(testLoopCounter));
+	//	targetTest();
+	}
+	void targetTest(){
+		double[] p = tracker.getCenter();
+		SmartDashboard.putNumber("target x", p[0]);
+		SmartDashboard.putNumber("target y", p[1]);
+		System.out.println(p[0]+", "+p[1]);
 	}
 }
