@@ -18,7 +18,7 @@ import org.bytedeco.javacv.OpenCVFrameConverter;
 public class MJPEGserver {
 	private int listeningport;
 	private OpenCVFrameConverter.ToMat FrameToMatConverter = new OpenCVFrameConverter.ToMat();
-	private Set<clientThread> socketSet = new HashSet();
+	private Set<clientThread> socketSet = new HashSet<>();
 	private ServerSocket serverSocket;
 	private Thread serverThread;
 	
@@ -47,7 +47,7 @@ public class MJPEGserver {
 					while (!serverSocket.isClosed()) {
 						Socket socket = serverSocket.accept();
 						socket.setSoTimeout(2);
-						System.out.println("Client connected");
+						System.out.print("\nClient connected");
 						clientThread t = new clientThread(socket);
 						t.start();
 						socketSet.add(t);
@@ -155,6 +155,11 @@ public class MJPEGserver {
 		}
 
 		public void run() {
+			setName(String.format(
+				"%s.%d",
+				this.getClass().getCanonicalName(),
+				this.getId()
+			));
 			while (true) try {
 				byte[] frame = newFrame; //get ptr now, use it for rest of loop
 				if (frame == oldFrame) {
