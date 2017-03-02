@@ -26,6 +26,8 @@ public class Drivetrain extends RobotModule
 	PIDOut driveCorrection;
 	PIDController driveStraight;
 	MOETracker tracker;
+	
+	boolean lastDriveB8;
 
 	public Drivetrain(RobotInputs inputs, RobotOutputs outputs, MOETracker tracker){
 		super(inputs, outputs);
@@ -126,26 +128,22 @@ public class Drivetrain extends RobotModule
 
 	public void teleopInit()
 	{
-		outputs.setGearShift(LO_GEAR); //
-		
-		
+		outputs.setGearShift(LO_GEAR);
+		lastDriveB8=false;
 	}
 	@Override
 	public void teleopPeriodic(int loopCounter)
 	{
 		double xJoy = inputs.driveStick.getX();
 		double yJoy = -inputs.driveStick.getY();
+		xJoy = Math.abs(xJoy)>0.1?xJoy:0;
+		yJoy = Math.abs(yJoy)>0.1?yJoy:0;
+		
+		boolean changeGear = inputs.driveStick.getRawButton(8);
+		outputs.setGearShift((changeGear && !lastDriveB8)?HI_GEAR:LO_GEAR);
+
 		double leftMotor;
 		double rightMotor;
-		
-		
-		if (inputs.driveStick.getRawButton(8)){
-			outputs.setGearShift(HI_GEAR);
-		}else{
-			outputs.setGearShift(LO_GEAR);
-		}
-
-		
 		if(inputs.driveStick.getTrigger()){
 			rightMotor = yJoy;
 			leftMotor = yJoy;
@@ -174,9 +172,10 @@ public class Drivetrain extends RobotModule
 			rightMotor = limitMotor(yJoy - xJoy);
 			leftMotor = limitMotor(yJoy + xJoy);
 		}
+		
 		if (inputs.driveStick.getRawButton(8)){
-			leftMotor = 0.5 * leftMotor;
-			rightMotor = 0.5 * rightMotor;
+			leftMotor*= 0.5;
+			rightMotor*= 0.5;
 		}
 		
 		
@@ -259,7 +258,6 @@ public class Drivetrain extends RobotModule
 	double limitMotor(double power){
 		if (power > 1) return 1;
 		else if (power < -1) return -1;
-		else if (Math.abs(power)<0.5) return 0;
 		else return power;
 	}
 

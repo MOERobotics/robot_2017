@@ -29,7 +29,7 @@ public final class RobotOutputs{
 	private Solenoid ballFlap;
 	
 	public RobotOutputs(){
-		driveL1 = new CANTalon(IOPort.DRIVE_L1);//
+		driveL1 = new CANTalon(IOPort.DRIVE_L1);
 		driveL2 = new CANTalon(IOPort.DRIVE_L2);
 		driveL3 = new CANTalon(IOPort.DRIVE_L3);
 		driveR1 = new CANTalon(IOPort.DRIVE_R1);
@@ -50,11 +50,9 @@ public final class RobotOutputs{
 		motorInit();
 	}
 	public void motorInit(){
-		driveR1.setInverted(true);
-		driveR2.setInverted(true);
-		driveR3.setInverted(true);
-	//	shooterA.setInverted(true);
-	//	shooterB.setInverted(true);
+		driveL1.setInverted(true);
+		driveL2.setInverted(true);
+		driveL3.setInverted(true);
 		indexer.setInverted(true);
 		feeder.setInverted(true);
 		climber.setInverted(true);
