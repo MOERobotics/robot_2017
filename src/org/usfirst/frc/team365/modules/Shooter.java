@@ -14,8 +14,15 @@ public class Shooter extends RobotModule
 	boolean runFeeder;
 	boolean runShooter;
 	
+	//final double P=1, I=1, D=1, F=1;
+	//PIDController shooterpid;
+	
+	
 	public Shooter(RobotInputs inputs, RobotOutputs outputs){
 		super(inputs, outputs);
+	//	shooterpid = new PIDController(P, I, D, F, inputs.shooterSpeed, outputs::setShooter);
+	//	shooterpid.setInputRange(-1400, 0);
+	//	shooterpid.setOutputRange(-1, 1);
 	}
 	
 	void turnAzimuthToAngle(double theta){
@@ -63,7 +70,7 @@ public class Shooter extends RobotModule
 		outputs.setShooter(.75);
 	}
 	@Override
-	public void autonomousPeriodic(int loopCounter){
+	public void autonomousPeriodic(int loopCounter, int autoRoutine){
 		
 	}
 	@Override
@@ -90,7 +97,7 @@ public class Shooter extends RobotModule
 		outputs.setShooter(runShooter ? shootPow : 0.0);
 		outputs.setIndexer(runIndexer ? 1.0 : 0.0);
 		outputs.setFeeder(runFeeder ? feederSpeed : 0.0);
-		outputs.setAzimuth( azimUp? -azimSpeed : azimDown? azimSpeed : 0.0);
+		outputs.setAzimuth(azimUp? -azimSpeed : azimDown? azimSpeed : 0.0);
 		outputs.setCollector(collectorIn? collectSpeed : collectorOut? -collectSpeed : 0.0);
 	}
 	@Override
@@ -100,5 +107,11 @@ public class Shooter extends RobotModule
 	@Override
 	public void testPeriodic(int loopCounter){
 		
+	}
+	
+	public double limit(double x, double m, double M){
+		if(x<m) return m;
+		if(x>M) return M;
+		else	return x;
 	}
 }

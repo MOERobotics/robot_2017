@@ -15,7 +15,7 @@ public abstract class RobotModule{
 	public abstract void disabledInit();
 	public abstract void disabledPeriodic(int loopCounter);
 	public abstract void autonomousInit();
-	public abstract void autonomousPeriodic(int loopCounter);
+	public abstract void autonomousPeriodic(int loopCounter, int autoRoutine);
 	public abstract void teleopInit();
 	public abstract void teleopPeriodic(int loopCounter);
 	public abstract void testInit();

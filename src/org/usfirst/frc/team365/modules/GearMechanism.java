@@ -16,7 +16,7 @@ public class GearMechanism extends RobotModule {
 	}
 	@Override
 	public void robotInit(){
-		outputs.setGearCollector(GEAR_DROP);
+		outputs.setBallFlap(GEAR_DROP);
 		outputs.setGearReleaser(GEAR_UP);
 	}
 	@Override
@@ -36,7 +36,7 @@ public class GearMechanism extends RobotModule {
 		
 	}
 	@Override
-	public void autonomousPeriodic(int loopCounter){
+	public void autonomousPeriodic(int loopCounter, int autoRoutine){
 		
 	}
 	@Override
@@ -46,9 +46,9 @@ public class GearMechanism extends RobotModule {
 	@Override
 	public void teleopPeriodic(int loopCounter){
 		if (inputs.funStick.getY()<-0.5) {
-			outputs.setGearCollector(GEAR_GRAB);
+			outputs.setBallFlap(GEAR_GRAB);
 		}else {
-			outputs.setGearCollector(GEAR_DROP);
+			outputs.setBallFlap(GEAR_DROP);
 		}
 		
 		if (inputs.funStick.getRawButton(6)) {

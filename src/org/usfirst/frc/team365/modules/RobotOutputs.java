@@ -1,11 +1,12 @@
 package org.usfirst.frc.team365.modules;
 
-import org.usfirst.frc.team365.robot.IOPortPage;
+import org.usfirst.frc.team365.robot.IOPort;
 
 import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public final class RobotOutputs{
@@ -25,35 +26,33 @@ public final class RobotOutputs{
 	
 	private DoubleSolenoid gearShift;
 	private DoubleSolenoid releaseGear;
-	private Solenoid collectGear;
+	private Solenoid ballFlap;
 	
 	public RobotOutputs(){
-		driveL1 = new CANTalon(IOPortPage.DRIVE_L1);//
-		driveL2 = new CANTalon(IOPortPage.DRIVE_L2);
-		driveL3 = new CANTalon(IOPortPage.DRIVE_L3);
-		driveR1 = new CANTalon(IOPortPage.DRIVE_R1);
-		driveR2 = new CANTalon(IOPortPage.DRIVE_R2);
-		driveR3 = new CANTalon(IOPortPage.DRIVE_R3);
-		collector = new CANTalon(IOPortPage.COLLECTOR);
-		shooterA = new CANTalon(IOPortPage.SHOOT_SPIN_A);
-		shooterB = new CANTalon(IOPortPage.SHOOT_SPIN_B);
-		indexer = new CANTalon(IOPortPage.INDEXER);
-		feeder = new CANTalon(IOPortPage.FEEDER);
-		azimuth = new CANTalon(IOPortPage.AZIMUTH);
-		climber = new CANTalon(IOPortPage.CLIMBER);
+		driveL1 = new CANTalon(IOPort.DRIVE_L1);
+		driveL2 = new CANTalon(IOPort.DRIVE_L2);
+		driveL3 = new CANTalon(IOPort.DRIVE_L3);
+		driveR1 = new CANTalon(IOPort.DRIVE_R1);
+		driveR2 = new CANTalon(IOPort.DRIVE_R2);
+		driveR3 = new CANTalon(IOPort.DRIVE_R3);
+		collector = new CANTalon(IOPort.COLLECTOR);
+		shooterA = new CANTalon(IOPort.SHOOT_SPIN_A);
+		shooterB = new CANTalon(IOPort.SHOOT_SPIN_B);
+		indexer = new CANTalon(IOPort.INDEXER);
+		feeder = new CANTalon(IOPort.FEEDER);
+		azimuth = new CANTalon(IOPort.AZIMUTH);
+		climber = new CANTalon(IOPort.CLIMBER);
 		
-		gearShift = new DoubleSolenoid(IOPortPage.SHIFT_FWD_CH,IOPortPage.SHIFT_BAK_CH);
-		releaseGear = new DoubleSolenoid(2,3);
-		collectGear = new Solenoid(4);
+		gearShift = new DoubleSolenoid(IOPort.SHIFT_FWD, IOPort.SHIFT_BAK);
+		releaseGear = new DoubleSolenoid(IOPort.GEAR_RELEASE_BAK, IOPort.GEAR_RELEASE_FWD);
+		ballFlap = new Solenoid(IOPort.BALL_FLAP);
 		
 		motorInit();
 	}
 	public void motorInit(){
-		driveR1.setInverted(true);
-		driveR2.setInverted(true);
-		driveR3.setInverted(true);
-		shooterA.setInverted(true);
-		shooterB.setInverted(true);
+		driveL1.setInverted(true);
+		driveL2.setInverted(true);
+		driveL3.setInverted(true);
 		indexer.setInverted(true);
 		feeder.setInverted(true);
 		climber.setInverted(true);
@@ -65,6 +64,9 @@ public final class RobotOutputs{
 		driveR2.enableBrakeMode(true);
 		driveR3.enableBrakeMode(true);
 		climber.enableBrakeMode(true);
+		
+		shooterA.setPIDSourceType(PIDSourceType.kRate);
+		
 	}
 	public void setDriveLA(double value){
 		driveL1.set(value);
@@ -106,8 +108,8 @@ public final class RobotOutputs{
 	public void setGearReleaser(Value value){
 		releaseGear.set(value);
 	}
-	public void setGearCollector(boolean value){
-		collectGear.set(value);
+	public void setBallFlap(boolean value){
+		ballFlap.set(value);
 	}
 	final private double climberLoad = 1000;
 	public void setClimber(double value){

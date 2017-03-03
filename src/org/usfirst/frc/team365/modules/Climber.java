@@ -24,7 +24,7 @@ public class Climber extends RobotModule
 	@Override
 	public void autonomousInit(){}
 	@Override
-	public void autonomousPeriodic(int loopCounter){}
+	public void autonomousPeriodic(int loopCounter, int autoRoutine){}
 	@Override
 	public void teleopInit(){
 		

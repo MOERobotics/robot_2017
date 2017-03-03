@@ -55,3 +55,8 @@
 	yaw
 	pitch
 	roll
+	
+	
+	shooter wheel calculation
+	3 7/8 dia in wheel *pi *12 / 12 * 30 
+	
