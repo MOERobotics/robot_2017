@@ -1,9 +1,5 @@
 import org.bytedeco.javacv.*;
 
-import javax.swing.*;
-import java.nio.file.Files;
-import java.util.Scanner;
-
 /**
  * Created by kevok on 2/9/17.
  */
@@ -46,10 +42,10 @@ public class TwoCameraTest {
         */
 
         System.err.print("\nStarting servers...");
-        MJPEGserver server1 = new MJPEGserver(8000);
+        MJPEGServer server1 = new MJPEGServer(8000);
         server1.start();
         System.err.print("1,");
-        MJPEGserver server2 = new MJPEGserver(8001);
+        MJPEGServer server2 = new MJPEGServer(8001);
         server2.start();
         System.err.print("2,");
 

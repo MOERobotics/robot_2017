@@ -2,19 +2,11 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.RaspiPin;
-import com.pi4j.system.SystemInfo;
-import org.bytedeco.javacpp.BytePointer;
-import org.bytedeco.javacpp.IntPointer;
 import org.bytedeco.javacpp.opencv_core;
-import org.bytedeco.javacpp.opencv_imgcodecs;
 import org.bytedeco.javacv.*;
-import org.bytedeco.javacv.FrameGrabber.Exception;
 
 import java.io.File;
 import java.util.*;
-
-import static org.bytedeco.javacpp.avcodec.avpicture_get_size;
-import static org.bytedeco.javacpp.avutil.AV_PIX_FMT_RGB24;
 
 public class SingleCameraSingleStream {
     static OpenCVFrameConverter.ToMat FrameToMatConverter = new OpenCVFrameConverter.ToMat();
@@ -33,8 +25,8 @@ public class SingleCameraSingleStream {
         String videoLocation = findVideoDevices().get(0).getAbsolutePath();
 
         grabber = new FFmpegFrameGrabber("/dev/video0");
-        grabber.setImageHeight(320);
-        grabber.setImageWidth(480);
+        grabber.setImageHeight(480);
+        grabber.setImageWidth(640);
         grabber.setFrameRate(30);
 
         System.err.print("Init...");
@@ -50,15 +42,28 @@ public class SingleCameraSingleStream {
 		c1.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		*/
 
+        System.err.print("\nChecking arch..");
+        GpioController gpio = null;
+        GpioPinDigitalOutput outpin = null;
+
+        if (System.getProperty("nogpio") != null) {
+            System.err.print("I don't think we are pi");
+        } else {
+            System.err.print("I Think we are pi");
+            gpio = GpioFactory.getInstance();
+            outpin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00);
+            outpin.high();
+        }
+
         System.err.print("\nStarting servers...");
-		MJPEGserver server1 = new MJPEGserver(8000);
+		MJPEGServer server1 = new MJPEGServer(8000);
 		server1.start();
         System.err.print("1,");
         /*
-        MJPEGserver server2 = new MJPEGserver(8001);
+        MJPEGServer server2 = new MJPEGServer(8001);
         server2.start();
         System.err.print("2,");
-        MJPEGserver server3 = new MJPEGserver(8002);
+        MJPEGServer server3 = new MJPEGServer(8002);
         server3.start();
         System.err.print("and 3...");
         */
@@ -69,19 +74,21 @@ public class SingleCameraSingleStream {
         encoder1.start();
 
         System.err.print("\nStarting the main loop...");
-        long iter = 0;
+        int frameCycleIndex = 0;
+        long frameProfileCounter = 0;
         long start = System.currentTimeMillis();
         int frameProfileLength = 600;
-		do {
-		    if ((iter = ((iter + 1) % 600)) == 0) {
-		        long end = System.currentTimeMillis();
-		        double dTime = (end - start)/1000.0;
-		        System.out.printf(
-                    "\n%d frames at %f frames per second",
-                    frameProfileLength,
-                    frameProfileLength/dTime
+        do {
+            frameProfileCounter = (frameProfileCounter + 1) % 600;
+            if (frameProfileCounter == 0) {
+                long end = System.currentTimeMillis();
+                double dTime = (end - start) / 1000.0;
+                System.out.printf(
+                        "\n%d frames at %f frames per second",
+                        frameProfileLength,
+                        frameProfileLength / dTime
                 );
-		        start = end;
+                start = end;
             }
             //System.err.print("\nGrabbin...");
 			Frame frame = grabber.grab();
@@ -91,11 +98,12 @@ public class SingleCameraSingleStream {
             FrameToMatConverter.convert(frame).copyTo(m);
             encoder1.setWorkItem(m);
             //c1.showImage(frame);
-            BytePointer image = encoder1.outputImage;
+            if (encoder1.outputImage == null) continue;
+            byte[] image = encoder1.outputImage.getStringBytes();
 
             //System.err.print("Streamin...");
             if (image != null)
-                server1.streamData(image.getStringBytes());
+                server1.streamData(image);
 
 
 
