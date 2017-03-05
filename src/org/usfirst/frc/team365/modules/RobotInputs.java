@@ -45,6 +45,9 @@ public class RobotInputs{
 	public boolean isDriveOverrided = false;
 	
 	public int getDriveEncoderRawMax(){
-		return Math.max(Math.abs(leftEncoder.getRaw()), Math.abs(rightEncoder.getRaw()));
+		if(Math.abs(leftEncoder.getRaw())>Math.abs(rightEncoder.getRaw()))
+			return leftEncoder.getRaw();
+		else
+			return rightEncoder.getRaw();
 	}
 }
