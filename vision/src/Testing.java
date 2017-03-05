@@ -3,20 +3,13 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.RaspiPin;
-import com.pi4j.system.SystemInfo;
-import org.bytedeco.javacpp.BytePointer;
-import org.bytedeco.javacpp.IntPointer;
 import org.bytedeco.javacpp.opencv_core;
-import org.bytedeco.javacpp.opencv_imgcodecs;
 import org.bytedeco.javacv.*;
 import org.bytedeco.javacv.FrameGrabber.Exception;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.bytedeco.javacpp.avcodec.avpicture_get_size;
-import static org.bytedeco.javacpp.avutil.AV_PIX_FMT_RGB24;
 
 public class Testing {
     static OpenCVFrameConverter.ToMat FrameToMatConverter = new OpenCVFrameConverter.ToMat();
@@ -41,9 +34,15 @@ public class Testing {
     public static void a() throws java.lang.Exception {
         System.err.print("\nStarting execution");
         String videoLocation = findVideoDevices().get(0).getAbsolutePath();
+        Runtime.getRuntime().exec("v4l2-ctl --device "+videoLocation+" -c brightness=30");
+        Runtime.getRuntime().exec("v4l2-ctl --device "+videoLocation+" -c contrast=6");
+        Runtime.getRuntime().exec("v4l2-ctl --device "+videoLocation+" -c saturation=100");
+        Runtime.getRuntime().exec("v4l2-ctl --device "+videoLocation+" -c white_balance_temperature_auto=0");
+        Runtime.getRuntime().exec("v4l2-ctl --device "+videoLocation+" -c white_balance_temperature=6500");
+        Runtime.getRuntime().exec("v4l2-ctl --device "+videoLocation+" -c exposure_auto=1");
+        //Runtime.getRuntime().exec("v4l2-ctl --device "+videoLocation+" -c exposure=156");
 
         System.err.print("\nOpening Camera...");
-
         grabber = new FFmpegFrameGrabber(videoLocation);
         grabber.setImageWidth(424);
         grabber.setImageHeight(240);
@@ -83,13 +82,13 @@ public class Testing {
 
 
         System.err.print("\nStarting servers...");
-        MJPEGserver server1 = new MJPEGserver(8000);
+        MJPEGServer server1 = new MJPEGServer(8000);
         server1.start();
         System.err.print("1,");
-        MJPEGserver server2 = new MJPEGserver(8001);
+        MJPEGServer server2 = new MJPEGServer(8001);
         server2.start();
         System.err.print("2,");
-        MJPEGserver server3 = new MJPEGserver(8002);
+        MJPEGServer server3 = new MJPEGServer(8002);
         server3.start();
         System.err.print("and 3...");
 
