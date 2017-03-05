@@ -19,8 +19,8 @@ public class Shooter extends RobotModule
 	boolean runFeeder;
 	boolean runShooter;
 	
-	final double P=1, I=1, D=1, F=1;
-	PIDController shooterpid;
+	//double P=1, I=1, D=1, F=1;
+	//PIDController shooterpid;
 	
 	MOETracker tracker;
 	
@@ -29,6 +29,7 @@ public class Shooter extends RobotModule
 	public Shooter(RobotInputs inputs, RobotOutputs outputs, MOETracker tracker){
 		super(inputs, outputs);
 		this.tracker=tracker;
+		lg = new LinearRegression();
 	//	shooterpid = new PIDController(P, I, D, F, inputs.shooterSpeed, outputs::setShooter);
 	//	shooterpid.setInputRange(-1400, 0);
 	//	shooterpid.setOutputRange(-1, 1);
@@ -97,6 +98,11 @@ public class Shooter extends RobotModule
 		outputs.setFeeder(0);
 		outputs.setAzimuth(0);
 		outputs.setCollector(0);
+		
+	//	SmartDashboard.putNumber("P", 0);
+	//	SmartDashboard.putNumber("I", 0);
+	//	SmartDashboard.putNumber("D", 0);
+	//	SmartDashboard.putNumber("F", 0);
 	}
 	@Override
 	public void teleopPeriodic(int loopCounter){
@@ -116,8 +122,16 @@ public class Shooter extends RobotModule
 		runShooter = shooterOn? true : shooterOff? false : runShooter;
 		runFeeder = feederOn? true : feederOff? false : runFeeder;
 		collectorIn = runShooter? true: collectorIn;
-
-		outputs.setShooter(runShooter ? 0.8 : 0.0);
+		
+	//	shooterpid.setPID(
+	//		SmartDashboard.getNumber("P", 0),
+	//		SmartDashboard.getNumber("I", 0),
+	//		SmartDashboard.getNumber("D", 0),
+	//		SmartDashboard.getNumber("F", 0)
+	//	);
+		SmartDashboard.putNumber("Shoot rate", inputs.shooterSpeed.getRate());
+		//shooterpid.setSetpoint(runShooter ? 0.8 : 0.0);
+		outputs.setShooter(runShooter ? 0.81 : 0.0);
 		outputs.setIndexer(runIndexer ? 1.0 : 0.0);
 		outputs.setFeeder(runFeeder ? feederSpeed : 0.0);
 		outputs.setAzimuth(azimUp? -azimSpeed : azimDown? azimSpeed : 0.0);
@@ -133,8 +147,17 @@ public class Shooter extends RobotModule
 	}
 	public void distanceToAzimuth(){
 		double distance = getTrackerDist();
-		double azimuth = -62.9*distance+3680;
+		if(inputs.driveStick.getRawButton(10)){
+			lg.addPoint(distance, outputs.getAzimuthPosition());
+			lg.calculateLinReg();
+			System.out.println("\n********************DIST2AZIM****\n");
+		}else if(inputs.driveStick.getRawButton(9)){
+			lg.clear();
+		}
+		
+		double azimuth = lg.predict(distance);
 		SmartDashboard.putNumber("tracker azim", azimuth);
+		SmartDashboard.putString("dist2azim", lg.toString());
 	}
 	/**
 	 * +- 1.5 in

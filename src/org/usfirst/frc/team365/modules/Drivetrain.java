@@ -205,10 +205,10 @@ public class Drivetrain extends RobotModule
 			targeted=true;
 		}
 		if(inputs.driveStick.getTrigger()){
-			turnToAngle(targetBearing);
+			turnToAngle(targetBearing-3);
 		}
 		if(inputs.driveStick.getRawButton(12)){
-			turnToAngle(targetBearing2);
+			turnToAngle(targetBearing2-3);
 		}
 	}
 	public void autoTarget(){

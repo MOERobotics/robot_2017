@@ -20,12 +20,12 @@
 		4	::	right move
 		5	::	collector out
 		6	::	collector in
-		7	::	shake
+		7	::	
 		8	::	shift gear
-		9	::
-		10	::
-		11	::
-		12	::
+		9	::	
+		10	::	
+		11	::	
+		12	::	
 		
 ***************FORWARD POLARITY***************
 	Right Drive		::	-
