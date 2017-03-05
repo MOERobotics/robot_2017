@@ -8,15 +8,15 @@ public class GearMechanism extends RobotModule {
 	
 	final Value GEAR_DN = Value.kForward;
 	final Value GEAR_UP = Value.kReverse;
-	final boolean GEAR_GRAB = true;
-	final boolean GEAR_DROP = false;
+	final boolean FLAP_OPENED = true;
+	final boolean FLAP_CLOSED = false;
 	
 	public GearMechanism(RobotInputs inputs, RobotOutputs outputs){
 		super(inputs, outputs);
 	}
 	@Override
 	public void robotInit(){
-		outputs.setBallFlap(GEAR_DROP);
+		outputs.setBallFlap(FLAP_CLOSED);
 		outputs.setGearReleaser(GEAR_UP);
 	}
 	@Override
@@ -46,9 +46,9 @@ public class GearMechanism extends RobotModule {
 	@Override
 	public void teleopPeriodic(int loopCounter){
 		if (inputs.funStick.getY()<-0.5) {
-			outputs.setBallFlap(GEAR_GRAB);
+			outputs.setBallFlap(FLAP_OPENED);
 		}else {
-			outputs.setBallFlap(GEAR_DROP);
+			outputs.setBallFlap(FLAP_CLOSED);
 		}
 		
 		if (inputs.funStick.getRawButton(6)) {

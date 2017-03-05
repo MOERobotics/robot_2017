@@ -22,7 +22,8 @@ public final class RobotOutputs{
 	private CANTalon indexer;
 	private CANTalon feeder;
 	private CANTalon azimuth;
-	private CANTalon climber;
+	private CANTalon climberA;
+	private CANTalon climberB;
 	
 	private DoubleSolenoid gearShift;
 	private DoubleSolenoid releaseGear;
@@ -41,7 +42,9 @@ public final class RobotOutputs{
 		indexer = new CANTalon(IOPort.INDEXER);
 		feeder = new CANTalon(IOPort.FEEDER);
 		azimuth = new CANTalon(IOPort.AZIMUTH);
-		climber = new CANTalon(IOPort.CLIMBER);
+		climberA = new CANTalon(IOPort.CLIMBER_A);
+		climberB = new CANTalon(IOPort.CLIMBER_B);
+		
 		
 		gearShift = new DoubleSolenoid(IOPort.SHIFT_FWD, IOPort.SHIFT_BAK);
 		releaseGear = new DoubleSolenoid(IOPort.GEAR_RELEASE_BAK, IOPort.GEAR_RELEASE_FWD);
@@ -55,7 +58,6 @@ public final class RobotOutputs{
 		driveL3.setInverted(true);
 		indexer.setInverted(true);
 		feeder.setInverted(true);
-		climber.setInverted(true);
 		
 		driveL1.enableBrakeMode(true);
 		driveL2.enableBrakeMode(true);
@@ -63,7 +65,8 @@ public final class RobotOutputs{
 		driveR1.enableBrakeMode(true);
 		driveR2.enableBrakeMode(true);
 		driveR3.enableBrakeMode(true);
-		climber.enableBrakeMode(true);
+		climberA.enableBrakeMode(true);
+		climberB.enableBrakeMode(true);
 		
 		shooterA.setPIDSourceType(PIDSourceType.kRate);
 		
@@ -113,17 +116,18 @@ public final class RobotOutputs{
 	}
 	final private double climberLoad = 1000;
 	public void setClimber(double value){
-		if(climber.getOutputCurrent()>climberLoad){
+		if(climberA.getOutputCurrent()>climberLoad){
 			value*=2;
-		}climber.set(value);
+		}climberA.set(value);
 	}
 	public void setClimberRaw(double value){
-		climber.set(value);
+		climberA.set(value);
+		climberB.set(value);
 	}
-	public double getClimberAmps(){
-		return climber.getOutputCurrent();
+	public double getAvgClimberAmps(){
+		return (climberA.getOutputCurrent()+climberB.getOutputCurrent())/2.0;
 	}
 	public double getAzimuthPosition(){
-		return azimuth.getPulseWidthPosition();
+		return azimuth.getPulseWidthPosition()%4096;
 	}
 }

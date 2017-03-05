@@ -40,6 +40,6 @@ public class Climber extends RobotModule
 	}
 	@Override
 	public void testPeriodic(int loopCounter){
-		outputs.setClimberRaw(inputs.funStick.getY());
+		
 	}
 }

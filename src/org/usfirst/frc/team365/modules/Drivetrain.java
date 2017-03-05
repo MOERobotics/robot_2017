@@ -6,6 +6,7 @@ import org.usfirst.frc.team365.util.RobotModule;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drivetrain extends RobotModule
 {
@@ -22,6 +23,8 @@ public class Drivetrain extends RobotModule
 	double kDer;
 	double straightSum;
 	double kProp;
+
+	double targetCoeff;
 	
 	PIDOut driveCorrection;
 	PIDController driveStraight;
@@ -44,9 +47,8 @@ public class Drivetrain extends RobotModule
 		driveStraight.setOutputRange(-1.0, 1.0); //
 	}
 	@Override
-	public void robotPeriodic(int loopCounter)
-	{
-
+	public void robotPeriodic(int loopCounter){
+		targetCoeff = SmartDashboard.getNumber("auto target coefficient", 1);
 	}
 	@Override
 	public void disabledInit()
@@ -67,12 +69,9 @@ public class Drivetrain extends RobotModule
 		autoStep = 1;
 	}
 	@Override
-	public void autonomousPeriodic(int loopCounter, int autoRoutine)
-	{
+	public void autonomousPeriodic(int loopCounter, int autoRoutine){
 		distance = inputs.getDriveEncoderRawMax();
-		
-		switch (autoRoutine)
-		{
+		switch (autoRoutine){
 			case 1:
 				turnToAngle(-10);
 				auto1(currentYaw);
@@ -182,6 +181,7 @@ public class Drivetrain extends RobotModule
 		if(!inputs.isDriveOverrided)
 			driveRobot(leftMotor, rightMotor);
 	}
+	boolean targeted = false;
 	@Override
 	public void testInit()
 	{
@@ -191,16 +191,28 @@ public class Drivetrain extends RobotModule
 		autoTargetTest();
 	}
 	
-	final double center_x=0.5;
-	final double pixelsToAngle=1/5.3;
+	final double center_x=0.53;
+	final double pixelsToAngle=.3;
+	double targetBearing, targetBearing2;
 	public void autoTargetTest(){
-		//need calibration for real values
-		if(inputs.driveStick.getRawButton(12)){
-			double[]p = tracker.getCenter();
-			double dx = center_x - p[0];
-			double dTheta_x=pixelsToAngle*dx;
-			turnToAngle(inputs.navx.getYaw()+dTheta_x);
+		double[]p = tracker.getCenter();
+		double dx = center_x - p[0];
+		double dTheta_x=dx * MOETracker.pixelsWide * pixelsToAngle;
+		SmartDashboard.putNumber("dthetax", dTheta_x);
+		if(!targeted){
+			targetBearing = inputs.navx.getYaw()-dTheta_x;
+			targetBearing2 = inputs.navx.getYaw()+(p[0]*92.829-52.786);
+			targeted=true;
 		}
+		if(inputs.driveStick.getTrigger()){
+			turnToAngle(targetBearing);
+		}
+		if(inputs.driveStick.getRawButton(12)){
+			turnToAngle(targetBearing2);
+		}
+	}
+	public void autoTarget(){
+		
 	}
 	public void driveTest(){
 		if(inputs.driveStick.getRawButton(5)){ // LA
@@ -294,7 +306,7 @@ public class Drivetrain extends RobotModule
 		{
 			turnSum = 0;
 		}
-		if(offYaw > 0.6 || offYaw < -0.6)
+		if(offYaw > 0.1 || offYaw < -0.1)
 		{
 			if (offYaw < 20 && offYaw > -20) 
 			{

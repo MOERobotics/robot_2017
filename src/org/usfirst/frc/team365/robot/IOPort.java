@@ -25,7 +25,8 @@ public final class IOPort
 	public static final int DRIVE_R1 = 13;
 	public static final int DRIVE_R2 = 14;
 	public static final int DRIVE_R3 = 15;
-	public static final int CLIMBER = 3;
+	public static final int CLIMBER_A = 3;
+	public static final int CLIMBER_B = 6;
 	public static final int FEEDER = 4;
 	public static final int INDEXER = 5;
 	public static final int COLLECTOR = 9;

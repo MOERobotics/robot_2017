@@ -1,6 +1,11 @@
 package org.usfirst.frc.team365.modules;
 
+import org.usfirst.frc.team365.math.LinearRegression;
+import org.usfirst.frc.team365.net.MOETracker;
 import org.usfirst.frc.team365.util.RobotModule;
+
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter extends RobotModule
 {
@@ -14,12 +19,16 @@ public class Shooter extends RobotModule
 	boolean runFeeder;
 	boolean runShooter;
 	
-	//final double P=1, I=1, D=1, F=1;
-	//PIDController shooterpid;
+	final double P=1, I=1, D=1, F=1;
+	PIDController shooterpid;
 	
+	MOETracker tracker;
 	
-	public Shooter(RobotInputs inputs, RobotOutputs outputs){
+	LinearRegression lg;
+	
+	public Shooter(RobotInputs inputs, RobotOutputs outputs, MOETracker tracker){
 		super(inputs, outputs);
+		this.tracker=tracker;
 	//	shooterpid = new PIDController(P, I, D, F, inputs.shooterSpeed, outputs::setShooter);
 	//	shooterpid.setInputRange(-1400, 0);
 	//	shooterpid.setOutputRange(-1, 1);
@@ -59,7 +68,11 @@ public class Shooter extends RobotModule
 	}
 	@Override
 	public void disabledInit(){
-		
+		outputs.setShooter(0);
+		outputs.setIndexer(0);
+		outputs.setFeeder(0);
+		outputs.setAzimuth(0);
+		outputs.setCollector(0);
 	}
 	@Override
 	public void disabledPeriodic(int loopCounter){
@@ -67,7 +80,11 @@ public class Shooter extends RobotModule
 	}
 	@Override
 	public void autonomousInit(){
-		outputs.setShooter(.75);
+		outputs.setShooter(0);
+		outputs.setIndexer(0);
+		outputs.setFeeder(0);
+		outputs.setAzimuth(0);
+		outputs.setCollector(0);
 	}
 	@Override
 	public void autonomousPeriodic(int loopCounter, int autoRoutine){
@@ -75,7 +92,11 @@ public class Shooter extends RobotModule
 	}
 	@Override
 	public void teleopInit(){
-		outputs.setShooter(0.0);
+		outputs.setShooter(0);
+		outputs.setIndexer(0);
+		outputs.setFeeder(0);
+		outputs.setAzimuth(0);
+		outputs.setCollector(0);
 	}
 	@Override
 	public void teleopPeriodic(int loopCounter){
@@ -89,12 +110,14 @@ public class Shooter extends RobotModule
 		boolean collectorIn = inputs.driveStick.getRawButton(5);
 		boolean collectorOut = inputs.driveStick.getRawButton(6);
 		double shootPow = (inputs.driveStick.getRawAxis(2)+1.0)/2.0;
+		distanceToAzimuth();
+		
 		
 		runShooter = shooterOn? true : shooterOff? false : runShooter;
 		runFeeder = feederOn? true : feederOff? false : runFeeder;
 		collectorIn = runShooter? true: collectorIn;
 
-		outputs.setShooter(runShooter ? shootPow : 0.0);
+		outputs.setShooter(runShooter ? 0.8 : 0.0);
 		outputs.setIndexer(runIndexer ? 1.0 : 0.0);
 		outputs.setFeeder(runFeeder ? feederSpeed : 0.0);
 		outputs.setAzimuth(azimUp? -azimSpeed : azimDown? azimSpeed : 0.0);
@@ -106,7 +129,22 @@ public class Shooter extends RobotModule
 	}
 	@Override
 	public void testPeriodic(int loopCounter){
-		
+		distanceToAzimuth();
+	}
+	public void distanceToAzimuth(){
+		double distance = getTrackerDist();
+		double azimuth = -62.9*distance+3680;
+		SmartDashboard.putNumber("tracker azim", azimuth);
+	}
+	/**
+	 * +- 1.5 in
+	 */
+	double cetnerHigh_y = 0.14, pixelsToDist=1;
+	public double getTrackerDist(){
+		double tracker_y=tracker.getCenter()[1];		//center val - the read tracker val from min dist
+		double distance = tracker_y*91.3+2.46;				//tracker y scaled + min dist; is in inches
+		SmartDashboard.putNumber("tracker dist", distance);	//log
+		return distance;
 	}
 	
 	public double limit(double x, double m, double M){
