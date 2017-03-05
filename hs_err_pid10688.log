@@ -1,0 +1,212 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  Internal Error (ad_x86_64.cpp:1001), pid=10688, tid=0x00000000000020f4
+#  Error: Unimplemented()
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0_102-b14) (build 1.8.0_102-b14)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.102-b14 mixed mode windows-amd64 compressed oops)
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x0000000017e97800):  JavaThread "C2 CompilerThread0" daemon [_thread_in_native, id=8436, stack(0x00000000194f0000,0x00000000195f0000)]
+
+Stack: [0x00000000194f0000,0x00000000195f0000]
+[error occurred during error reporting (printing stack bounds), id 0xc0000005]
+
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+
+
+Current CompileTask:
+C2:   1445 1014   !   4       com.sun.tools.javac.parser.JavaTokenizer::readToken (2243 bytes)
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x0000000017eee800 JavaThread "Service Thread" daemon [_thread_blocked, id=6336, stack(0x0000000019bf0000,0x0000000019cf0000)]
+  0x0000000017ea0000 JavaThread "C1 CompilerThread2" daemon [_thread_in_native, id=7552, stack(0x00000000196f0000,0x00000000197f0000)]
+  0x0000000017e9b800 JavaThread "C2 CompilerThread1" daemon [_thread_in_native, id=7212, stack(0x00000000195f0000,0x00000000196f0000)]
+=>0x0000000017e97800 JavaThread "C2 CompilerThread0" daemon [_thread_in_native, id=8436, stack(0x00000000194f0000,0x00000000195f0000)]
+  0x0000000017e95000 JavaThread "Attach Listener" daemon [_thread_blocked, id=8788, stack(0x00000000193f0000,0x00000000194f0000)]
+  0x0000000017e94800 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=5988, stack(0x00000000192f0000,0x00000000193f0000)]
+  0x0000000017e80000 JavaThread "Finalizer" daemon [_thread_blocked, id=8748, stack(0x0000000019100000,0x0000000019200000)]
+  0x0000000003316000 JavaThread "Reference Handler" daemon [_thread_blocked, id=1020, stack(0x0000000019000000,0x0000000019100000)]
+  0x0000000003223800 JavaThread "main" [_thread_in_Java, id=10128, stack(0x0000000003120000,0x0000000003220000)]
+
+Other Threads:
+  0x0000000017e58000 VMThread [stack: 0x0000000018f00000,0x0000000019000000] [id=1612]
+  0x000000001982f800 WatcherThread [stack: 0x0000000019cf0000,0x0000000019df0000] [id=9860]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap:
+ PSYoungGen      total 38400K, used 37768K [0x00000000d5c00000, 0x00000000d8680000, 0x0000000100000000)
+  eden space 33280K, 98% used [0x00000000d5c00000,0x00000000d7be31f8,0x00000000d7c80000)
+  from space 5120K, 99% used [0x00000000d7c80000,0x00000000d817ee70,0x00000000d8180000)
+  to   space 5120K, 0% used [0x00000000d8180000,0x00000000d8180000,0x00000000d8680000)
+ ParOldGen       total 87552K, used 587K [0x0000000081400000, 0x0000000086980000, 0x00000000d5c00000)
+  object space 87552K, 0% used [0x0000000081400000,0x0000000081492f08,0x0000000086980000)
+ Metaspace       used 12399K, capacity 12568K, committed 12928K, reserved 1060864K
+  class space    used 1461K, capacity 1542K, committed 1664K, reserved 1048576K
+
+Card table byte_map: [0x00000000126e0000,0x0000000012ae0000] byte_map_base: 0x00000000122d6000
+
+Marking Bits: (ParMarkBitMap*) 0x000000006f01a6c0
+ Begin Bits: [0x0000000013190000, 0x0000000015140000)
+ End Bits:   [0x0000000015140000, 0x00000000170f0000)
+
+Polling page: 0x0000000002ee0000
+
+CodeCache: size=245760Kb used=4539Kb max_used=4539Kb free=241220Kb
+ bounds [0x0000000003320000, 0x00000000037a0000, 0x0000000012320000]
+ total_blobs=1607 nmethods=1277 adapters=241
+ compilation: enabled
+
+Compilation events (10 events):
+Event: 1.416 Thread 0x0000000017ea0000 nmethod 1258 0x0000000003779b10 code [0x0000000003779cc0, 0x000000000377a2a8]
+Event: 1.416 Thread 0x0000000017ea0000 1259       2       com.sun.tools.javac.tree.TreeInfo::symbol (116 bytes)
+Event: 1.416 Thread 0x0000000017ea0000 nmethod 1259 0x000000000377a7d0 code [0x000000000377a9c0, 0x000000000377aec8]
+Event: 1.418 Thread 0x0000000017ea0000 1260       2       com.sun.tools.javac.comp.Resolve::findIdentInPackage (111 bytes)
+Event: 1.418 Thread 0x0000000017ea0000 nmethod 1260 0x000000000377b350 code [0x000000000377b4e0, 0x000000000377b818]
+Event: 1.418 Thread 0x0000000017ea0000 1262       2       com.sun.tools.javac.code.Symbol$VarSymbol::<init> (22 bytes)
+Event: 1.418 Thread 0x0000000017ea0000 nmethod 1262 0x000000000377ba10 code [0x000000000377bb80, 0x000000000377bd28]
+Event: 1.418 Thread 0x0000000017ea0000 1261       2       com.sun.tools.javac.tree.JCTree$JCFieldAccess::accept (6 bytes)
+Event: 1.418 Thread 0x0000000017ea0000 nmethod 1261 0x000000000377bdd0 code [0x000000000377bf40, 0x000000000377c0c8]
+Event: 1.424 Thread 0x0000000017ea0000 1264       2       com.sun.tools.javac.comp.Attr::visitSelect (1224 bytes)
+
+GC Heap History (2 events):
+Event: 1.043 GC heap before
+{Heap before GC invocations=1 (full 0):
+ PSYoungGen      total 38400K, used 33280K [0x00000000d5c00000, 0x00000000d8680000, 0x0000000100000000)
+  eden space 33280K, 100% used [0x00000000d5c00000,0x00000000d7c80000,0x00000000d7c80000)
+  from space 5120K, 0% used [0x00000000d8180000,0x00000000d8180000,0x00000000d8680000)
+  to   space 5120K, 0% used [0x00000000d7c80000,0x00000000d7c80000,0x00000000d8180000)
+ ParOldGen       total 87552K, used 0K [0x0000000081400000, 0x0000000086980000, 0x00000000d5c00000)
+  object space 87552K, 0% used [0x0000000081400000,0x0000000081400000,0x0000000086980000)
+ Metaspace       used 10172K, capacity 10360K, committed 10624K, reserved 1058816K
+  class space    used 1229K, capacity 1318K, committed 1408K, reserved 1048576K
+Event: 1.051 GC heap after
+Heap after GC invocations=1 (full 0):
+ PSYoungGen      total 38400K, used 5115K [0x00000000d5c00000, 0x00000000d8680000, 0x0000000100000000)
+  eden space 33280K, 0% used [0x00000000d5c00000,0x00000000d5c00000,0x00000000d7c80000)
+  from space 5120K, 99% used [0x00000000d7c80000,0x00000000d817ee70,0x00000000d8180000)
+  to   space 5120K, 0% used [0x00000000d8180000,0x00000000d8180000,0x00000000d8680000)
+ ParOldGen       total 87552K, used 587K [0x0000000081400000, 0x0000000086980000, 0x00000000d5c00000)
+  object space 87552K, 0% used [0x0000000081400000,0x0000000081492f08,0x0000000086980000)
+ Metaspace       used 10172K, capacity 10360K, committed 10624K, reserved 1058816K
+  class space    used 1229K, capacity 1318K, committed 1408K, reserved 1048576K
+}
+
+Deoptimization events (10 events):
+Event: 1.134 Thread 0x0000000003223800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x0000000003580914 method=java.util.Collections$UnmodifiableCollection$1.hasNext()Z @ 4
+Event: 1.134 Thread 0x0000000003223800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x000000000357e614 method=java.util.Collections$UnmodifiableCollection$1.next()Ljava/lang/Object; @ 4
+Event: 1.134 Thread 0x0000000003223800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x0000000003580914 method=java.util.Collections$UnmodifiableCollection$1.hasNext()Z @ 4
+Event: 1.134 Thread 0x0000000003223800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x000000000357e614 method=java.util.Collections$UnmodifiableCollection$1.next()Ljava/lang/Object; @ 4
+Event: 1.134 Thread 0x0000000003223800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x000000000357e614 method=java.util.Collections$UnmodifiableCollection$1.next()Ljava/lang/Object; @ 4
+Event: 1.137 Thread 0x0000000003223800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00000000034bb570 method=sun.misc.URLClassPath.getLoader(I)Lsun/misc/URLClassPath$Loader; @ 94
+Event: 1.219 Thread 0x0000000003223800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00000000035fe538 method=java.util.Collections$UnmodifiableCollection$1.<init>(Ljava/util/Collections$UnmodifiableCollection;)V @ 17
+Event: 1.308 Thread 0x0000000003223800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00000000035fe538 method=java.util.Collections$UnmodifiableCollection$1.<init>(Ljava/util/Collections$UnmodifiableCollection;)V @ 17
+Event: 1.308 Thread 0x0000000003223800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00000000036897f0 method=java.io.WinNTFileSystem.normalize(Ljava/lang/String;)Ljava/lang/String; @ 128
+Event: 1.374 Thread 0x0000000003223800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00000000036d41f0 method=com.sun.tools.javac.util.Name$Table.equals([BI[BII)Z @ 22
+
+Internal exceptions (10 events):
+Event: 0.777 Thread 0x0000000003223800 Exception <a 'java/lang/ClassNotFoundException': org/apache/tools/ant/AntClassLoader> (0x00000000d6ebf610) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u102\7268\hotspot\src\share\vm\classfile\systemDictionary.cpp, line 210]
+Event: 0.778 Thread 0x0000000003223800 Exception <a 'java/lang/ClassNotFoundException': sun/net/www/protocol/c/Handler> (0x00000000d6ecb230) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u102\7268\hotspot\src\share\vm\classfile\systemDictionary.cpp, line 210]
+Event: 0.778 Thread 0x0000000003223800 Exception <a 'java/lang/ClassNotFoundException': sun/net/www/protocol/c/Handler> (0x00000000d6ece948) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u102\7268\hotspot\src\share\vm\classfile\systemDictionary.cpp, line 210]
+Event: 0.778 Thread 0x0000000003223800 Exception <a 'java/lang/ClassNotFoundException': org/apache/tools/ant/AntClassLoader> (0x00000000d6ed42f8) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u102\7268\hotspot\src\share\vm\classfile\systemDictionary.cpp, line 210]
+Event: 0.778 Thread 0x0000000003223800 Exception <a 'java/lang/ClassNotFoundException': org/apache/tools/ant/AntClassLoader> (0x00000000d6ed8b38) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u102\7268\hotspot\src\share\vm\classfile\systemDictionary.cpp, line 210]
+Event: 0.778 Thread 0x0000000003223800 Exception <a 'java/lang/ClassNotFoundException': org/apache/tools/ant/AntClassLoader> (0x00000000d6ed92c8) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u102\7268\hotspot\src\share\vm\classfile\systemDictionary.cpp, line 210]
+Event: 0.779 Thread 0x0000000003223800 Exception <a 'java/lang/ClassNotFoundException': org/apache/tools/ant/AntClassLoader> (0x00000000d6edaab0) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u102\7268\hotspot\src\share\vm\classfile\systemDictionary.cpp, line 210]
+Event: 0.789 Thread 0x0000000003223800 Exception <a 'java/io/FileNotFoundException'> (0x00000000d6f2e4f0) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u102\7268\hotspot\src\share\vm\prims\jni.cpp, line 709]
+Event: 1.280 Thread 0x0000000003223800 Exception <a 'java/io/FileNotFoundException'> (0x00000000d6acc898) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u102\7268\hotspot\src\share\vm\prims\jni.cpp, line 709]
+Event: 1.283 Thread 0x0000000003223800 Exception <a 'java/io/FileNotFoundException'> (0x00000000d6b03560) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u102\7268\hotspot\src\share\vm\prims\jni.cpp, line 709]
+
+Events (10 events):
+Event: 1.400 Thread 0x0000000003223800 DEOPT PACKING pc=0x000000000372b4ea sp=0x000000000321c870
+Event: 1.400 Thread 0x0000000003223800 DEOPT UNPACKING pc=0x000000000336787f sp=0x000000000321c5f8 mode 0
+Event: 1.400 Thread 0x0000000003223800 DEOPT PACKING pc=0x000000000372adc9 sp=0x000000000321c7f0
+Event: 1.400 Thread 0x0000000003223800 DEOPT UNPACKING pc=0x000000000336787f sp=0x000000000321c548 mode 0
+Event: 1.400 Thread 0x0000000003223800 DEOPT PACKING pc=0x000000000372b4ea sp=0x000000000321c870
+Event: 1.400 Thread 0x0000000003223800 DEOPT UNPACKING pc=0x000000000336787f sp=0x000000000321c5f8 mode 0
+Event: 1.401 Thread 0x0000000003223800 DEOPT PACKING pc=0x000000000372b4ea sp=0x000000000321c870
+Event: 1.401 Thread 0x0000000003223800 DEOPT UNPACKING pc=0x000000000336787f sp=0x000000000321c5f8 mode 0
+Event: 1.403 Thread 0x0000000003223800 DEOPT PACKING pc=0x000000000374e5e6 sp=0x000000000321c7b0
+Event: 1.403 Thread 0x0000000003223800 DEOPT UNPACKING pc=0x000000000336787f sp=0x000000000321c4b0 mode 0
+
+
+Dynamic libraries:
+0x00007ff620be0000 - 0x00007ff620c17000 	C:\Program Files\Java\jre1.8.0_102\bin\javaw.exe
+0x00007ffa8e880000 - 0x00007ffa8ea51000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007ffa8e7d0000 - 0x00007ffa8e87b000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x00007ffa8ae20000 - 0x00007ffa8b03d000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x00007ffa8e720000 - 0x00007ffa8e7c2000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x00007ffa8dff0000 - 0x00007ffa8e08e000 	C:\WINDOWS\System32\msvcrt.dll
+0x00007ffa8e600000 - 0x00007ffa8e659000 	C:\WINDOWS\System32\sechost.dll
+0x00007ffa8c440000 - 0x00007ffa8c561000 	C:\WINDOWS\System32\RPCRT4.dll
+0x00007ffa8c580000 - 0x00007ffa8c6e5000 	C:\WINDOWS\System32\USER32.dll
+0x00007ffa8b480000 - 0x00007ffa8b49e000 	C:\WINDOWS\System32\win32u.dll
+0x00007ffa8e6e0000 - 0x00007ffa8e714000 	C:\WINDOWS\System32\GDI32.dll
+0x00007ffa8b4a0000 - 0x00007ffa8b622000 	C:\WINDOWS\System32\gdi32full.dll
+0x00007ffa7a1b0000 - 0x00007ffa7a429000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.14393.447_none_42191651c6827bb3\COMCTL32.dll
+0x00007ffa8bf10000 - 0x00007ffa8c1d8000 	C:\WINDOWS\System32\combase.dll
+0x00007ffa8b040000 - 0x00007ffa8b135000 	C:\WINDOWS\System32\ucrtbase.dll
+0x00007ffa8b140000 - 0x00007ffa8b1aa000 	C:\WINDOWS\System32\bcryptPrimitives.dll
+0x00007ffa8c410000 - 0x00007ffa8c43e000 	C:\WINDOWS\System32\IMM32.DLL
+0x000000006e650000 - 0x000000006e721000 	C:\Program Files\Java\jre1.8.0_102\bin\msvcr100.dll
+0x000000006e800000 - 0x000000006f09a000 	C:\Program Files\Java\jre1.8.0_102\bin\server\jvm.dll
+0x00007ffa8c240000 - 0x00007ffa8c248000 	C:\WINDOWS\System32\PSAPI.DLL
+0x00007ffa7d600000 - 0x00007ffa7d609000 	C:\WINDOWS\SYSTEM32\WSOCK32.dll
+0x00007ffa8e660000 - 0x00007ffa8e6ca000 	C:\WINDOWS\System32\WS2_32.dll
+0x00007ffa88470000 - 0x00007ffa88493000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007ffa89100000 - 0x00007ffa8910a000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007ffa88410000 - 0x00007ffa8843b000 	C:\WINDOWS\SYSTEM32\WINMMBASE.dll
+0x00007ffa8bd10000 - 0x00007ffa8bd52000 	C:\WINDOWS\System32\cfgmgr32.dll
+0x000000006e7f0000 - 0x000000006e7ff000 	C:\Program Files\Java\jre1.8.0_102\bin\verify.dll
+0x000000006e7c0000 - 0x000000006e7e9000 	C:\Program Files\Java\jre1.8.0_102\bin\java.dll
+0x000000006e7a0000 - 0x000000006e7b6000 	C:\Program Files\Java\jre1.8.0_102\bin\zip.dll
+0x00007ffa8cae0000 - 0x00007ffa8dfe9000 	C:\WINDOWS\System32\SHELL32.dll
+0x00007ffa8b630000 - 0x00007ffa8bd0a000 	C:\WINDOWS\System32\windows.storage.dll
+0x00007ffa8ace0000 - 0x00007ffa8ad2c000 	C:\WINDOWS\System32\powrprof.dll
+0x00007ffa8c750000 - 0x00007ffa8c7a2000 	C:\WINDOWS\System32\shlwapi.dll
+0x00007ffa8ad50000 - 0x00007ffa8ad5f000 	C:\WINDOWS\System32\kernel.appcore.dll
+0x00007ffa8ad70000 - 0x00007ffa8ae19000 	C:\WINDOWS\System32\shcore.dll
+0x00007ffa8ad30000 - 0x00007ffa8ad44000 	C:\WINDOWS\System32\profapi.dll
+0x000000006e780000 - 0x000000006e79a000 	C:\Program Files\Java\jre1.8.0_102\bin\net.dll
+0x00007ffa8a2d0000 - 0x00007ffa8a32c000 	C:\WINDOWS\system32\mswsock.dll
+
+VM Arguments:
+jvm_args: -Dant.home=C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020 -Dant.library.dir=C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020\lib -Djava.library.path=C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/Program Files/Java/jre1.8.0_102/bin/server;C:/Program Files/Java/jre1.8.0_102/bin;C:/Program Files/Java/jre1.8.0_102/lib/amd64;C:\Python35\Scripts\;C:\Python35\;C:\Program Files\Haskell\bin;C:\Program Files\Haskell Platform\8.0.1\lib\extralibs\bin;C:\Program Files\Haskell Platform\8.0.1\bin;C:\tools\ruby23\bin;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\Skype\Phone\;C:\ProgramData\chocolatey\bin;C:\Program Files\Haskell Platform\8.0.1\mingw\bin;C:\Program Files\Java\jdk1.8.0_92;C:\Program Files\Java\jdk1.8.0_102\bin;C:\Users\jmsun\AppData\Roaming\cabal\bin;C:\Users\jmsun\AppData\Roaming\local\bin;C:\Users\jmsun\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Java\jdk1.8.0_102;C:\Program Files (x86)\Notepad++;C:\Program Files\Java\jdk1.8.0_102\bin;C:\Program Files\Git\bin\;C:\Program Files\Git\cmd;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse;;.;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\configuration\org.eclipse.osgi\388\0\.cp -Dfile.encoding=UTF-8 
+java_command: org.eclipse.ant.internal.launching.remote.InternalAntRunner -Dorg.eclipse.ant.core.ANT_PROCESS_ID=1488658661521 -Declipse.connect.port=54509 -Dant.home=C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020 -logger org.eclipse.ant.internal.launching.remote.logger.RemoteAntBuildLogger -inputhandler org.eclipse.ant.internal.ui.antsupport.inputhandler.ProxyInputHandler -buildfile C:\Users\jmsun\Desktop\moe\robot_2017\build.xml deploy
+java_class_path (initial): C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020\lib\ant-antlr.jar;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020\lib\ant-apache-bcel.jar;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020\lib\ant-apache-bsf.jar;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020\lib\ant-apache-log4j.jar;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020\lib\ant-apache-oro.jar;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020\lib\ant-apache-regexp.jar;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020\lib\ant-apache-resolver.jar;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020\lib\ant-apache-xalan2.jar;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020\lib\ant-commons-logging.jar;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020\lib\ant-commons-net.jar;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020\lib\ant-jai.jar;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020\lib\ant-javamail.jar;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020\lib\ant-jdepend.jar;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020\lib\ant-jmf.jar;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse\plugins\org.apache.ant_1.9.4.v201504302020\lib\ant-jsch.jar;C
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=C:\Program Files\Java\jdk1.8.0_102
+PATH=C:/Program Files/Java/jre1.8.0_102/bin/server;C:/Program Files/Java/jre1.8.0_102/bin;C:/Program Files/Java/jre1.8.0_102/lib/amd64;C:\Python35\Scripts\;C:\Python35\;C:\Program Files\Haskell\bin;C:\Program Files\Haskell Platform\8.0.1\lib\extralibs\bin;C:\Program Files\Haskell Platform\8.0.1\bin;C:\tools\ruby23\bin;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\Skype\Phone\;C:\ProgramData\chocolatey\bin;C:\Program Files\Haskell Platform\8.0.1\mingw\bin;C:\Program Files\Java\jdk1.8.0_92;C:\Program Files\Java\jdk1.8.0_102\bin;C:\Users\jmsun\AppData\Roaming\cabal\bin;C:\Users\jmsun\AppData\Roaming\local\bin;C:\Users\jmsun\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Java\jdk1.8.0_102;C:\Program Files (x86)\Notepad++;C:\Program Files\Java\jdk1.8.0_102\bin;C:\Program Files\Git\bin\;C:\Program Files\Git\cmd;C:\Users\jmsun\Downloads\eclipse-java-mars-1-win32-x86_64\eclipse;
+USERNAME=jmsun
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 61 Stepping 4, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 10.0 , 64 bit Build 14393 (10.0.14393.0)
+
+CPU:total 4 (2 cores per cpu, 2 threads per core) family 6 model 61 stepping 4, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, 3dnowpref, lzcnt, ht, tsc, tscinvbit, bmi1, bmi2, adx
+
+Memory: 4k page, physical 8301640k(3500768k free), swap 9612360k(3824088k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (25.102-b14) for windows-amd64 JRE (1.8.0_102-b14), built on Jun 22 2016 13:15:21 by "java_re" with MS VC++ 10.0 (VS2010)
+
+time: Sat Mar 04 15:17:43 2017
+elapsed time: 1 seconds (0d 0h 0m 1s)
+
