@@ -57,7 +57,7 @@ public class UDPTracker implements MOETracker {
 				final short status = buf.getShort();
 				int boxAmnt = status - 1;
 				synchronized (this) {
-					boxVector.clear();
+					boxes.clear();
 					for(int n = 0; n < boxAmnt; n++)
 						boxes.add(readBox(buf));
 				}
@@ -81,13 +81,13 @@ public class UDPTracker implements MOETracker {
 		try {
 			Box box;
 			synchronized (this) {
-				box = boxVector.get(0);
-				SmartDashboard.putNumber("raw x target", box.x);
-				SmartDashboard.putNumber("raw y target", box.y);
-				//I... give up. iIi can'T TAke it anymORE
-				SmartDashboard.putString("is great", "definitlee");
-				return new double[]{box.x, box.y};
+				box = boxes.get(0);
 			}
+			SmartDashboard.putNumber("raw x target", box.x);
+			SmartDashboard.putNumber("raw y target", box.y);
+			//I... give up. iIi can'T TAke it anymORE
+			SmartDashboard.putString("is great", "definitlee");
+			return new double[]{box.x, box.y};
 		} catch(Exception e) {
 			e.printStackTrace();
 			SmartDashboard.putString("is great", "needs to be made so again: "+e.getMessage());
