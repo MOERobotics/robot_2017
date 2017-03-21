@@ -39,11 +39,20 @@ public class UDPTracker implements MOETracker {
 				packet.setLength(buf.limit());
 				socket.receive(packet);
 				final int id = buf.getInt();
-				if (id <= lastID)
+				final short status = buf.getShort();
+				if (status >= 0x8000) {
+					switch (status) {
+						case (short) 0x8001:
+							lastID = id;
+							continue;
+					}
+					continue;
+				} else if (id <= lastID)
 					continue;
 				lastID = id;
-				final short status = buf.getShort();
 				int boxAmnt = status - 1;
+				if (boxAmnt < 0 || boxAmnt > 16)
+					continue;
 				synchronized (this) {
 					boxVector.clear();
 					for(int n=0;n<boxAmnt;n++)
