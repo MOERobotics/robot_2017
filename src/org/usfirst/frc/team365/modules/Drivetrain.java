@@ -4,26 +4,19 @@ import org.usfirst.frc.team365.math.PIDOut;
 import org.usfirst.frc.team365.net.MOETracker;
 import org.usfirst.frc.team365.util.RobotModule;
 
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drivetrain extends RobotModule
 {
-	
-	AnalogInput sonar = new AnalogInput(0);
-	
 	Value HI_GEAR = Value.kReverse;
 	final Value LO_GEAR = Value.kForward;
 
 	double direction;
-	int teleopLoop;
 	int autoLoop;
 	int autoStep;
-	int autoRoutine;
-	int disabledLoop;
-	int loopCount;
+	public int autoRoutine;
 	int gearStep;
 	double straightSum = 0;
 	double turnSum = 0;
@@ -52,7 +45,7 @@ public class Drivetrain extends RobotModule
 	boolean upToSpeed;
 	boolean leftOn;
 	boolean rightOn;
-	boolean redSide;
+	public boolean redSide;
 	
 	double kProp = 0.05;
 	double kInt = .0001;
@@ -62,8 +55,6 @@ public class Drivetrain extends RobotModule
 	double autoKD;
 	
 	// conversion 107 pulses per inch
-
-	double targetCoeff;
 	
 	PIDOut driveCorrection;
 	PIDController driveStraight;
@@ -76,8 +67,7 @@ public class Drivetrain extends RobotModule
 		this.tracker = tracker;
 	}
 	@Override
-	public void robotInit()
-	{
+	public void robotInit(){
 		outputs.setGearShift(LO_GEAR);
 		driveCorrection = new PIDOut();
 		driveStraight = new PIDController(0.04, 0.00005, 0.03, inputs.navx, driveCorrection); //
@@ -87,32 +77,26 @@ public class Drivetrain extends RobotModule
 	}
 	@Override
 	public void robotPeriodic(int loopCounter){
-		targetCoeff = SmartDashboard.getNumber("auto target coefficient", 1);
+		
 	}
 	@Override
-	public void disabledInit()
-	{
+	public void disabledInit(){
 		if (driveStraight.isEnabled())
-		{ //
-			driveStraight.disable(); //
-		} //
+			driveStraight.disable();
 		driveRobot(0,0);
-		outputs.setShooter(0);
-		outputs.setIndexer(0);
-		outputs.setCollector(0);
-		outputs.setFeeder(0);
+		autoLoop = 0;
+		autoStep = 1;
+		outputs.setGearShift(LO_GEAR);
+		turnSum = 0;
+		straightSum = 0;
+		speedSum = 0;
 	}
 	@Override
-	public void disabledPeriodic(int loopCounter)
-	{
-		disabledLoop++;
-		if (inputs.driveStick.getRawButton(2)) {  //  zero yaw
+	public void disabledPeriodic(int loopCounter){
+		if (inputs.driveStick.getRawButton(2))//  zero yaw
 			inputs.navx.zeroYaw();
-		}
-		if (inputs.driveStick.getRawButton(4)) {   //  reset encoders
-			inputs.leftEncoder.reset();
-			inputs.rightEncoder.reset();
-		}
+		if (inputs.driveStick.getRawButton(4))//  reset encoders
+			inputs.resetEncoders();
 		
 		if (inputs.driveStick.getRawButton(6)) autoRoutine = 1;
 		else if (inputs.driveStick.getRawButton(8)) autoRoutine = 2;
@@ -123,30 +107,6 @@ public class Drivetrain extends RobotModule
 		
 		if (inputs.funStick.getRawButton(8)) redSide = true;
 		else if (inputs.funStick.getRawButton(9)) redSide = false;
-		
-		if (disabledLoop % 25 == 0) {
-			SmartDashboard.putBoolean("leftLight", inputs.lightLeft.get());
-			SmartDashboard.putBoolean("rightLight", inputs.lightRight.get());
-			SmartDashboard.putNumber("shootPower", (inputs.driveStick.getRawAxis(2) + 1.0)/2.0);
-			SmartDashboard.putNumber("leftEncoder", inputs.leftEncoder.getRaw());
-			SmartDashboard.putNumber("rightEncoder", inputs.rightEncoder.getRaw());
-			SmartDashboard.putNumber("autoRoutine", autoRoutine);
-			SmartDashboard.putBoolean("redSide", redSide);
-			SmartDashboard.putNumber("sonar", sonar.getAverageVoltage());
-
-			if (!inputs.navx.isCalibrating()) {
-				SmartDashboard.putNumber("yaw", inputs.navx.getYaw());
-				SmartDashboard.putNumber("pitch", inputs.navx.getPitch());
-				SmartDashboard.putNumber("roll", inputs.navx.getRoll());
-			}
-			SmartDashboard.putBoolean("navxConnection", inputs.navx.isConnected());
-			
-//			double wheelPeriod = shootSpeed.getPeriod();
-//			SmartDashboard.putNumber("shooterSpeed", 60/(12*wheelPeriod));
-			SmartDashboard.putNumber("shooterSpeed", inputs.shooterSpeed.getRate());
-			double hood = outputs.getAzimuthPosition();
-			SmartDashboard.putNumber("azimuth", hood);
-		}
 
 		autoKP = SmartDashboard.getNumber("DB/Slider 0", 0);
 		autoKI = SmartDashboard.getNumber("DB/Slider 1", 0);
@@ -163,13 +123,15 @@ public class Drivetrain extends RobotModule
 		turnSum = 0;
 		straightSum = 0;
 		speedSum = 0;
-		setShootPower = 0.81;
+		
+	//	setShootPower = 0.81;
 //		setShootPower = (driveStick.getRawAxis(2) + 1.0)/2.0;
 	}
 	@Override
-	public void autonomousPeriodic(int loopCounter, int autoRoutine){
+	public void autonomousPeriodic(int loopCounter, int notnow){
 		currentDist = inputs.getDriveEncoderRawMax();
 		currentYaw = inputs.navx.getYaw();
+		autoLoop++;
 		switch (autoRoutine){
 		case 1:
 			autoCenterGear();	
@@ -182,13 +144,19 @@ public class Drivetrain extends RobotModule
 
 			break;
 		case 3:
-
+			if (redSide) {
+				autoShootFirstRed();
+			}
+			else autoShootFirstBlue();
 			break;
 		case 4:
-
+			autoOuterGear();
 			break;
 		case 5:
-
+			if (redSide) {
+				autoBoilerGearRed();
+			}
+			else autoBoilerGearBlue();
 			break;
 		}
 	}
@@ -198,7 +166,6 @@ public class Drivetrain extends RobotModule
 	{
 		outputs.setGearShift(LO_GEAR);
 		lastDriveB8=false;
-		teleopLoop = 0;
 	
 		shiftPosition = true;
 		lastButtonD12 = false;
@@ -212,36 +179,57 @@ public class Drivetrain extends RobotModule
 		lastButtonF11 = false;
 		shooterOn = false;
 		upToSpeed = false;
-		loopCount = 0;
 		leftOn = false;
 		rightOn= false;
 		straightSum = 0;
 		turnSum = 0;
 		speedSum = 0;
+		autoLoop = 0;
+		autoStep = 1;
+		outputs.setGearShift(LO_GEAR);
+		turnSum = 0;
+		straightSum = 0;
+		speedSum = 0;
+		
+		targeted=false;
 	}
+	boolean wasLoGear=true;
 	@Override
-	public void teleopPeriodic(int loopCounter)
-	{
-		teleopLoop++;
-	
+	public void teleopPeriodic(int loopCounter){
 		boolean driveButton3 = inputs.driveStick.getRawButton(3);
 		boolean driveButton7 = inputs.driveStick.getRawButton(7);
-		boolean driveButton12 = inputs.driveStick.getRawButton(12);
+		boolean driveButton10 = inputs.driveStick.getRawButton(10);
+		
+		currentDist=inputs.getDriveEncoderRawMax();
+		currentYaw=inputs.navx.getYaw();
 	
 		double xJoy = inputs.driveStick.getX();
 		double yJoy = -inputs.driveStick.getY();
 		xJoy = Math.abs(xJoy)>0.1?xJoy:0;
 		yJoy = Math.abs(yJoy)>0.1?yJoy:0;
 		
+		autoTargetCheckAngle();	
+		targeted=false;
+		
 		boolean changeGear = inputs.driveStick.getRawButton(8);
-		outputs.setGearShift((changeGear && !lastDriveB8)?HI_GEAR:LO_GEAR);
-		lastDriveB8=changeGear;
+		if(changeGear && !lastDriveB8){
+			if(wasLoGear){
+				outputs.setGearShift(HI_GEAR);
+				wasLoGear=false;
+			}else{
+				outputs.setGearShift(LO_GEAR);
+				wasLoGear=true;
+			}
+		}lastDriveB8=changeGear;
 		
 		double leftMotor;
 		double rightMotor;
 		if(inputs.driveStick.getTrigger()){   //drive straight with y joystick value only
 			rightMotor = yJoy;
 			leftMotor = yJoy;
+			leftOn=false;
+			rightOn=false;
+			driveRobot(leftMotor,rightMotor);
 		}else if (inputs.driveStick.getRawButton(2)){  //turn slowly left until sees right target
 			if (inputs.lightRight.get() || rightOn) {
 				driveRobot(0,0);
@@ -260,21 +248,19 @@ public class Drivetrain extends RobotModule
 			}
 		}else if (driveButton3) {   //  back up robot from boiler
 			if (!lastButtonD3) {
-				inputs.leftEncoder.reset();
-				inputs.rightEncoder.reset();
+				inputs.resetEncoders();
 			}
-			if (inputs.leftEncoder.getRaw() > 2400 || inputs.rightEncoder.getRaw() > 2400) {
+			if (currentDist>2400) {
 				driveRobot(0,0);
 			}
 			else driveRobot(0.35,0.35);
 		
 		}
-	else if (inputs.driveStick.getRawButton(11))    {  // test turn to angle
-			
-			turnToAngle(0);
+		else if (inputs.driveStick.getRawButton(11))    {  //do auto turning
+			turnToAngle(targetBearing2);	targeted=true;		
 		}
-		else if (driveButton12) {  // stay firm at set angle
-			if (!lastButtonD12) {
+		else if (driveButton10) {  // stay firm at set angle
+			if (!lastButtonD10) {
 				setYaw = currentYaw;
 			}
 			turnToAngle(setYaw);
@@ -305,44 +291,20 @@ public class Drivetrain extends RobotModule
 		*/else{
 			rightMotor = limitMotor(yJoy - xJoy);
 			leftMotor = limitMotor(yJoy + xJoy);
-		
+			leftOn=false;
+			rightOn=false;
 			driveRobot(leftMotor, rightMotor);
 	}
 		
-		if (teleopLoop % 25 == 0) {   //print values to dashboard
-			SmartDashboard.putBoolean("leftLight", inputs.lightLeft.get());
-			SmartDashboard.putBoolean("rightLight", inputs.lightRight.get());
-			SmartDashboard.putNumber("shootPower", (inputs.driveStick.getRawAxis(2) + 1.0)/2.0);
-			SmartDashboard.putNumber("leftEncoder", inputs.leftEncoder.getRaw());
-			SmartDashboard.putNumber("rightEncoder", inputs.rightEncoder.getRaw());
-			SmartDashboard.putNumber("sonar", sonar.getAverageVoltage());
-			
-			double wheelPeriod = inputs.shooterSpeed.getPeriod();
-			SmartDashboard.putNumber("shooterSpeed", 60/(12*wheelPeriod));
-			SmartDashboard.putNumber("loSpeed", loSpeed);
-			SmartDashboard.putNumber("hiSpeed", hiSpeed);
-			SmartDashboard.putNumber("setShootPower", setShootPower);
-			SmartDashboard.putBoolean("upToSpeed", upToSpeed);
-			double hood = outputs.getAzimuthPosition();
-			SmartDashboard.putNumber("azimuth", hood);
-			
-	//		SmartDashboard.putNumber("climberAmps", climber.getOutputCurrent());
-
-			if (!inputs.navx.isCalibrating()) {
-				SmartDashboard.putNumber("yaw", inputs.navx.getYaw());
-				SmartDashboard.putNumber("pitch", inputs.navx.getPitch());
-				SmartDashboard.putNumber("roll", inputs.navx.getRoll());
-			}			
-		}
-		
 		lastButtonD3 = driveButton3;
 		lastButtonD7 = driveButton7;
-		lastButtonD12 = driveButton12;
+		lastButtonD10 = driveButton10;
 	}
 	boolean targeted = false;
 	@Override
 	public void testInit()
 	{
+		targeted=false;
 	}
 	@Override
 	public void testPeriodic(int loopCounter){
@@ -352,25 +314,49 @@ public class Drivetrain extends RobotModule
 	final double center_x=0.53;
 	final double pixelsToAngle=.3;
 	double targetBearing, targetBearing2;
-	public void autoTargetTest(){
+	public void autoTargetCheckAngle(){
+		outputs.setSignalLight(true);
 		double[]p = tracker.getCenter();
 		double dx = center_x - p[0];
-		double dTheta_x=dx * MOETracker.pixelsWide * pixelsToAngle;
-		SmartDashboard.putNumber("dthetax", dTheta_x);
-		if(!targeted){
-			targetBearing = inputs.navx.getYaw()-dTheta_x;
-			targetBearing2 = inputs.navx.getYaw()+(p[0]*92.829-52.786);
-			targeted=true;
-		}
-		if(inputs.driveStick.getTrigger()){
-			turnToAngle(targetBearing-3);
-		}
-		if(inputs.driveStick.getRawButton(12)){
-			turnToAngle(targetBearing2-3);
+		if(p[0]!=-1 && p[1]!=-1){
+			if(!targeted){
+				double dTheta_x=dx * MOETracker.pixelsWide * pixelsToAngle;
+				SmartDashboard.putNumber("tracker x", p[0]);
+				SmartDashboard.putNumber("tracker y", p[1]);
+				SmartDashboard.putNumber("target yaw", dTheta_x);
+				targetBearing2 = inputs.navx.getYaw()-((p[0]-0.5)*-69.344+0.64);
+			}
 		}
 	}
-	public void autoTarget(){
-		
+	public void autoTargetMove(){
+		turnToAngle(targetBearing2);
+	}
+	
+	
+	public void autoTargetTest(){
+		outputs.setSignalLight(true);
+		double[]p = tracker.getCenter();
+		double dx = center_x - p[0];
+		if(p[0]!=-1 && p[1]!=-1){
+			if(!targeted){
+				double dTheta_x=dx * MOETracker.pixelsWide * pixelsToAngle;
+				SmartDashboard.putNumber("tracker x", p[0]);
+				SmartDashboard.putNumber("tracker y", p[1]);
+				SmartDashboard.putNumber("target yaw", dTheta_x);
+				targetBearing2 = inputs.navx.getYaw()-((p[0]-0.5)*-69.344+0.64);
+			}
+			if(inputs.driveStick.getTrigger()){
+				turnToAngle(targetBearing-2.5);
+				targeted=true;
+			}else if(inputs.driveStick.getRawButton(12)){
+				turnToAngle(targetBearing2);
+				targeted=true;
+			}else{
+				turnToAngle(inputs.navx.getYaw());
+			}
+		}else{
+			return;
+		}
 	}
 	public void driveTest(){
 		if(inputs.driveStick.getRawButton(5)){ // LA
@@ -452,7 +438,7 @@ public class Drivetrain extends RobotModule
 	}
 	
 	void turnToAngle(double setBearing) {
-//		currentYaw = navx.getYaw();
+		currentYaw = inputs.navx.getYaw();
 		double offYaw = setBearing - currentYaw;
 
 		if (offYaw * lastOffYaw <= 0) {
@@ -488,14 +474,14 @@ public class Drivetrain extends RobotModule
 	}
 	void reorientBot() {
 		switch(autoStep) {
-		case 1: if (inputs.leftEncoder.getRaw() < -1100 || inputs.rightEncoder.getRaw() < -1100) {
+		case 1: if (currentDist < -1100) {
 			autoStep = 2;
 			driveRobot(0,0);
 
 		}
 		else goStraight(setYaw + 3., -0.4);
 		break;
-		case 2:  if (inputs.leftEncoder.getRaw()> 500 || inputs.rightEncoder.getRaw() > 500) {
+		case 2:  if (currentDist > 500) {
 			driveRobot(0,0);
 			autoStep = 3;
 		}
@@ -515,13 +501,13 @@ public class Drivetrain extends RobotModule
 			else goStraight(0,0.45);
 				break;
 		case 2:
-			if (currentDist > 7900 || autoLoop > 100) { 
-				if (/*sonar.getAverageVoltage() > 0.15 ||*/ autoLoop > 100) {
+			if (currentDist > 7800 || autoLoop > 100) { 
+				if (/*inputs.sonar.getAverageVoltage() > 0.15 ||*/ autoLoop > 100) {
 				
 					autoStep = 8;
 					setYaw = currentYaw;
 					SmartDashboard.putNumber("autoDist", currentDist);
-//					SmartDashboard.putNumber("autoSonar", sonar.getAverageVoltage());
+//					SmartDashboard.putNumber("autoSonar", inputs.sonar.getAverageVoltage());
 					inputs.leftEncoder.reset();
 					inputs.rightEncoder.reset();
 				}
@@ -529,7 +515,7 @@ public class Drivetrain extends RobotModule
 				autoStep = 3;
 				driveRobot(0,0);				
 				SmartDashboard.putNumber("autoDist", currentDist);
-//				SmartDashboard.putNumber("autoSonar", sonar.getAverageVoltage());
+//				SmartDashboard.putNumber("autoSonar", inputs.sonar.getAverageVoltage());
 				autoLoop = 0;
 				}
 			}
@@ -545,7 +531,7 @@ public class Drivetrain extends RobotModule
 			}
 			break;
 		case 4:
-			if (currentDist < -2100) {
+			if (currentDist < -2200) {
 				autoStep = 5;
 				driveRobot(0,0);
 			}
@@ -553,31 +539,32 @@ public class Drivetrain extends RobotModule
 			break;
 		case 5:
 			if (redSide) {
-			if (currentYaw < -64) {
+			if (currentYaw < -63) {
 				autoStep = 6;
 				inputs.leftEncoder.reset();
 				inputs.rightEncoder.reset();
 			}
-			else driveRobot(-0.4,0.4);
+			else driveRobot(-0.5,0.5);
 			}
 			else {
-				if (currentYaw > 64) {
+				if (currentYaw > 63) {
 					autoStep = 6;
 					inputs.leftEncoder.reset();
 					inputs.rightEncoder.reset();
 				}
-				else driveRobot(0.4,-0.4);
+				else driveRobot(0.5,-0.5);
 			}
 			outputs.setGearReleaser(Value.kReverse);
 			break;
 		case 6:
-			if (currentDist < -10400) {
-				autoStep = 7;
+			if (currentDist < -11200) {
+				autoStep = 10;
+				setYaw=currentYaw;
 				driveRobot(0,0);
 			}
 			else {
-				if (redSide) goStraight(-67,-0.5);
-				else goStraight(67,-0.5);
+				if (redSide) goStraight(-67,-0.7);
+				else goStraight(67,-0.7);
 			}
 			break;
 		case 7: 
@@ -591,13 +578,15 @@ public class Drivetrain extends RobotModule
 			else goStraight(setYaw + 3, -0.4);
 			break;
 		case 9:
-			if (currentDist > 700) {
+			if (currentDist > 500) {
 				autoStep = 3;
 				driveRobot(0,0);
 			}
 			else goStraight(setYaw, 0.3);
 			break;
-			
+		case 10:
+			outputs.setIndexer(1);
+			turnToAngle(setYaw);
 		}
 			
 		
@@ -605,7 +594,7 @@ public class Drivetrain extends RobotModule
 	void autoHopperShootBlue() {    //   Blue Side
 		switch(autoStep) {
 		case 1:
-			if (currentDist > 7800) {    //first try 8100 but maybe wrong distance
+			if (currentDist > 7600) {    //first try 8100 but maybe wrong distance
 				driveRobot(0,0);
 				lastOffYaw = currentYaw;
 				outputs.setBallFlap(true);
@@ -641,7 +630,7 @@ public class Drivetrain extends RobotModule
 			else driveRobot(0,0);
 			break;
 		case 5:
-			if (currentDist < -1600) {
+			if (currentDist < -1800) {
 				autoStep = 6;
 				turnSum = 0;
 			}
@@ -660,7 +649,7 @@ public class Drivetrain extends RobotModule
 			else turnToAngle(18);
 			break;
 		case 7:
-			if (currentDist < -4200) {
+			if (currentDist < -3100) {
 				autoStep = 8;
 				driveRobot(0,0);
 				autoLoop = 0;
@@ -668,6 +657,9 @@ public class Drivetrain extends RobotModule
 			else {
 				goStraight(18,-0.4);
 				outputs.setShooter(setShootPower);
+				outputs.setFeeder(1);
+				outputs.setCollector(1);
+				
 			}
 			break;
 		case 8:		
@@ -692,7 +684,7 @@ public class Drivetrain extends RobotModule
 	void autoHopperShootRed() {
 		switch(autoStep) {
 		case 1:
-			if (currentDist > 7800) {    //first try 8100 but maybe wrong distance
+			if (currentDist > 7600) {    //first try 8100 but maybe wrong distance
 				autoStep = 2;
 				driveRobot(0,0);
 				lastOffYaw = currentYaw;
@@ -729,7 +721,7 @@ public class Drivetrain extends RobotModule
 			else driveRobot(0,0);
 			break;
 		case 5:
-			if (currentDist < -1600) {
+			if (currentDist < -1800) {
 				autoStep = 6;
 				turnSum = 0;
 			}
@@ -743,12 +735,14 @@ public class Drivetrain extends RobotModule
 				inputs.leftEncoder.reset();
 				inputs.rightEncoder.reset();
 				outputs.setShooter(setShootPower);
+				outputs.setFeeder(1);
+				outputs.setCollector(1);
 				straightSum = 0;
 			}
 			else turnToAngle(-18);
 			break;
 		case 7:
-			if (currentDist < -4200) {
+			if (currentDist < -3100) {
 				autoStep = 8;
 				driveRobot(0,0);
 				autoLoop = 0;
@@ -775,6 +769,542 @@ public class Drivetrain extends RobotModule
 		case 9:
 			outputs.setIndexer(1.0);
 			turnToAngle(-18);		
+		}
+	}
+	void autoOuterGear() {     
+		switch(autoStep) {
+		case 1:
+			if (currentDist > 8800) {
+				autoStep = 2;
+				driveRobot(0,0);
+			}
+			else goStraight(0,0.7);
+			break;
+		case 2:
+			if (redSide) {
+				if (inputs.lightLeft.get()) {
+					autoStep = 3;
+					inputs.rightEncoder.reset();
+					inputs.leftEncoder.reset();
+					driveRobot(0,0);
+					setYaw = currentYaw;
+					autoLoop = 0;
+				}
+				else driveRobot(0.35,-0.35);
+			}
+			else {
+				if (inputs.lightRight.get()) {
+					autoStep = 3;
+					inputs.rightEncoder.reset();
+					inputs.leftEncoder.reset();
+					driveRobot(0,0);
+					setYaw = currentYaw;
+					autoLoop = 0;
+				}
+				else driveRobot(-0.35,0.35);
+			}
+			break;
+		case 3:
+			if (currentDist > 2100 || autoLoop > 100) {
+				if (/*inputs.sonar.getAverageVoltage() > 0.15 ||*/ autoLoop > 100) {					
+					autoStep = 8;
+					setYaw = currentYaw;
+//					SmartDashboard.putNumber("autoDist", currentDist);
+					SmartDashboard.putNumber("autoSonar", inputs.sonar.getAverageVoltage());
+					inputs.rightEncoder.reset();
+					inputs.leftEncoder.reset();
+				}
+				else {
+				autoStep = 4;
+				driveRobot(0,0);				
+//				SmartDashboard.putNumber("autoDist", currentDist);
+				SmartDashboard.putNumber("autoSonar", inputs.sonar.getAverageVoltage());
+				autoLoop = 0;
+				}			
+			}
+			else goStraight(setYaw,0.35);
+			break;
+		case 4:
+			driveRobot(0,0);
+			outputs.setGearReleaser(Value.kForward);
+			if (autoLoop > 25) {
+				autoStep = 5;
+				inputs.rightEncoder.reset();
+				inputs.leftEncoder.reset();
+				setYaw = currentYaw;
+			}
+			break;
+		case 5:
+			if (currentDist < -2500) {
+				autoStep = 6;
+				driveRobot(0,0);
+			}
+			else goStraight(setYaw,-0.4);
+			break;
+		
+		case 6:
+			driveRobot(0,0);
+			outputs.setGearReleaser(Value.kReverse);
+			break;
+		
+	case 8:
+		if (currentDist < -1100) {
+			autoStep = 9;
+			driveRobot(0,0);
+		}
+		else goStraight(setYaw + 3, -0.4);
+		break;
+	case 9:
+		if (currentDist > 500) {
+			autoStep = 4;
+			driveRobot(0,0);
+		}
+		else goStraight(setYaw, 0.3);
+		break;
+		}
+	}
+		
+	
+	void autoShootFirstBlue() {    //   Blue Side
+		switch(autoStep) {
+		case 1:
+			if (autoLoop > 100) {
+				autoStep = 2;
+				autoLoop = 0;
+			}
+			else {
+				outputs.setShooter(0.81);
+				outputs.setCollector(1.0);
+				outputs.setFeeder(-1.0);
+			}
+			break;
+		case 2:
+			outputs.setIndexer(-1.0);
+			if (autoLoop > 300) {
+				autoStep = 3;
+				outputs.setIndexer(0);
+				outputs.setShooter(0);
+				outputs.setCollector(0);
+				outputs.setFeeder(0);				
+			}
+			break;
+		case 3:
+			outputs.setIndexer(0);
+			outputs.setShooter(0);
+			if (currentYaw < -81) {
+				autoStep = 4;
+				driveRobot(0,0);
+				inputs.leftEncoder.reset();
+				inputs.rightEncoder.reset();
+			}
+			else driveRobot(0.15,0.65);
+			break;
+		case 4:
+			if (currentDist > 2700) {
+				autoStep = 5;
+				driveRobot(0,0);
+			}
+			else goStraight(-84,0.4);
+			break;
+		case 5:
+//			if (currentYaw > -25) {
+			if (inputs.lightLeft.get()) {
+				autoStep = 9;
+				driveRobot(0,0);
+				inputs.leftEncoder.reset();
+				inputs.rightEncoder.reset();
+			}
+			else driveRobot(0.35,-0.35);
+			break;
+		case 6:
+			if (currentDist > 1400) {
+				autoStep = 7;
+				driveRobot(0,0);
+			}
+			else goStraight(-25,0.4);
+			break;
+		case 7:
+			if (inputs.lightLeft.get())  {			
+				autoStep = 9;
+				driveRobot(0,0);
+				inputs.leftEncoder.reset();
+				inputs.rightEncoder.reset();
+				setYaw = currentYaw;
+			}		
+			else driveRobot(0.35,-0.35);
+			break;
+		case 8:
+			if (currentDist > 700) {
+				autoStep = 9;
+				driveRobot(0,0);
+			}
+			else goStraight(setYaw,0.35);
+			
+			break;
+		case 9:        //need to add gear release
+			driveRobot(0,0);
+			break;
+			}				
+	}
+	
+	void autoShootFirstRed() {
+		switch(autoStep) {
+		case 1:
+			if (autoLoop > 100) {
+				autoStep = 2;
+				autoLoop = 0;
+			}
+			else {
+				outputs.setShooter(0.8);
+				outputs.setCollector(1.0);
+				outputs.setFeeder(-1.0);
+			}
+			break;
+		case 2:
+			outputs.setIndexer(-1.0);
+			if (autoLoop > 300) {
+				autoStep = 3;
+				outputs.setIndexer(0);
+				outputs.setShooter(0);
+				outputs.setCollector(0);
+				outputs.setFeeder(0);				
+			}
+			break;
+		case 3:
+			outputs.setIndexer(0);
+			outputs.setShooter(0);
+			if (currentYaw > 81) {
+				autoStep = 4;
+				driveRobot(0,0);
+				inputs.leftEncoder.reset();
+				inputs.rightEncoder.reset();
+			}
+			else driveRobot(0.65,0.15);
+			break;
+		case 4:
+			if (currentDist > 2700) {
+				autoStep = 5;
+				driveRobot(0,0);
+			}
+			else goStraight(84,0.4);
+			break;
+		case 5:
+//			if (currentYaw < 25) {
+			if (inputs.lightRight.get()) {
+				autoStep = 9;
+				driveRobot(0,0);
+				inputs.leftEncoder.reset();
+				inputs.rightEncoder.reset();
+			}
+			else driveRobot(-0.35,0.35);
+			break;
+		case 6:
+			if (currentDist > 1400) {
+				autoStep = 7;
+				driveRobot(0,0);
+			}
+			else goStraight(25,0.4);
+			break;
+		case 7:
+			if (inputs.lightRight.get())  {			
+				autoStep = 9;
+				driveRobot(0,0);
+				inputs.leftEncoder.reset();
+				inputs.rightEncoder.reset();
+				setYaw = currentYaw;
+			}		
+			else driveRobot(-0.35,0.35);
+			break;
+		case 8:
+			if (currentDist > 700) {
+				autoStep = 9;
+				driveRobot(0,0);
+			}
+			else goStraight(setYaw,0.35);
+			
+			break;
+		case 9:        //need to add gear release
+			driveRobot(0,0);
+			break;
+			}				
+	}
+	void autoBoilerGearRed() {  //  red side
+		switch(autoStep) {
+		case 1:
+			if (currentDist > 8500) {
+				autoStep = 2;
+				driveRobot(0,0);
+			}
+			else goStraight(0,0.6);
+			break;
+		case 2:
+			if (inputs.lightRight.get()) {
+				autoStep = 3;
+				inputs.leftEncoder.reset();
+				inputs.rightEncoder.reset();
+				driveRobot(0,0);
+				setYaw = inputs.navx.getYaw();
+				autoLoop = 0;
+			}
+			else driveRobot(-0.33,0.33);
+			break;
+		case 3:
+			
+				if (currentDist > 2000 || autoLoop > 100) {
+					if (/*inputs.sonar.getAverageVoltage() > 0.16 ||*/ autoLoop > 100) {
+						
+						autoStep = 9;
+						setYaw = currentYaw;
+						SmartDashboard.putNumber("autoDist", currentDist);
+						SmartDashboard.putNumber("autoSonar", inputs.sonar.getAverageVoltage());
+						inputs.leftEncoder.reset();
+						inputs.rightEncoder.reset();
+					}
+					else {
+					autoStep = 4;
+					driveRobot(0,0);				
+					SmartDashboard.putNumber("autoDist", currentDist);
+					SmartDashboard.putNumber("autoSonar", inputs.sonar.getAverageVoltage());
+					autoLoop = 0;
+					}
+				}
+				else goStraight(setYaw - 3,0.35);
+			
+	
+			break;
+		case 4:
+			driveRobot(0,0);
+			outputs.setGearReleaser(Value.kForward);
+			if (autoLoop > 25) {
+				autoStep = 5;
+				inputs.leftEncoder.reset();
+				inputs.rightEncoder.reset();
+				setYaw = currentYaw;
+			}
+			break;
+		case 5:
+			if (currentDist < -2500) {
+				autoStep = 6;
+				driveRobot(0,0);
+			}
+			else goStraight(setYaw,-0.4);
+			break;
+		
+		case 6:
+			outputs.setShooter(setShootPower);
+			outputs.setCollector(1.0);
+			outputs.setFeeder(-1.0);
+			if (currentYaw < -40) {
+				autoStep = 7;
+				driveRobot(0,0);
+				inputs.leftEncoder.reset();
+				inputs.rightEncoder.reset();
+			}
+			else 
+				turnToAngle(-42);
+			
+			outputs.setGearReleaser(Value.kReverse);
+			break;
+		case 7:
+			outputs.setShooter(setShootPower);
+			outputs.setCollector(1.0);
+			outputs.setFeeder(-1.0);
+			if (currentDist < -7400) {
+				driveRobot(0,0);
+				autoStep = 8;
+			}
+			else goStraight(-42,-0.4);
+			break;
+		case 8:
+		//	double newPower = setShooterSpeed(1950);
+		//	outputs.setShooter(newPower);
+			outputs.setShooter(setShootPower);
+			turnToAngle(-42);
+			outputs.setIndexer(-1.0);
+//			driveRobot(0,0);
+			break;
+		
+	case 9:
+		if (currentDist < -1100) {
+			autoStep = 10;
+			driveRobot(0,0);
+		}
+		else goStraight(setYaw + 3, -0.4);
+		break;
+	case 10:
+		if (currentDist > 500) {
+			autoStep = 4;
+			driveRobot(0,0);
+		}
+		else goStraight(setYaw, 0.3);
+		break;
+		}
+		
+	}
+	
+	void autoBoilerGearBlue() {
+		switch(autoStep) {
+		case 1:
+			if (currentDist > 8500) {
+				autoStep = 2;
+				driveRobot(0,0);
+			}
+			else goStraight(0,0.6);
+			break;
+		case 2:
+			if (inputs.lightLeft.get()) {
+				autoStep = 3;
+				inputs.leftEncoder.reset();
+				inputs.rightEncoder.reset();
+				driveRobot(0,0);
+				setYaw = inputs.navx.getYaw();
+				autoLoop = 0;
+			}
+			else driveRobot(0.33,-0.33);
+			break;
+		case 3:
+			
+				if (currentDist > 2000 || autoLoop > 100) {
+					if (/*inputs.sonar.getAverageVoltage() > 0.16 || */autoLoop > 100) {
+						
+						autoStep = 9;
+						setYaw = currentYaw;
+						SmartDashboard.putNumber("autoDist", currentDist);
+						SmartDashboard.putNumber("autoSonar", inputs.sonar.getAverageVoltage());
+						inputs.leftEncoder.reset();
+						inputs.rightEncoder.reset();
+					}
+					else {
+					autoStep = 4;
+					driveRobot(0,0);				
+					SmartDashboard.putNumber("autoDist", currentDist);
+					SmartDashboard.putNumber("autoSonar", inputs.sonar.getAverageVoltage());
+					autoLoop = 0;
+					}
+				}
+				else goStraight(setYaw,0.35);
+			
+	
+			break;
+		case 4:
+			driveRobot(0,0);
+			outputs.setGearReleaser(Value.kForward);
+			if (autoLoop > 25) {
+				autoStep = 5;
+				inputs.leftEncoder.reset();
+				inputs.rightEncoder.reset();
+				setYaw = currentYaw;
+			}
+			break;
+		case 5:
+			if (currentDist < -2500) {
+				autoStep = 6;
+				driveRobot(0,0);
+			}
+			else goStraight(setYaw,-0.4);
+			break;
+		
+		case 6:
+			outputs.setShooter(setShootPower);
+			outputs.setCollector(1.0);
+			outputs.setFeeder(-1.0);
+			if (currentYaw > 40) {
+				autoStep = 7;
+				driveRobot(0,0);
+				inputs.leftEncoder.reset();
+				inputs.rightEncoder.reset();
+			}
+			else 
+				turnToAngle(42);
+			
+			outputs.setGearReleaser(Value.kReverse);
+			break;
+		case 7:
+			outputs.setShooter(setShootPower);
+			outputs.setCollector(1.0);
+			outputs.setFeeder(-1.0);
+			if (currentDist < -7400) {
+				driveRobot(0,0);
+				autoStep = 8;
+			}
+			else goStraight(42,-0.4);
+			break;
+		case 8:
+			//double newPower = setShooterSpeed(1950);
+			//outputs.setShooter(newPower);
+			outputs.setShooter(setShootPower);
+			turnToAngle(42);
+			outputs.setIndexer(-1.0);
+//			driveRobot(0,0);
+			break;
+		
+	case 9:
+		if (currentDist < -1100) {
+			autoStep = 10;
+			driveRobot(0,0);
+		}
+		else goStraight(setYaw + 3, -0.4);
+		break;
+	case 10:
+		if (currentDist > 500) {
+			autoStep = 4;
+			driveRobot(0,0);
+		}
+		else goStraight(setYaw, 0.3);
+		break;
+		}
+		
+	}
+	
+	void autoMoveShootCrossLine() {
+		switch(autoStep) {
+		case 1:
+			if (currentDist > 3000) {
+				autoStep = 2;
+			}
+			else goStraight(0,0.5);
+			break;
+		case 2:
+			if (currentYaw < -61) {
+				inputs.leftEncoder.reset();
+				inputs.rightEncoder.reset();
+				autoStep = 3;
+			}
+			else turnToAngle(-63);
+			break;
+		case 3:
+			if (currentDist < -4700) {
+				driveRobot(0,0);
+				autoStep = 4;
+				outputs.setShooter(setShootPower);
+				outputs.setCollector(1.0);
+				outputs.setFeeder(-1.0);
+				autoLoop = 0;
+			}
+			else goStraight(-63,-0.4);
+			break;
+		case 4:
+			outputs.setShooter(setShootPower);
+			outputs.setCollector(1.0);
+			outputs.setFeeder(-1.0);
+			outputs.setIndexer(-1.0);
+			if (autoLoop > 200) {
+				autoStep = 5;
+				inputs.leftEncoder.reset();
+				inputs.rightEncoder.reset();
+				driveRobot(0,0);
+			}
+			else turnToAngle(-60);
+			break;
+		case 5:
+			if (currentDist > 7000) {
+				autoStep = 6;
+				driveRobot(0,0);
+			}
+			else goStraight(0,0.6);
+			break;
+		case 6:
+			driveRobot(0,0);
 		}
 	}
 }

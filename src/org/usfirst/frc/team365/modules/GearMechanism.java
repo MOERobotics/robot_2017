@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class GearMechanism extends RobotModule {
 	
-	final Value GEAR_DN = Value.kForward;
-	final Value GEAR_UP = Value.kReverse;
+	final Value GEAR_DN = Value.kReverse;
+	final Value GEAR_UP = Value.kForward;
 	final boolean FLAP_OPENED = true;
 	final boolean FLAP_CLOSED = false;
 	
@@ -85,7 +85,7 @@ public class GearMechanism extends RobotModule {
 				}
 				break;
 			case 2: // back up for 50 iterations
-				int dist = inputs.getDriveEncoderRawMax();
+				int dist = (int) inputs.getDriveEncoderRawMax();
 				if(dist<50){
 					Drivetrain.driveRobot(-0.4, -0.4);
 				}else{

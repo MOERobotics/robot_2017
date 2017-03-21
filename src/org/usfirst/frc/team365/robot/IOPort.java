@@ -26,13 +26,13 @@ public final class IOPort
 	public static final int DRIVE_R2 = 14;
 	public static final int DRIVE_R3 = 15;
 	public static final int CLIMBER_A = 3;
-	public static final int CLIMBER_B = 6;
+	public static final int CLIMBER_B = 12;
 	public static final int FEEDER = 4;
 	public static final int INDEXER = 5;
 	public static final int COLLECTOR = 9;
 	public static final int AZIMUTH = 10;
 	public static final int SHOOT_SPIN_A = 11;
-	public static final int SHOOT_SPIN_B = 12;
+	public static final int SHOOT_SPIN_B = 6;
 	
 	public static final int SHIFT_FWD = 5;
 	public static final int SHIFT_BAK = 7;

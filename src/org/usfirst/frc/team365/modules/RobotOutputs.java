@@ -28,6 +28,7 @@ public final class RobotOutputs{
 	private DoubleSolenoid gearShift;
 	private DoubleSolenoid releaseGear;
 	private Solenoid ballFlap;
+	private Solenoid signalLight;
 	
 	public RobotOutputs(){
 		driveL1 = new CANTalon(IOPort.DRIVE_L1);
@@ -45,10 +46,10 @@ public final class RobotOutputs{
 		climberA = new CANTalon(IOPort.CLIMBER_A);
 		climberB = new CANTalon(IOPort.CLIMBER_B);
 		
-		
 		gearShift = new DoubleSolenoid(IOPort.SHIFT_FWD, IOPort.SHIFT_BAK);
 		releaseGear = new DoubleSolenoid(IOPort.GEAR_RELEASE_BAK, IOPort.GEAR_RELEASE_FWD);
 		ballFlap = new Solenoid(IOPort.BALL_FLAP);
+		signalLight = new Solenoid(3);
 		
 		motorInit();
 	}
@@ -58,6 +59,9 @@ public final class RobotOutputs{
 		driveL3.setInverted(true);
 		indexer.setInverted(true);
 		feeder.setInverted(true);
+		//for LawnMOEr climbers are inverted, not for LocoMOEtive
+		//climberA.setInverted(true);
+		//climberB.setInverted(true);
 		
 		driveL1.enableBrakeMode(true);
 		driveL2.enableBrakeMode(true);
@@ -67,6 +71,9 @@ public final class RobotOutputs{
 		driveR3.enableBrakeMode(true);
 		climberA.enableBrakeMode(true);
 		climberB.enableBrakeMode(true);
+		azimuth.enableBrakeMode(true);
+		
+		
 		
 		shooterA.setPIDSourceType(PIDSourceType.kRate);
 		
@@ -114,15 +121,12 @@ public final class RobotOutputs{
 	public void setBallFlap(boolean value){
 		ballFlap.set(value);
 	}
-	final private double climberLoad = 1000;
-	public void setClimber(double value){
-		if(climberA.getOutputCurrent()>climberLoad){
-			value*=2;
-		}climberA.set(value);
-	}
 	public void setClimberRaw(double value){
 		climberA.set(value);
 		climberB.set(value);
+	}
+	public void setSignalLight(boolean value){
+		signalLight.set(value);
 	}
 	public double getAvgClimberAmps(){
 		return (climberA.getOutputCurrent()+climberB.getOutputCurrent())/2.0;

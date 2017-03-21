@@ -18,25 +18,32 @@ public class Climber extends RobotModule
 
 	/*only here for compliance reasons*/
 	@Override
-	public void disabledInit(){}
+	public void disabledInit(){
+		outputs.setClimberRaw(0);
+	}
 	@Override
 	public void disabledPeriodic(int loopCounter){}
 	@Override
-	public void autonomousInit(){}
+	public void autonomousInit(){
+		outputs.setClimberRaw(0);
+	}
 	@Override
 	public void autonomousPeriodic(int loopCounter, int autoRoutine){}
 	@Override
 	public void teleopInit(){
-		
+		outputs.setClimberRaw(0);
 	}
 	@Override
 	public void teleopPeriodic(int loopCounter){
-		if(inputs.funStick.getY()>.5)
-			outputs.setClimberRaw(0.5);
+		if(inputs.funStick.getY()>.5){
+			outputs.setClimberRaw(1);
+		}else{
+			outputs.setClimberRaw(0);
+		}
 	}
 	@Override
 	public void testInit(){
-		
+		outputs.setClimberRaw(0);
 	}
 	@Override
 	public void testPeriodic(int loopCounter){

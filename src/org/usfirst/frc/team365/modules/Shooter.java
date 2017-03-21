@@ -9,12 +9,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter extends RobotModule
 {
-	double collectSpeed=0.75;
+	double collectSpeed=1;
 	double azimSpeed=0.25;
 	double feederSpeed=0.75;
 	
 	double closeEnough = 2;
 	double dThetaCoeff = 1;
+	
+	double addToShootSpeed=0;
 	
 	boolean runFeeder;
 	boolean runShooter;
@@ -26,13 +28,12 @@ public class Shooter extends RobotModule
 	
 	LinearRegression lg;
 	
+	boolean lastfstick10, lastfstick11;
+	
 	public Shooter(RobotInputs inputs, RobotOutputs outputs, MOETracker tracker){
 		super(inputs, outputs);
 		this.tracker=tracker;
 		lg = new LinearRegression();
-	//	shooterpid = new PIDController(P, I, D, F, inputs.shooterSpeed, outputs::setShooter);
-	//	shooterpid.setInputRange(-1400, 0);
-	//	shooterpid.setOutputRange(-1, 1);
 	}
 	
 	void turnAzimuthToAngle(double theta){
@@ -74,6 +75,7 @@ public class Shooter extends RobotModule
 		outputs.setFeeder(0);
 		outputs.setAzimuth(0);
 		outputs.setCollector(0);
+		outputs.setSignalLight(false);
 	}
 	@Override
 	public void disabledPeriodic(int loopCounter){
@@ -86,6 +88,7 @@ public class Shooter extends RobotModule
 		outputs.setFeeder(0);
 		outputs.setAzimuth(0);
 		outputs.setCollector(0);
+		outputs.setSignalLight(true);
 	}
 	@Override
 	public void autonomousPeriodic(int loopCounter, int autoRoutine){
@@ -98,11 +101,7 @@ public class Shooter extends RobotModule
 		outputs.setFeeder(0);
 		outputs.setAzimuth(0);
 		outputs.setCollector(0);
-		
-	//	SmartDashboard.putNumber("P", 0);
-	//	SmartDashboard.putNumber("I", 0);
-	//	SmartDashboard.putNumber("D", 0);
-	//	SmartDashboard.putNumber("F", 0);
+		outputs.setSignalLight(false);
 	}
 	@Override
 	public void teleopPeriodic(int loopCounter){
@@ -118,24 +117,33 @@ public class Shooter extends RobotModule
 		double shootPow = (inputs.driveStick.getRawAxis(2)+1.0)/2.0;
 		distanceToAzimuth();
 		
-		
 		runShooter = shooterOn? true : shooterOff? false : runShooter;
 		runFeeder = feederOn? true : feederOff? false : runFeeder;
-		collectorIn = runShooter? true: collectorIn;
+		//collectorIn = runShooter? true: collectorIn;
 		
-	//	shooterpid.setPID(
-	//		SmartDashboard.getNumber("P", 0),
-	//		SmartDashboard.getNumber("I", 0),
-	//		SmartDashboard.getNumber("D", 0),
-	//		SmartDashboard.getNumber("F", 0)
-	//	);
-		SmartDashboard.putNumber("Shoot rate", inputs.shooterSpeed.getRate());
-		//shooterpid.setSetpoint(runShooter ? 0.8 : 0.0);
-		outputs.setShooter(runShooter ? 0.81 : 0.0);
+		outputs.setShooter(runShooter ? shootPow : 0.0);
+		outputs.setSignalLight(runShooter);
 		outputs.setIndexer(runIndexer ? 1.0 : 0.0);
-		outputs.setFeeder(runFeeder ? feederSpeed : 0.0);
+		if(!shooterOff)
+			outputs.setFeeder(runFeeder ? feederSpeed : 0.0);
+		else{
+			outputs.setFeeder(0);
+			runFeeder=false;
+		}
 		outputs.setAzimuth(azimUp? -azimSpeed : azimDown? azimSpeed : 0.0);
-		outputs.setCollector(collectorIn? collectSpeed : collectorOut? -collectSpeed : 0.0);
+		if(runShooter){
+			outputs.setCollector(1);
+		}else{
+			outputs.setCollector(collectorIn? 1 : collectorOut? -1 : 0.0);
+		}
+		
+		if(inputs.funStick.getRawButton(10)){
+			addToShootSpeed+=0.03;
+		}else if(inputs.funStick.getRawButton(11)){
+			addToShootSpeed-=0.03;
+		}
+		lastfstick10=inputs.funStick.getRawButton(10);
+		lastfstick11=inputs.funStick.getRawButton(11);
 	}
 	@Override
 	public void testInit(){
@@ -165,7 +173,7 @@ public class Shooter extends RobotModule
 	double cetnerHigh_y = 0.14, pixelsToDist=1;
 	public double getTrackerDist(){
 		double tracker_y=tracker.getCenter()[1];		//center val - the read tracker val from min dist
-		double distance = tracker_y*91.3+2.46;				//tracker y scaled + min dist; is in inches
+		double distance = tracker_y*91.3+2.46+9.5;				//tracker y scaled + min dist; is in inches
 		SmartDashboard.putNumber("tracker dist", distance);	//log
 		return distance;
 	}
@@ -174,5 +182,16 @@ public class Shooter extends RobotModule
 		if(x<m) return m;
 		if(x>M) return M;
 		else	return x;
+	}
+	
+	double Kp, Ki, Kd, Kf, inputMin, inputMax;
+	PIDController shooterController;
+	public void fragment(){
+		shooterController=new PIDController(Kp, Ki, Kd, Kf, inputs.shooterSpeed, outputs::setShooter);
+		shooterController.setContinuous(false);
+		shooterController.setInputRange(inputMin, inputMax);
+		shooterController.setOutputRange(0, 1);
+		
+		//shooterController.setSetpoint(setpoint);
 	}
 }

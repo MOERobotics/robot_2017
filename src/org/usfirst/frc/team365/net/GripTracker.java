@@ -39,7 +39,7 @@ public class GripTracker implements MOETracker{
 		//is this needed here?
 		//could it just be here for comliance & be blank or something?
 		while(true){
-			updateReport();
+			//updateReport();
 		}
 	}
 }
