@@ -3,6 +3,7 @@ package org.usfirst.frc.team365.modules;
 import org.usfirst.frc.team365.math.LinearRegression;
 import org.usfirst.frc.team365.net.MOETracker;
 import org.usfirst.frc.team365.util.RobotModule;
+import org.usfirst.frc.team365.modules.AutoTargeting;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,15 +25,13 @@ public class Shooter extends RobotModule
 	//double P=1, I=1, D=1, F=1;
 	//PIDController shooterpid;
 	
-	MOETracker tracker;
 	
 	LinearRegression lg;
 	
 	boolean lastfstick10, lastfstick11;
 	
-	public Shooter(RobotInputs inputs, RobotOutputs outputs, MOETracker tracker){
+	public Shooter(RobotInputs inputs, RobotOutputs outputs){
 		super(inputs, outputs);
-		this.tracker=tracker;
 		lg = new LinearRegression();
 	}
 	
@@ -115,7 +114,7 @@ public class Shooter extends RobotModule
 		boolean collectorIn = inputs.driveStick.getRawButton(5);
 		boolean collectorOut = inputs.driveStick.getRawButton(6);
 		double shootPow = (inputs.driveStick.getRawAxis(2)+1.0)/2.0;
-		distanceToAzimuth();
+//		distanceToAzimuth();
 		
 		runShooter = shooterOn? true : shooterOff? false : runShooter;
 		runFeeder = feederOn? true : feederOff? false : runFeeder;
@@ -151,32 +150,14 @@ public class Shooter extends RobotModule
 	}
 	@Override
 	public void testPeriodic(int loopCounter){
-		distanceToAzimuth();
+//		distanceToAzimuth();
 	}
-	public void distanceToAzimuth(){
-		double distance = getTrackerDist();
-		if(inputs.driveStick.getRawButton(10)){
-			lg.addPoint(distance, outputs.getAzimuthPosition());
-			lg.calculateLinReg();
-			System.out.println("\n********************DIST2AZIM****\n");
-		}else if(inputs.driveStick.getRawButton(9)){
-			lg.clear();
-		}
-		
-		double azimuth = lg.predict(distance);
-		SmartDashboard.putNumber("tracker azim", azimuth);
-		SmartDashboard.putString("dist2azim", lg.toString());
-	}
+	
 	/**
 	 * +- 1.5 in
 	 */
 	double cetnerHigh_y = 0.14, pixelsToDist=1;
-	public double getTrackerDist(){
-		double tracker_y=tracker.getCenter()[1];		//center val - the read tracker val from min dist
-		double distance = tracker_y*91.3+2.46+9.5;				//tracker y scaled + min dist; is in inches
-		SmartDashboard.putNumber("tracker dist", distance);	//log
-		return distance;
-	}
+	
 	
 	public double limit(double x, double m, double M){
 		if(x<m) return m;

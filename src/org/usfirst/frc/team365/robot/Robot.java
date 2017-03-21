@@ -4,6 +4,7 @@ package org.usfirst.frc.team365.robot;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.usfirst.frc.team365.modules.AutoTargeting;
 import org.usfirst.frc.team365.modules.Climber;
 import org.usfirst.frc.team365.modules.Drivetrain;
 import org.usfirst.frc.team365.modules.GearMechanism;
@@ -36,19 +37,23 @@ public class Robot extends IterativeRobot {
 	
 	boolean isRedSide;
 	public Robot(){
-		inputs = new RobotInputs();
-		outputs = new RobotOutputs();
-		//tracker = new GripTracker("GRIP");
 		tracker = UDPTracker.getTracker("Tracker7", 5801);
 		trackingThread = new Thread(tracker);
 		trackingThread.start();
+		
+		inputs = new RobotInputs(tracker);
+		outputs = new RobotOutputs();
+		//tracker = new GripTracker("GRIP");
+		
+		AutoTargeting auto = new AutoTargeting(tracker);
 		d=new Drivetrain(inputs, outputs, tracker);
+
 		
 		modules=new ArrayList<>();
 		modules.add(new Climber(inputs, outputs));
 		modules.add(d);
 		modules.add(new GearMechanism(inputs, outputs));
-		modules.add(new Shooter(inputs, outputs, tracker));
+		modules.add(new Shooter(inputs, outputs));
 		
 		
 	}

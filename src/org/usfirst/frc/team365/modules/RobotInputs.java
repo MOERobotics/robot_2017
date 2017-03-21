@@ -1,5 +1,6 @@
 package org.usfirst.frc.team365.modules;
 
+import org.usfirst.frc.team365.net.MOETracker;
 import org.usfirst.frc.team365.robot.IOPort;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -47,6 +48,7 @@ public class RobotInputs{
 	);
 	public final AnalogInput sonar = new AnalogInput(0);
 	public boolean isDriveOverrided = false;
+	public final MOETracker tracker;
 	
 	public double getDriveEncoderRawMax(){
 		return 1.25*(Math.abs(leftEncoder.getRaw())>Math.abs(rightEncoder.getRaw())? 
@@ -57,7 +59,8 @@ public class RobotInputs{
 		rightEncoder.reset();
 	}
 	
-	public RobotInputs(){
+	public RobotInputs(MOETracker tracker){
+		this.tracker=tracker;
 		shooterSpeed.setSamplesToAverage(12);
 	}
 }
