@@ -37,16 +37,15 @@ public class Robot extends IterativeRobot {
 	
 	boolean isRedSide;
 	public Robot(){
+		//tracker = new GripTracker("GRIP");
 		tracker = UDPTracker.getTracker("Tracker7", 5801);
 		trackingThread = new Thread(tracker);
 		trackingThread.start();
 		
 		inputs = new RobotInputs(tracker);
 		outputs = new RobotOutputs();
-		//tracker = new GripTracker("GRIP");
 		
-		AutoTargeting auto = new AutoTargeting(tracker);
-		d=new Drivetrain(inputs, outputs, tracker);
+		d=new Drivetrain(inputs, outputs);
 
 		
 		modules=new ArrayList<>();

@@ -3,6 +3,7 @@ package org.usfirst.frc.team365.modules;
 import org.usfirst.frc.team365.math.PIDOut;
 import org.usfirst.frc.team365.net.MOETracker;
 import org.usfirst.frc.team365.util.RobotModule;
+import org.usfirst.frc.team365.modules.AutoTargeting;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PIDController;
@@ -30,6 +31,7 @@ public class Drivetrain extends RobotModule
 	double loSpeed;
 	double hiSpeed;
 	double setShootPower;
+	double deltaTheta;
 	
 	boolean lastButtonD12;
 	boolean lastButtonD11;
@@ -62,9 +64,8 @@ public class Drivetrain extends RobotModule
 	
 	boolean lastDriveB8;
 
-	public Drivetrain(RobotInputs inputs, RobotOutputs outputs, MOETracker tracker){
+	public Drivetrain(RobotInputs inputs, RobotOutputs outputs){
 		super(inputs, outputs);
-		this.tracker = tracker;
 	}
 	@Override
 	public void robotInit(){
@@ -256,9 +257,6 @@ public class Drivetrain extends RobotModule
 			else driveRobot(0.35,0.35);
 		
 		}
-		else if (inputs.driveStick.getRawButton(11))    {  //do auto turning
-			turnToAngle(targetBearing2);	targeted=true;		
-		}
 		else if (driveButton10) {  // stay firm at set angle
 			if (!lastButtonD10) {
 				setYaw = currentYaw;
@@ -289,6 +287,11 @@ public class Drivetrain extends RobotModule
 			}
 		}
 		*/else{
+			if (inputs.driveStick.getRawButton(11))    {  //do auto turning
+				TurnByAngle(deltaTheta);	targeted=true;		
+			} else {
+				deltaTheta = AutoTargeting.getAngleToBoiler(tracker);
+			}
 			rightMotor = limitMotor(yJoy - xJoy);
 			leftMotor = limitMotor(yJoy + xJoy);
 			leftOn=false;
@@ -435,6 +438,13 @@ public class Drivetrain extends RobotModule
 		double leftSide = speed + newPower;
 		double rightSide = speed - newPower;
 		driveRobot(leftSide, rightSide);
+	}
+	
+	
+	void TurnByAngle(double angle){
+		double targetBearing;
+		targetBearing = inputs.navx.getYaw()-angle;
+		turnToAngle(targetBearing);
 	}
 	
 	void turnToAngle(double setBearing) {
